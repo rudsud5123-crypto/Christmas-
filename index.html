@@ -720,7 +720,7 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
       <p class="rule"><b>5인전 × 2판</b>. <b>1조·2조</b>(당일 랜덤, 부부를 서로 다른 조로)가 한 판씩 겨루고, 매 판 <b>룰렛</b>으로 모드를 뽑아요. 먼저 종을 치면 순서대로 <b>1~5등</b>! (동점이면 사다리·가위바위보)</p>
       <div class="gmeta">
         <div id="g3Teams"></div>
-        <div class="row"><span class="lbl">조 섞기</span><span style="font-size:14px">필요하면 <b>룰렛 탭 → 만능 MC 도구 → 🔔 할리갈리 1·2조 뽑기</b></span></div>
+        <div class="row"><span class="lbl">조 섞기</span><span style="font-size:14px">필요하면 <b>룰렛 탭 → 만능 MC 도구 → 🎲 할리갈리 조 나누기</b></span></div>
         <div class="row"><span class="lbl">준비</span><span style="font-size:14px">할리갈리 · 쫀쫀이</span></div>
         <div class="row"><span class="lbl">점수</span><span style="font-size:14px">1~5등 = <b>7, 5, 3, 2, 1점</b></span></div>
       </div>
@@ -791,7 +791,7 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
         <button type="button" class="toolbtn" data-draw="g2">2 왈츠</button>
         <button type="button" class="toolbtn" data-draw="g4">4 빙고</button>
       </div>
-      <button type="button" class="toolbtn wide" data-draw="halli">🔔 할리갈리 1·2조 뽑기</button>
+      <button type="button" class="toolbtn wide" data-draw="g3">🎲 할리갈리 조 나누기 (1조 / 2조)</button>
       <div id="splitArea"></div>
       <div class="sharednote">📡 뽑은 조는 모든 폰에 바로 보여요 · 점수판도 이 조로 계산돼요</div>
       <hr class="dash">
@@ -970,8 +970,8 @@ var PEOPLE = [
 var P = {};
 PEOPLE.forEach(function(p){ P[p.id] = p; });
 
-/* 게임별 랜덤 조 (당일 뽑기) — g1·g2·g4 팀전, halli는 할리갈리 1·2조 */
-var TEAM_KEYS = ["g1","g2","g4","halli"];
+/* 게임별 랜덤 조 (당일 뽑기) — g1·g2·g4 팀전, g3는 할리갈리 1·2조 */
+var TEAM_KEYS = ["g1","g2","g3","g4"];
 var TEAM_LABEL = { a:{label:"A조", cls:"solid-red"}, b:{label:"B조", cls:"solid-green"} };
 var TEAM_GAMES = [
   {key:"g1", title:"팀전 1 · 가면 그릇치기", short:"가면"},
@@ -2098,7 +2098,7 @@ function renderSplit(){
   if(hasAssign(S.teams.g1)) html += splitCols("1 가면 그릇치기", S.teams.g1, "A조", "B조");
   if(hasAssign(S.teams.g2)) html += splitCols("2 종이컵 왈츠", S.teams.g2, "A조", "B조");
   if(hasAssign(S.teams.g4)) html += splitCols("4 컵 세우기 빙고", S.teams.g4, "A조", "B조");
-  if(hasAssign(S.teams.halli)) html += splitCols("3 할리갈리", S.teams.halli, "1조", "2조");
+  if(hasAssign(S.teams.g3)) html += splitCols("3 할리갈리", S.teams.g3, "1조", "2조");
   area.innerHTML = html;
 }
 var pickTimer = null;
@@ -2152,7 +2152,7 @@ function drawTeams(kind){
   var cleared = false;
   if(TEAM_GAMES.some(function(g){ return g.key === kind; }) && S.wins[kind]){ S.wins[kind] = null; cleared = true; }
   save(); renderAll(); queuePush(); vibrate([12,30,12]);
-  var nm = kind === "halli" ? "할리갈리 1·2조" : (TEAM_GAMES.filter(function(g){ return g.key===kind; })[0] || {}).title;
+  var nm = kind === "g3" ? "할리갈리 1·2조" : (TEAM_GAMES.filter(function(g){ return g.key===kind; })[0] || {}).title;
   toast((nm ? nm + " " : "") + "배정 완료! 모든 폰에 보여요 🎲" + (cleared ? " (승리 표시는 초기화)" : ""));
 }
 function requireDraw(kind){
@@ -2337,9 +2337,7 @@ function renderTeamInputs(){
 
 /* ══════════════════ 입력: 등수 (할리갈리) ══════════════════ */
 function halliGroups(){
-  if(hasAssign(S.teams.halli)) return {a:S.teams.halli.a, b:S.teams.halli.b, own:true};
-  var g = TEAM_GAMES.filter(function(x){ return hasAssign(S.teams[x.key]); })[0];
-  if(g) return {a:S.teams[g.key].a, b:S.teams[g.key].b, own:false, from:g.short};
+  if(hasAssign(S.teams.g3)) return {a:S.teams.g3.a, b:S.teams.g3.b, own:true};
   return null;
 }
 function rankBlock(gkey, ids, label, cls, pts){
@@ -2362,13 +2360,13 @@ function renderRankInputs(){
   if(!h) return;
   var g = halliGroups();
   if(!g){
-    h.innerHTML = '<div class="teamempty">할리갈리 조가 아직 없어요.<br>게임 안내 카드나 룰렛 탭 MC 도구에서 <b>🔔 할리갈리 1·2조 뽑기</b>를 눌러주세요.</div>'+
-      '<button type="button" class="drawbtn" data-draw="halli">🔔 할리갈리 1·2조 뽑기</button>';
+    h.innerHTML = '<div class="teamempty">할리갈리 조가 아직 없어요.<br>게임 안내 카드나 룰렛 탭 MC 도구에서 <b>🎲 할리갈리 조 나누기 (1조 / 2조)</b>를 눌러주세요.</div>'+
+      '<button type="button" class="drawbtn" data-draw="g3">🎲 할리갈리 조 나누기 (1조 / 2조)</button>';
     updateCounts(); return;
   }
   h.innerHTML = rankBlock("a", g.a, "1조 (A)", "solid-red", HALLI_PTS) +
                 rankBlock("b", g.b, "2조 (B)", "solid-green", HALLI_PTS) +
-                '<span class="hint">'+(g.own ? "할리갈리 전용 조로 뽑혔어요" : "지금은 <b>"+esc(g.from)+"</b> 게임 조를 그대로 쓴 조예요")+' · 따로 섞으려면 <b>🔔 할리갈리 1·2조 뽑기</b></span>';
+                '<span class="hint">할리갈리 전용 조예요 · 다시 섞으려면 <b>🎲 할리갈리 조 나누기 (1조 / 2조)</b></span>';
   updateCounts();
 }
 function assignRank(gkey, r, id){
@@ -2446,16 +2444,12 @@ function renderBonusInputs(){
 
 /* ══════════════════ 업데이트: 게임별 조 표시 ══════════════════ */
 function gameTeamsHTML(key){
-  var isHalli = (key === "halli");
+  var isHalli = (key === "g3");
   var la = isHalli ? "1조" : "A조", lb = isHalli ? "2조" : "B조";
-  var btn = isHalli ? "🎲 할리갈리 1·2조 뽑기 (부부 분리)" : "🎲 조 나누기 (부부 분리)";
+  var btn = isHalli ? "🎲 조 나누기 (1조 / 2조)" : "🎲 조 나누기 (부부 분리)";
   var src = null, own = true, from = "";
-  if(isHalli){
-    var g = halliGroups();
-    if(g){ src = g; own = g.own; from = g.from || ""; }
-  } else if(hasAssign(S.teams[key])){
-    src = S.teams[key];
-  }
+  if(hasAssign(S.teams[key])){ src = S.teams[key]; }
+  if(isHalli && !src){ var g = halliGroups(); if(g){ src = g; } }
   if(!src){
     return '<div class="row"><span class="lbl">'+(isHalli?"조":"팀")+'</span>'+
         '<span style="font-size:13.5px;color:#7a7472">🎲 '+(isHalli?"1·2조 뽑기":"조 나누기")+'를 누르면 '+la+'·'+lb+'가 배정돼요 (부부 분리)</span></div>'+
@@ -2475,7 +2469,7 @@ function gameTeamsHTML(key){
     tail;
 }
 function renderGameTeams(){
-  var map = {g1:"g1", g2:"g2", g3:"halli", g4:"g4"};
+  var map = {g1:"g1", g2:"g2", g3:"g3", g4:"g4"};
   Object.keys(map).forEach(function(id){
     var box = $("#"+id+"Teams");
     if(box) box.innerHTML = gameTeamsHTML(map[id]);
@@ -2492,13 +2486,11 @@ function renderTeamSummary(){
         ? '<span class="tsnames"><span class="chip solid-red">A조</span> '+esc(namesOf(t.a))+'<br><span class="chip solid-green">B조</span> '+esc(namesOf(t.b))+'</span>'
         : '<span class="tsnames muted">아직 안 뽑았어요 <button type="button" class="minibtn" data-draw="'+g.key+'">🎲 뽑기</button></span>')+'</div>';
   }).join("");
-  var h = S.teams.halli, hb = halliGroups();
+  var h = S.teams.g3;
   html += '<div class="tsrow"><b>3 할리갈리</b>'+
     (hasAssign(h)
       ? '<span class="tsnames"><span class="chip solid-red">1조</span> '+esc(namesOf(h.a))+'<br><span class="chip solid-green">2조</span> '+esc(namesOf(h.b))+'</span>'
-      : (hb
-          ? '<span class="tsnames"><span class="chip solid-red">1조</span> '+esc(namesOf(hb.a))+'<br><span class="chip solid-green">2조</span> '+esc(namesOf(hb.b))+'<span class="muted"> ('+esc(hb.from)+' 조 그대로)</span></span>'
-          : '<span class="tsnames muted">아직 안 뽑았어요</span>'))+'</div>';
+      : '<span class="tsnames muted">아직 안 뽑았어요 <button type="button" class="minibtn" data-draw="g3">🎲 뽑기</button></span>')+'</div>';
   box.innerHTML = html + '<span class="hint" style="margin-top:4px">게임 카드를 열거나 위 <b>🎲 뽑기</b>로 그 게임 조를 정해요 (관리자 PIN 필요).</span>';
 }
 
