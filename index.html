@@ -191,6 +191,20 @@ h3{font-size:18px;margin:0;line-height:1.25}
 .teamrow:last-child{border-bottom:0}
 .teamrow .tl2{flex:0 0 74px}
 .teamrow .names{font-size:15.5px;line-height:1.55;padding-top:2px;font-weight:700}
+/* 게임별 랜덤 조 */
+.gdrawbtn{border:2.5px solid var(--ink);border-radius:12px;background:var(--red);color:#fff;padding:8px 14px;font-size:14.5px;font-weight:700;cursor:pointer;box-shadow:0 3px 0 rgba(27,27,27,.18);font-family:inherit}
+.gdrawbtn:active{transform:translateY(3px);box-shadow:none}
+.teamempty{border:2.5px dashed #cfc6bb;border-radius:12px;padding:10px;text-align:center;font-size:13.5px;color:#7a7472;line-height:1.6;background:var(--cream);margin-bottom:7px}
+.drawbtn{width:100%;margin-top:7px;border:2.5px solid var(--ink);border-radius:13px;background:var(--red);color:#fff;padding:10px;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 3px 0 rgba(27,27,27,.18);font-family:inherit}
+.drawbtn:active{transform:translateY(3px);box-shadow:none}
+.tsrow{display:flex;gap:7px;align-items:flex-start;padding:7px 0;border-bottom:1.5px dashed #e6ded3;font-size:14px;line-height:1.6}
+.tsrow:last-of-type{border-bottom:0}
+.tsrow b{flex:0 0 84px;font-size:13.5px;padding-top:1px}
+.tsrow .tsnames{flex:1;font-weight:700}
+.tsrow .tsnames.muted{color:#8a8482;font-weight:400;font-size:13px}
+.tsrow .chip{font-size:12px;padding:1px 7px;margin-right:2px}
+.splitwrap{margin-top:9px}
+.splithead{font-size:13px;font-weight:700;margin-bottom:3px}
 .couples{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
 .couple{display:inline-flex;align-items:center;gap:4px;border:2px solid var(--ink);border-radius:999px;padding:3px 9px;font-size:14px;background:#fff}
 .couple .hh{color:var(--red);font-size:11px}
@@ -656,12 +670,18 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
       <li class="jump" data-jump="g1"><span class="num">1</span><span class="nm">가면 그릇치기</span><a class="vico" data-vlink href="https://www.instagram.com/reel/DeHI0xJSO9V/?jplx=MXJqdDVqMXlubmJnbg==" target="_blank" rel="noopener noreferrer" aria-label="가면 그릇치기 예시 영상">🎬</a><span class="badge red">팀전</span><span class="tm">25분</span><span class="go">↓</span></li>
       <li class="jump" data-jump="g2"><span class="num">2</span><span class="nm">종이컵 왈츠</span><a class="vico" data-vlink href="https://www.instagram.com/reel/DZwx2YgJrzd/?evlk=MTRwc3BkN3hvdjdoMA==" target="_blank" rel="noopener noreferrer" aria-label="종이컵 왈츠 예시 영상">🎬</a><span class="badge red">팀전</span><span class="tm">20분</span><span class="go">↓</span></li>
       <li class="jump" data-jump="g3"><span class="num">3</span><span class="nm">할리갈리 랜덤</span><span class="badge green">개인전</span><span class="tm">25분</span><span class="go">↓</span></li>
-      <li class="jump" data-jump="g4"><span class="num">4</span><span class="nm">컵 세우기 빙고</span><span class="badge green">개인전</span><span class="tm">25분</span><span class="go">↓</span></li>
+      <li class="jump" data-jump="g4"><span class="num">4</span><span class="nm">컵 세우기 빙고</span><a class="vico" data-vlink href="https://youtube.com/shorts/znwHlcQvAH0?si=7-Ye6j9RbI2p0UFn" target="_blank" rel="noopener noreferrer" aria-label="컵 세우기 빙고 예시 영상">🎬</a><span class="badge red">팀전</span><span class="tm">25분</span><span class="go">↓</span></li>
       <li class="jump" data-jump="g5"><span class="num">5</span><span class="nm">사진피하기</span><a class="vico" data-vlink href="https://www.instagram.com/reel/Ddn1oHSpQH7/?evlk=MXZyaHJoZWZxcWM5Zw==" target="_blank" rel="noopener noreferrer" aria-label="사진피하기 예시 영상">🎬</a><span class="badge green">개인전</span><span class="tm">25분</span><span class="go">↓</span></li>
-      <li class="jump" data-jump="g6"><span class="num" style="background:var(--gold);color:#4a3200">+</span><span class="nm">보너스 (인아웃 점프 · 초성퀴즈)</span><span class="tm">여유 있을 때</span><span class="go">↓</span></li>
+      <li class="jump" data-jump="g6"><span class="num" style="background:var(--gold);color:#4a3200">+</span><span class="nm">보너스 (인아웃 점프 · 초성퀴즈)</span><a class="vico" data-vlink href="https://www.instagram.com/reel/Db05LgnRq35/?avpt=MWdnMWdnYzAxajRqZA==" target="_blank" rel="noopener noreferrer" aria-label="인아웃 점프 예시 영상">🎬 인아웃</a><a class="vico" data-vlink href="https://www.instagram.com/reel/Dc3D4EnTdre/?knvt=MXh0bnpuNzJ2eXVvNg==" target="_blank" rel="noopener noreferrer" aria-label="한 글자 초성퀴즈 예시 영상">🎬 초성</a><span class="tm">여유 있을 때</span><span class="go">↓</span></li>
     </ul>
     <span class="hint">게임 이름을 누르면 아래 설명으로 바로 이동해요 · 🎬 는 예시 영상</span>
-    <div class="tip hint">💡 부부는 <b>서로 다른 팀</b>! 팀 명단은 게임마다 달라요. 점수는 <b>점수판</b> 탭에서 바로바로 넣으면 돼요.</div>
+    <div class="tip hint">💡 부부는 <b>서로 다른 팀</b>! 조는 <b>당일 랜덤</b>으로 정해요. 점수는 <b>점수판</b> 탭에서 바로바로 넣으면 돼요.</div>
+  </div>
+
+  <div class="card" id="teamCard">
+    <h2><span class="u">🎲 오늘의 조</span> <span class="badge dark" id="teamBadge">랜덤 배정</span></h2>
+    <div id="teamLive"></div>
+    <span class="hint">게임마다 조를 따로 뽑아요. 각 게임 카드 안의 <b>🎲 조 나누기</b>(관리자 PIN)로 뽑으면 모든 폰에 바로 보여요. 부부는 서로 다른 조!</span>
   </div>
 
   <div class="card">
@@ -670,10 +690,8 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
     <article class="game" id="g1">
       <div class="gtop"><span class="num red">1</span><h3>가면 그릇치기</h3><span class="badge red">팀전</span><span class="tm">25분</span></div>
       <p class="rule">가면을 쓰고 허리에 <b>생수병</b>(삼다수 등)을 매달아, <b>골반을 튕기며</b> 바닥의 <b>일회용 그릇</b>을 쳐서 앞으로 전진시키는 <b>이어달리기</b>!<br>반환점(분기점)을 돌아와 다음 주자에게 <b>바통터치</b>하면 완주!</p>
-      <a class="vlink" data-vlink href="https://www.instagram.com/reel/DeHI0xJSO9V/?jplx=MXJqdDVqMXlubmJnbg==" target="_blank" rel="noopener noreferrer">🎬 가면 그릇치기 예시</a>
       <div class="gmeta">
-        <div class="row"><span class="lbl">팀</span><span class="chip solid-red">소 띠 팀</span><span style="font-size:14px">한길 · 경녕 · 예진 · 지수 · 태성</span></div>
-        <div class="row"><span class="lbl"></span><span class="chip solid-orange">돼지 띠 팀</span><span style="font-size:14px">가영 · 윤민 · 봉수 · 정석 · 수정</span></div>
+        <div id="g1Teams"></div>
         <div class="row"><span class="lbl">준비</span><span style="font-size:14px">가면 · 생수병(500ml) · 끈/노끈 · 일회용 그릇</span></div>
         <div class="row"><span class="lbl">점수</span><span style="font-size:14px">이긴 팀 전원 <b>+3</b> / 진 팀 <b>+1</b></span></div>
       </div>
@@ -682,10 +700,8 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
     <article class="game" id="g2">
       <div class="gtop"><span class="num red">2</span><h3>종이컵 왈츠</h3><span class="badge red">팀전</span><span class="tm">20분</span></div>
       <p class="rule">한 손등에 <b>종이컵</b>을 올려두고, 다른 한 손으로 <b>상대 팀 종이컵</b>을 쳐서 떨어뜨리기!<br>마지막까지 컵을 지킨 팀 승리!</p>
-      <a class="vlink" data-vlink href="https://www.instagram.com/reel/DZwx2YgJrzd/?evlk=MTRwc3BkN3hvdjdoMA==" target="_blank" rel="noopener noreferrer">🎬 종이컵 왈츠 예시</a>
       <div class="gmeta">
-        <div class="row"><span class="lbl">팀</span><span class="chip solid-red">남편 팀</span><span style="font-size:14px">한길 · 윤민 · 봉수 · 정석 · 태성</span></div>
-        <div class="row"><span class="lbl"></span><span class="chip solid-green">아내 팀</span><span style="font-size:14px">가영 · 경녕 · 예진 · 지수 · 수정</span></div>
+        <div id="g2Teams"></div>
         <div class="row"><span class="lbl">준비</span><span style="font-size:14px">종이컵 넉넉히</span></div>
         <div class="row"><span class="lbl">점수</span><span style="font-size:14px">이긴 팀 전원 <b>+3</b> / 진 팀 <b>+1</b></span></div>
       </div>
@@ -693,30 +709,28 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
 
     <article class="game" id="g3">
       <div class="gtop"><span class="num">3</span><h3>할리갈리 랜덤</h3><span class="badge green">개인전</span><span class="tm">25분</span></div>
-      <p class="rule"><b>5인전 × 2판</b>. 남편 조·아내 조가 한 명씩 나와 겨루고, 매 판 <b>룰렛</b>으로 모드를 뽑아요. 먼저 종을 치면 순서대로 <b>1~5등</b>! (동점이면 사다리·가위바위보)</p>
+      <p class="rule"><b>5인전 × 2판</b>. <b>1조·2조</b>(당일 랜덤, 부부를 서로 다른 조로)가 한 판씩 겨루고, 매 판 <b>룰렛</b>으로 모드를 뽑아요. 먼저 종을 치면 순서대로 <b>1~5등</b>! (동점이면 사다리·가위바위보)</p>
       <div class="gmeta">
-        <div class="row"><span class="lbl">조</span><span class="chip solid-red">남편 조</span><span style="font-size:14px">한길 · 윤민 · 봉수 · 정석 · 태성</span></div>
-        <div class="row"><span class="lbl"></span><span class="chip solid-green">아내 조</span><span style="font-size:14px">가영 · 경녕 · 예진 · 지수 · 수정</span></div>
+        <div id="g3Teams"></div>
+        <div class="row"><span class="lbl">조 섞기</span><span style="font-size:14px">필요하면 <b>룰렛 탭 → 만능 MC 도구 → 🔔 할리갈리 1·2조 뽑기</b></span></div>
         <div class="row"><span class="lbl">준비</span><span style="font-size:14px">할리갈리 · 쫀쫀이</span></div>
         <div class="row"><span class="lbl">점수</span><span style="font-size:14px">1~5등 = <b>7, 5, 3, 2, 1점</b></span></div>
       </div>
     </article>
 
     <article class="game" id="g4">
-      <div class="gtop"><span class="num">4</span><h3>컵 세우기 빙고</h3><span class="badge green">개인전</span><span class="tm">25분</span></div>
-      <p class="rule">테이블 끝에서 <b>종이컵 밑동</b>을 손으로 쳐서 돌려 세운 뒤, 내 <b>빙고판 한 칸</b> 채우기!<br>빙고판은 <b>마스킹테이프로 3×3</b>, 한 줄만 채우면 빙고! 먼저 완성한 순서로 점수!</p>
+      <div class="gtop"><span class="num red">4</span><h3>컵 세우기 빙고</h3><span class="badge red">팀전</span><span class="tm">25분</span></div>
+      <p class="rule">바닥(또는 아일랜드 식탁)에 <b>마스킹테이프 3×3 판</b>을 만들고, 두 팀이 <b>번갈아 릴레이</b>로 달려가 <b>컵을 뒤집어 세우기</b>! 한 사람이 컵 한 개를 세우고 돌아와 터치하면 다음 주자 출발 — 가로·세로·대각선 <b>한 줄을 먼저 완성한 팀</b>이 그 판 승리!<br><b>3판 2선승</b>으로 최종 승자를 정해요.</p>
       <div class="gmeta">
-        <div class="row"><span class="lbl">조</span><span class="chip solid-red">소 띠 조</span><span style="font-size:14px">한길 · 경녕 · 예진 · 지수 · 태성</span></div>
-        <div class="row"><span class="lbl"></span><span class="chip solid-orange">돼지 띠 조</span><span style="font-size:14px">가영 · 윤민 · 봉수 · 정석 · 수정</span></div>
-        <div class="row"><span class="lbl">준비</span><span style="font-size:14px">종이컵 · 마스킹테이프</span></div>
-        <div class="row"><span class="lbl">점수</span><span style="font-size:14px">1~5등 = <b>6, 4, 3, 2, 1점</b></span></div>
+        <div id="g4Teams"></div>
+        <div class="row"><span class="lbl">준비</span><span style="font-size:14px">색깔 종이컵 2색 (각 5개 이상) · 마스킹테이프</span></div>
+        <div class="row"><span class="lbl">점수</span><span style="font-size:14px">이긴 팀 전원 <b>+3</b> / 진 팀 <b>+1</b></span></div>
       </div>
     </article>
 
     <article class="game" id="g5">
       <div class="gtop"><span class="num">5</span><h3>사진피하기</h3><span class="badge green">개인전</span><span class="tm">25분</span></div>
       <p class="rule"><b>10명 전체가 술래!</b> 술래는 안대를 쓰고 폰 플래시를 켠 뒤 <b>10초</b>를 세고 <b>"하나~다섯!"</b> 외치며 <b>5장</b>을 찍어요. 5장 중 1장이라도 찍히면 <b>-1점</b>, 다 피하면 <b>+1점</b>.<br>합산이 높은 순서대로 <b>10~1점</b>, 가장 많이 찍힌 <b>베스트 술래 +3점</b> (공동이면 +2점).</p>
-      <a class="vlink" data-vlink href="https://www.instagram.com/reel/Ddn1oHSpQH7/?evlk=MXZyaHJoZWZxcWM5Zw==" target="_blank" rel="noopener noreferrer">🎬 사진피하기 예시</a>
       <div class="gmeta">
         <div class="row"><span class="lbl">금지</span><span style="font-size:14px">❌ 구역 이탈 (화장실·바깥 도망) &nbsp; ❌ 얼굴 가리기 (손·머리카락·물건)</span></div>
         <div class="row"><span class="lbl">준비</span><span style="font-size:14px">안대 1개 · 폰 카메라</span></div>
@@ -730,22 +744,15 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
     <article class="game">
       <div class="gtop"><span class="num" style="background:var(--gold);color:#4a3200">A</span><h3>인아웃 점프</h3><span class="tm">5인 × 2조</span></div>
       <p class="rule">처음 1분은 연습! 사회자가 <b>"안!" / "밖!"</b>을 외치면 반대쪽으로 점프, <b>"그대로!"</b>면 그대로 있기. 틀리면 탈락, 마지막 생존자 <b>+1점</b> (단독 생존 <b>+2점</b>).</p>
-      <a class="vlink" data-vlink href="https://www.instagram.com/reel/Db05LgnRq35/?avpt=MWdnMWdnYzAxajRqZA==" target="_blank" rel="noopener noreferrer">🎬 인아웃 예시</a>
     </article>
     <article class="game">
       <div class="gtop"><span class="num" style="background:var(--gold);color:#4a3200">B</span><h3>한 글자 초성퀴즈</h3><span class="tm">5인 × 2조</span></div>
       <p class="rule"><b>ㄱ · ㅅ · ㅂ · ㅁ · ㅊ</b> 중 하나를 외치면, 그 초성에 맞는 물건을 가져와 <b>"국자!"</b>처럼 외치며 터치! 남이 이미 외친 물건은 <b>중복 금지</b>. 조별 1~5등 <b>5~1점</b> (또는 보너스 점수).</p>
-      <a class="vlink" data-vlink href="https://www.instagram.com/reel/Dc3D4EnTdre/?knvt=MXh0bnpuNzJ2eXVvNg==" target="_blank" rel="noopener noreferrer">🎬 초성퀴즈 예시</a>
     </article>
   </div>
 
   <div class="card">
-    <h2><span class="u">팀 / 조 명단</span></h2>
-    <div class="teamrow"><div class="tl2"><span class="chip solid-red">소 띠</span></div><div class="names">한길 · 경녕 · 예진 · 지수 · 태성</div></div>
-    <div class="teamrow"><div class="tl2"><span class="chip solid-orange">돼지 띠</span></div><div class="names">가영 · 윤민 · 봉수 · 정석 · 수정</div></div>
-    <div class="teamrow"><div class="tl2"><span class="chip solid-red">남편 팀</span></div><div class="names">한길 · 윤민 · 봉수 · 정석 · 태성</div></div>
-    <div class="teamrow"><div class="tl2"><span class="chip solid-green">아내 팀</span></div><div class="names">가영 · 경녕 · 예진 · 지수 · 수정</div></div>
-    <h2 style="margin-top:16px;font-size:16px"><span class="u">다섯 부부</span></h2>
+    <h2><span class="u">다섯 부부</span></h2>
     <div class="couples">
       <span class="couple"><b>박한길</b><span class="hh">♥</span><b>윤가영</b></span>
       <span class="couple"><b>김윤민</b><span class="hh">♥</span><b>양경녕</b></span>
@@ -765,6 +772,39 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
 
 <!-- ══════════════ 룰렛 ══════════════ -->
 <section id="tab-wheel" hidden>
+
+  <details class="sect mc" id="sectTools" open>
+    <summary>🎲 만능 MC 도구 <span class="cnt">팀 뽑기 · 순서 · 초성</span><span class="arw">▲</span></summary>
+    <div class="sectbody">
+      <div class="toolhead">🎲 게임별 조 뽑기 (부부 분리 · 관리자)</div>
+      <label class="checkline"><input type="checkbox" id="coupleSep" checked><span>부부는 같은 조 금지 (기본 ON)</span></label>
+      <div class="btnrow">
+        <button type="button" class="toolbtn" data-draw="g1">1 가면</button>
+        <button type="button" class="toolbtn" data-draw="g2">2 왈츠</button>
+        <button type="button" class="toolbtn" data-draw="g4">4 빙고</button>
+      </div>
+      <button type="button" class="toolbtn wide" data-draw="halli">🔔 할리갈리 1·2조 뽑기</button>
+      <div id="splitArea"></div>
+      <div class="sharednote">📡 뽑은 조는 모든 폰에 바로 보여요 · 점수판도 이 조로 계산돼요</div>
+      <hr class="dash">
+      <div class="toolhead">랜덤 뽑기 · 순서 정하기</div>
+      <div class="seg2">
+        <button type="button" data-pool="people" class="on">참가자 10명</button>
+        <button type="button" data-pool="custom">직접 입력</button>
+      </div>
+      <textarea id="customItems" placeholder="한 줄에 하나씩 적어주세요 (예: 벌칙 항목)"></textarea>
+      <div class="btnrow">
+        <button type="button" class="toolbtn primary" id="pickOne">🎯 1명 뽑기</button>
+        <button type="button" class="toolbtn" id="pickOrder">🔢 순서 정하기</button>
+      </div>
+      <div class="pickarea" id="pickArea"><span class="ph">벌칙·술래·대표 뽑기! 버튼을 눌러주세요 🎁</span></div>
+      <div class="sharednote">📡 뽑기 결과는 다른 폰에도 보여요</div>
+      <hr class="dash">
+      <div class="toolhead">초성 랜덤 뽑기 (ㄱ~ㅎ 알짜 13개)</div>
+      <button type="button" class="toolbtn primary wide" id="pickCho">🔤 초성 뽑기!</button>
+      <div class="hint" style="margin-top:6px">ㄹ처럼 물건이 적은 초성은 빼고, 펜션·아기용품에서 찾기 좋은 초성만 나와요.</div>
+    </div>
+  </details>
 
   <div class="card tight">
     <h2 style="font-size:18px"><span class="u">⏱ 원터치 타이머</span></h2>
@@ -796,33 +836,6 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
       <ul id="histList"></ul>
     </div>
   </div>
-
-  <details class="sect mc" id="sectTools">
-    <summary>🎲 만능 MC 도구 <span class="cnt">뽑기 · 조 나누기</span><span class="arw">▲</span></summary>
-    <div class="sectbody">
-      <div class="toolhead">랜덤 뽑기 · 순서 정하기</div>
-      <div class="seg2">
-        <button type="button" data-pool="people" class="on">참가자 10명</button>
-        <button type="button" data-pool="custom">직접 입력</button>
-      </div>
-      <textarea id="customItems" placeholder="한 줄에 하나씩 적어주세요 (예: 벌칙 항목)"></textarea>
-      <div class="btnrow">
-        <button type="button" class="toolbtn primary" id="pickOne">🎯 1명 뽑기</button>
-        <button type="button" class="toolbtn" id="pickOrder">🔢 순서 정하기</button>
-      </div>
-      <div class="pickarea" id="pickArea"><span class="ph">벌칙·술래·대표 뽑기! 버튼을 눌러주세요 🎁</span></div>
-      <div class="sharednote">📡 뽑기 결과는 다른 폰에도 보여요</div>
-      <hr class="dash">
-      <div class="toolhead">초성 랜덤 뽑기 (ㄱ~ㅎ 알짜 13개)</div>
-      <button type="button" class="toolbtn primary wide" id="pickCho">🔤 초성 뽑기!</button>
-      <div class="hint" style="margin-top:6px">ㄹ처럼 물건이 적은 초성은 빼고, 펜션·아기용품에서 찾기 좋은 초성만 나와요.</div>
-      <hr class="dash">
-      <div class="toolhead">조 나누기 (5 : 5)</div>
-      <label class="checkline"><input type="checkbox" id="coupleSep" checked><span>부부는 같은 조 금지 (기본 ON)</span></label>
-      <button type="button" class="toolbtn primary wide" id="splitTeams">🔀 조 섞기!</button>
-      <div id="splitArea"></div>
-    </div>
-  </details>
 
   <div class="card tight">
     <h2 style="font-size:16.5px"><span class="u">5가지 모드</span></h2>
@@ -856,18 +869,13 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
 
     <div id="scoreInputs">
       <details class="sect" id="sectTeam" open>
-        <summary>🏁 팀전 <span class="cnt" data-cnt="team">0/2</span><span class="arw">▲</span></summary>
+        <summary>🏁 팀전 (1·2·4번) <span class="cnt" data-cnt="team">0/3</span><span class="arw">▲</span></summary>
         <div class="sectbody" id="teamInputs"></div>
       </details>
 
       <details class="sect" id="sectHalli">
         <summary>🔔 할리갈리 랜덤 <span class="cnt" data-cnt="halli">0/10</span><span class="arw">▲</span></summary>
         <div class="sectbody" id="halliInputs"></div>
-      </details>
-
-      <details class="sect" id="sectBingo">
-        <summary>🥤 컵 세우기 빙고 <span class="cnt" data-cnt="bingo">0/10</span><span class="arw">▲</span></summary>
-        <div class="sectbody" id="bingoInputs"></div>
       </details>
 
       <details class="sect" id="sectPhoto">
@@ -940,37 +948,32 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
 
 /* ══════════════════ 기본 데이터 ══════════════════ */
 var PEOPLE = [
-  {id:"hangil",   name:"박한길", short:"한길", team:"cow",  side:"husband"},
-  {id:"gayoung",  name:"윤가영", short:"가영", team:"pig",  side:"wife"},
-  {id:"yunmin",   name:"김윤민", short:"윤민", team:"pig",  side:"husband"},
-  {id:"gyeong",   name:"양경녕", short:"경녕", team:"cow",  side:"wife"},
-  {id:"bongsu",   name:"김봉수", short:"봉수", team:"pig",  side:"husband"},
-  {id:"yejin",    name:"설예진", short:"예진", team:"cow",  side:"wife"},
-  {id:"jeongseok",name:"오정석", short:"정석", team:"pig",  side:"husband"},
-  {id:"jisu",     name:"김지수", short:"지수", team:"cow",  side:"wife"},
-  {id:"taeseong", name:"한태성", short:"태성", team:"cow",  side:"husband"},
-  {id:"sujeong",  name:"이수정", short:"수정", team:"pig",  side:"wife"}
+  {id:"hangil",   name:"박한길", short:"한길"},
+  {id:"gayoung",  name:"윤가영", short:"가영"},
+  {id:"yunmin",   name:"김윤민", short:"윤민"},
+  {id:"gyeong",   name:"양경녕", short:"경녕"},
+  {id:"bongsu",   name:"김봉수", short:"봉수"},
+  {id:"yejin",    name:"설예진", short:"예진"},
+  {id:"jeongseok",name:"오정석", short:"정석"},
+  {id:"jisu",     name:"김지수", short:"지수"},
+  {id:"taeseong", name:"한태성", short:"태성"},
+  {id:"sujeong",  name:"이수정", short:"수정"}
 ];
 var P = {};
 PEOPLE.forEach(function(p){ P[p.id] = p; });
 
-var GROUPS = {
-  cow:     ["hangil","gyeong","yejin","jisu","taeseong"],
-  pig:     ["gayoung","yunmin","bongsu","jeongseok","sujeong"],
-  husband: ["hangil","yunmin","bongsu","jeongseok","taeseong"],
-  wife:    ["gayoung","gyeong","yejin","jisu","sujeong"]
-};
-var GROUP_LABEL = {
-  cow:{label:"소 띠", cls:"solid-red"},
-  pig:{label:"돼지 띠", cls:"solid-orange"},
-  husband:{label:"남편 조", cls:"solid-red"},
-  wife:{label:"아내 조", cls:"solid-green"}
-};
+/* 게임별 랜덤 조 (당일 뽑기) — g1·g2·g4 팀전, halli는 할리갈리 1·2조 */
+var TEAM_KEYS = ["g1","g2","g4","halli"];
+var TEAM_LABEL = { a:{label:"A조", cls:"solid-red"}, b:{label:"B조", cls:"solid-green"} };
+var TEAM_GAMES = [
+  {key:"g1", title:"팀전 1 · 가면 그릇치기", short:"가면"},
+  {key:"g2", title:"팀전 2 · 종이컵 왈츠", short:"왈츠"},
+  {key:"g4", title:"팀전 3 · 컵 세우기 빙고", short:"빙고"}
+];
 var COUPLES = [["hangil","gayoung"],["yunmin","gyeong"],["bongsu","yejin"],["jeongseok","jisu"],["taeseong","sujeong"]];
 var ADMINS = ["gyeong","hangil"];
 var ADMIN_PIN = "2821";   /* 관리자 4자리 PIN (기본 2821) */
 var HALLI_PTS = [7,5,3,2,1];
-var BINGO_PTS = [6,4,3,2,1];
 
 var MODES = [
   {name:"멀리갈리", emoji:"🔔", rule:"종을 멀리 두고 달려가서 치기!"},
@@ -982,7 +985,7 @@ var MODES = [
 var WHEEL_COLORS = ["#A60C0E","#FFFFFF","#1E7B3C","#FBF0DA","#FFFFFF"];
 var WHEEL_TEXT   = ["#FFFFFF","#1B1B1B","#FFFFFF","#1B1B1B","#1B1B1B"];
 
-var PREP = ["가면","생수병(500ml)","끈/노끈","일회용 그릇","종이컵","할리갈리","마스킹테이프","안대 1개","폰 카메라","쫀쫀이"];
+var PREP = ["가면","생수병(500ml)","끈/노끈","일회용 그릇","색깔 종이컵 2색 (각 5개 이상)","할리갈리","마스킹테이프","안대 1개","폰 카메라","쫀쫀이"];
 /* 초성퀴즈용 알짜 초성 13개 + 사회자 참고 예시 (펜션·아기용품에서 찾을 수 있는 것) */
 var CHO_LIST = [
   {c:"ㄱ", ex:"기저귀·국자·거울·가위·과자"},
@@ -1013,7 +1016,8 @@ var SEED_SHOP = [
   {id:"seed-baby",  cat:"아기/기타", name:"아기 간식·물티슈", qty:2, unit:"개"},
   {id:"seed-water", cat:"게임/소품", name:"삼다수 500ml (게임용)", qty:5, unit:"병"},
   {id:"seed-string",cat:"게임/소품", name:"노끈·허리끈", qty:2, unit:"개"},
-  {id:"seed-bowl",  cat:"게임/소품", name:"일회용 그릇", qty:2, unit:"팩"}
+  {id:"seed-bowl",  cat:"게임/소품", name:"일회용 그릇", qty:2, unit:"팩"},
+  {id:"seed-cup2",  cat:"게임/소품", name:"색깔 종이컵 2색 (각 5개 이상)", qty:10, unit:"개"}
 ];
 var SCHEDULE = [
   ["10:00","만남 & 아침/아점 식사"],
@@ -1031,7 +1035,6 @@ var VENUE = {name:"경주 더스테이 스파 펜션", lat:35.664579, lng:129.40
 function $(s, el){ return (el||document).querySelector(s); }
 function $all(s, el){ return Array.prototype.slice.call((el||document).querySelectorAll(s)); }
 function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
-function members(ids){ return ids.map(function(id){ return P[id].short; }).join(" · "); }
 function shuffle(a){
   var out = a.slice();
   for(var i=out.length-1;i>0;i--){ var j = Math.floor(Math.random()*(i+1)); var t = out[i]; out[i]=out[j]; out[j]=t; }
@@ -1054,11 +1057,17 @@ function toast(msg){
 
 /* ══════════════════ 상태 ══════════════════ */
 var KEY = "xmasParty.v2";
+function emptyTeam(){ return {a:[], b:[], at:0, by:""}; }
+function freshTeams(){
+  var t = {};
+  TEAM_KEYS.forEach(function(k){ t[k] = emptyTeam(); });
+  return t;
+}
 function freshShared(){
   return {
-    team1:null, team2:null,
-    halli:{husband:{}, wife:{}},
-    bingo:{cow:{}, pig:{}},
+    teams:freshTeams(),
+    wins:{g1:null, g2:null, g4:null},
+    halli:{},
     photo:{},
     best:{bonus:3, ids:[]},
     bonus:{},
@@ -1072,6 +1081,48 @@ function freshShared(){
     guestbook:{},
     meta:{shopSeed:0}
   };
+}
+function hasAssign(o){ return !!(o && o.a && o.b && o.a.length && o.b.length); }
+function normAssign(v){
+  var out = emptyTeam();
+  if(v && typeof v === "object"){
+    out.a = (Array.isArray(v.a) ? v.a : []).filter(function(id){ return !!P[id]; });
+    out.b = (Array.isArray(v.b) ? v.b : []).filter(function(id){ return !!P[id]; });
+    out.at = Number(v.at) || 0;
+    out.by = v.by || "";
+    /* A·B에 같은 사람이 있으면 엉킨 조라서 버려요 */
+    var dup = out.a.some(function(id){ return out.b.indexOf(id) >= 0; });
+    if(dup || !out.a.length || !out.b.length) return emptyTeam();
+  }
+  return out;
+}
+function normTeams(v){
+  var t = freshTeams();
+  if(!v || typeof v !== "object") return t;
+  TEAM_KEYS.forEach(function(k){ if(v[k] !== undefined) t[k] = normAssign(v[k]); });
+  return t;
+}
+function normWins(v){
+  var out = {g1:null, g2:null, g4:null};
+  if(v && typeof v === "object"){
+    ["g1","g2","g4"].forEach(function(k){ out[k] = (v[k]==="a"||v[k]==="b") ? v[k] : null; });
+  }
+  return out;
+}
+/* 옛 (남편/아내, 소/돼지) 조별 등수는 한 사람당 하나로 합쳐요 */
+function normHalli(v){
+  var out = {};
+  if(!v || typeof v !== "object") return out;
+  function take(obj){
+    if(!obj || typeof obj !== "object") return;
+    Object.keys(obj).forEach(function(id){
+      var r = Number(obj[id]);
+      if(P[id] && r >= 1 && r <= 5) out[id] = r;
+    });
+  }
+  if(v.husband || v.wife){ take(v.husband); take(v.wife); }
+  else take(v);
+  return out;
 }
 function fresh(){
   var s = freshShared();
@@ -1107,6 +1158,11 @@ function load(){
     if(!f.best || !Array.isArray(f.best.ids)) f.best = {bonus:3, ids:[]};
     if(!f.guestbook || typeof f.guestbook !== "object") f.guestbook = {};
     if(!f.meta || typeof f.meta !== "object") f.meta = {shopSeed:0};
+    /* 옛 고정 팀 기록은 새 랜덤 조 모델로 옮기지 않아요 */
+    delete f.team1; delete f.team2; delete f.bingo;
+    f.teams = normTeams(f.teams);
+    f.wins = normWins(f.wins);
+    f.halli = normHalli(f.halli);
   }catch(e){ return fresh(); }
   return f;
 }
@@ -1177,12 +1233,17 @@ function setSyncChip(state, text){
 /* 로컬 상태 → 동기화 노드 맵 */
 function flatten(){
   var m = {};
-  m["state/team1"] = S.team1;
-  m["state/team2"] = S.team2;
-  Object.keys(S.halli.husband).forEach(function(id){ m["state/halli/husband/"+id] = Number(S.halli.husband[id]); });
-  Object.keys(S.halli.wife).forEach(function(id){ m["state/halli/wife/"+id] = Number(S.halli.wife[id]); });
-  Object.keys(S.bingo.cow).forEach(function(id){ m["state/bingo/cow/"+id] = Number(S.bingo.cow[id]); });
-  Object.keys(S.bingo.pig).forEach(function(id){ m["state/bingo/pig/"+id] = Number(S.bingo.pig[id]); });
+  TEAM_KEYS.forEach(function(k){
+    var t = S.teams[k];
+    if(hasAssign(t)) m["teams/"+k] = {a:t.a.slice(), b:t.b.slice(), at:t.at||0, by:t.by||""};
+  });
+  var wins = {};
+  ["g1","g2","g4"].forEach(function(k){ if(S.wins[k]==="a" || S.wins[k]==="b") wins[k] = S.wins[k]; });
+  if(Object.keys(wins).length) m["state/wins"] = wins;
+  Object.keys(S.halli).forEach(function(id){
+    var r = Number(S.halli[id]);
+    if(r >= 1 && r <= 5) m["state/halli/"+id] = r;
+  });
   Object.keys(S.photo).forEach(function(id){
     var d = S.photo[id] || {};
     m["state/photo/"+id] = { r:d.rank||null, s:(d.score===undefined?null:d.score) };
@@ -1282,13 +1343,20 @@ function applyRemote(rootVal){
     var next = freshShared();
     next.check = S.check; next.tab = S.tab; next.me = S.me; next.toolsCustom = S.toolsCustom; next.adminOk = S.adminOk;
 
-    if("state/team1" in map) next.team1 = map["state/team1"] || null;
-    if("state/team2" in map) next.team2 = map["state/team2"] || null;
+    TEAM_KEYS.forEach(function(k){ if(("teams/"+k) in map) next.teams[k] = normAssign(map["teams/"+k]); });
+    if("state/wins" in map) next.wins = normWins(map["state/wins"]);
+    var hasLegacy = paths.some(function(p){
+      return p==="state/team1" || p==="state/team2" || p.indexOf("state/bingo")===0 ||
+             p.indexOf("state/halli/husband")===0 || p.indexOf("state/halli/wife")===0;
+    });
+    if(hasLegacy) setTimeout(purgeLegacy, 400);
     Object.keys(map).forEach(function(path){
       var v = map[path];
       var seg = path.split("/");
-      if(seg[0]==="state" && seg[1]==="halli" && seg[3]) next.halli[seg[2]][seg[3]] = Number(v);
-      else if(seg[0]==="state" && seg[1]==="bingo" && seg[3]) next.bingo[seg[2]][seg[3]] = Number(v);
+      if(seg[0]==="state" && seg[1]==="halli" && seg[2] && seg.length===3 && P[seg[2]]){
+        var rr = Number(v);
+        if(rr >= 1 && rr <= 5) next.halli[seg[2]] = rr;
+      }
       else if(seg[0]==="state" && seg[1]==="photo" && seg[2]) next.photo[seg[2]] = {rank:(v&&v.r)||null, score:(v&&v.s!==undefined?v.s:null)};
       else if(seg[0]==="state" && seg[1]==="bonus" && seg[2]) next.bonus[seg[2]] = Number(v);
       else if(path==="state/best" && v) next.best = {bonus:(v.bonus===2?2:3), ids:Array.isArray(v.ids)?v.ids:[]};
@@ -1318,6 +1386,16 @@ function applyRemote(rootVal){
     try{ lastPub = JSON.parse(JSON.stringify(flatten())); }catch(e){ lastPub = {}; }
     if(!hadMeta){ lastPub = {}; queuePush(); }   /* meta 마커가 없던 방이면 전체를 한 번 다시 올려 마커를 심어요 */
     renderAll();
+  });
+}
+
+/* 옛 고정 팀(소/돼지·남편/아내)·개인 빙고 잔여 노드 정리 (세션당 한 번) */
+var purgedLegacy = false;
+function purgeLegacy(){
+  if(purgedLegacy || !syncReady || !roomRef) return;
+  purgedLegacy = true;
+  ["state/team1","state/team2","state/bingo","state/halli/husband","state/halli/wife"].forEach(function(p){
+    try{ roomRef.child(p).remove(); }catch(e){}
   });
 }
 
@@ -1978,14 +2056,14 @@ function renderTools(){
     if(ta.value !== S.toolsCustom.items) ta.value = S.toolsCustom.items;
   }
   var cs = $("#coupleSep");
-  if(cs) cs.checked = !!S.toolsCustom.couples;
+  if(cs) cs.checked = S.toolsCustom.couples !== false;
   renderSharedTools();
 }
 function renderSharedTools(){
   var area = $("#pickArea");
   if(!area) return;
   var t = S.tools;
-  if(!t){ area.innerHTML = '<span class="ph">벌칙·술래·대표 뽑기! 버튼을 눌러주세요 🎁</span>'; renderSplit(null); return; }
+  if(!t){ area.innerHTML = '<span class="ph">벌칙·술래·대표 뽑기! 버튼을 눌러주세요 🎁</span>'; renderSplit(); return; }
   if(t.kind === "one"){
     area.innerHTML = '<div class="winkicker">당첨!</div><div class="rollname win">'+esc(t.value)+'</div>'+
       (t.by && P[t.by] ? '<div style="font-size:11.5px;color:#8a8482;margin-top:2px">'+esc(P[t.by].short)+' 뽑음</div>' : '');
@@ -1997,16 +2075,23 @@ function renderSharedTools(){
       '<div class="rollname win" style="font-size:46px">'+esc(t.value)+'</div>'+
       (t.ex ? '<div style="font-size:12.5px;color:#8a8482;margin-top:5px;line-height:1.5">사회자 참고 · '+esc(t.ex)+'</div>' : '');
   }
-  renderSplit(t.kind === "split" ? t : null);
+  renderSplit();
 }
-function renderSplit(t){
+function splitCols(title, t, la, lb){
+  return '<div class="splitwrap"><div class="splithead">'+esc(title)+'</div><div class="splitcols">'+
+    '<div class="splitcol a"><h5>🎅 '+esc(la)+'</h5>'+namesOf(t.a).split(" · ").join("<br>")+'</div>'+
+    '<div class="splitcol b"><h5>🤶 '+esc(lb)+'</h5>'+namesOf(t.b).split(" · ").join("<br>")+'</div></div>'+
+    (t.by && P[t.by] ? '<div class="sharednote">'+esc(P[t.by].short)+' 뽑음 · '+(t.at?hhmm(t.at):'')+'</div>' : '')+'</div>';
+}
+function renderSplit(){
   var area = $("#splitArea");
   if(!area) return;
-  if(!t || !t.a || !t.b){ area.innerHTML = ""; return; }
-  area.innerHTML = '<div class="splitcols">'+
-    '<div class="splitcol a"><h5>🎅 A조</h5>'+t.a.map(function(x){ return esc(x); }).join("<br>")+'</div>'+
-    '<div class="splitcol b"><h5>🤶 B조</h5>'+t.b.map(function(x){ return esc(x); }).join("<br>")+'</div></div>'+
-    '<div class="sharednote">📡 모든 폰에 같이 보여요'+(t.by && P[t.by] ? ' · '+esc(P[t.by].short)+' 섞음' : '')+'</div>';
+  var html = "";
+  if(hasAssign(S.teams.g1)) html += splitCols("1 가면 그릇치기", S.teams.g1, "A조", "B조");
+  if(hasAssign(S.teams.g2)) html += splitCols("2 종이컵 왈츠", S.teams.g2, "A조", "B조");
+  if(hasAssign(S.teams.g4)) html += splitCols("4 컵 세우기 빙고", S.teams.g4, "A조", "B조");
+  if(hasAssign(S.teams.halli)) html += splitCols("3 할리갈리", S.teams.halli, "1조", "2조");
+  area.innerHTML = html;
 }
 var pickTimer = null;
 function publishTools(obj){ S.tools = obj; save(); queuePush(); renderSharedTools(); }
@@ -2041,37 +2126,38 @@ function pickCho(){
   vibrate([12,30]);
   publishTools({ kind:"cho", value:pick.c, ex:pick.ex, at:Date.now(), by:S.me||"" });
 }
-function splitTeams(){
-  if(S.toolsCustom.pool === "custom"){
-    var list = shuffle(poolItems());
-    if(list.length < 2){ toast("항목을 2개 이상 적어주세요"); return; }
-    var half = Math.ceil(list.length/2);
-    publishTools({ kind:"split", a:list.slice(0,half), b:list.slice(half), at:Date.now(), by:S.me||"" });
-    return;
-  }
+/* 게임별 랜덤 조 뽑기 — 부부는 서로 다른 조 */
+function drawTeams(kind){
+  var couples = S.toolsCustom.couples !== false;
   var a = [], b = [];
-  if(S.toolsCustom.couples){
+  if(couples){
     shuffle(COUPLES).forEach(function(c){
-      var pair = Math.random()<0.5 ? [c[0],c[1]] : [c[1],c[0]];
-      a.push(P[pair[0]].name); b.push(P[pair[1]].name);
+      var pair = Math.random() < 0.5 ? [c[0],c[1]] : [c[1],c[0]];
+      a.push(pair[0]); b.push(pair[1]);
     });
   } else {
     var ids = shuffle(PEOPLE.map(function(p){ return p.id; }));
-    a = ids.slice(0,5).map(function(id){ return P[id].name; });
-    b = ids.slice(5).map(function(id){ return P[id].name; });
+    a = ids.slice(0,5); b = ids.slice(5);
   }
-  vibrate([12,30,12]);
-  publishTools({ kind:"split", a:shuffle(a), b:shuffle(b), at:Date.now(), by:S.me||"", couples:!!S.toolsCustom.couples });
+  S.teams[kind] = { a:shuffle(a), b:shuffle(b), at:Date.now(), by:S.me||"" };
+  /* 조가 바뀌면 그 게임의 승리 표시는 뜻이 없어져요 */
+  var cleared = false;
+  if(TEAM_GAMES.some(function(g){ return g.key === kind; }) && S.wins[kind]){ S.wins[kind] = null; cleared = true; }
+  save(); renderAll(); queuePush(); vibrate([12,30,12]);
+  var nm = kind === "halli" ? "할리갈리 1·2조" : (TEAM_GAMES.filter(function(g){ return g.key===kind; })[0] || {}).title;
+  toast((nm ? nm + " " : "") + "배정 완료! 모든 폰에 보여요 🎲" + (cleared ? " (승리 표시는 초기화)" : ""));
+}
+function requireDraw(kind){
+  requireAdmin(function(){ drawTeams(kind); });
 }
 $all("[data-pool]").forEach(function(b){
   b.addEventListener("click", function(){ S.toolsCustom.pool = b.getAttribute("data-pool"); save(); renderTools(); });
 });
 $("#customItems").addEventListener("input", function(){ S.toolsCustom.items = this.value; save(); });
-$("#coupleSep").addEventListener("change", function(){ S.toolsCustom.couples = this.checked; save(); });
+$("#coupleSep").addEventListener("change", function(){ S.toolsCustom.couples = this.checked; save(); renderTools(); });
 $("#pickOne").addEventListener("click", pickOne);
 $("#pickOrder").addEventListener("click", pickOrder);
 $("#pickCho").addEventListener("click", pickCho);
-$("#splitTeams").addEventListener("click", splitTeams);
 
 /* ══════════════════ 점수 계산 ══════════════════ */
 function photoBase(id){
@@ -2082,17 +2168,29 @@ function photoBase(id){
   return 0;
 }
 function bestBonus(id){ return S.best.ids.indexOf(id) >= 0 ? Number(S.best.bonus) : 0; }
+function sideOf(id, gkey){
+  var t = S.teams[gkey];
+  if(!hasAssign(t)) return null;
+  if(t.a.indexOf(id) >= 0) return "a";
+  if(t.b.indexOf(id) >= 0) return "b";
+  return null;
+}
 function compute(){
   var sc = {};
   PEOPLE.forEach(function(p){ sc[p.id] = 0; });
-  if(S.team1) PEOPLE.forEach(function(p){ sc[p.id] += (p.team === S.team1 ? 3 : 1); });
-  if(S.team2) PEOPLE.forEach(function(p){ sc[p.id] += (p.side === S.team2 ? 3 : 1); });
-  ["halli","bingo"].forEach(function(kind){
-    var table = kind === "halli" ? HALLI_PTS : BINGO_PTS;
-    Object.keys(S[kind].husband || {}).forEach(function(id){ var r = Number(S[kind].husband[id]); if(table[r-1]) sc[id] += table[r-1]; });
-    Object.keys(S[kind].wife || {}).forEach(function(id){ var r = Number(S[kind].wife[id]); if(table[r-1]) sc[id] += table[r-1]; });
-    Object.keys(S[kind].cow || {}).forEach(function(id){ var r = Number(S[kind].cow[id]); if(table[r-1]) sc[id] += table[r-1]; });
-    Object.keys(S[kind].pig || {}).forEach(function(id){ var r = Number(S[kind].pig[id]); if(table[r-1]) sc[id] += table[r-1]; });
+  TEAM_GAMES.forEach(function(g){
+    var w = S.wins[g.key];
+    if(w !== "a" && w !== "b") return;
+    if(!hasAssign(S.teams[g.key])) return;
+    PEOPLE.forEach(function(p){
+      var side = sideOf(p.id, g.key);
+      if(!side) return;
+      sc[p.id] += (side === w) ? 3 : 1;
+    });
+  });
+  Object.keys(S.halli).forEach(function(id){
+    var r = Number(S.halli[id]);
+    if(HALLI_PTS[r-1] && sc[id] !== undefined) sc[id] += HALLI_PTS[r-1];
   });
   PEOPLE.forEach(function(p){
     sc[p.id] += photoBase(p.id) + bestBonus(p.id) + (Number(S.bonus[p.id])||0);
@@ -2101,12 +2199,15 @@ function compute(){
 }
 function breakdown(id){
   var parts = [];
-  if(S.team1) parts.push("팀전1 " + (P[id].team===S.team1?"+3":"+1"));
-  if(S.team2) parts.push("팀전2 " + (P[id].side===S.team2?"+3":"+1"));
-  var hr = S.halli.husband[id] || S.halli.wife[id];
-  if(hr) parts.push("할리갈리 +"+HALLI_PTS[Number(hr)-1]);
-  var br = S.bingo.cow[id] || S.bingo.pig[id];
-  if(br) parts.push("빙고 +"+BINGO_PTS[Number(br)-1]);
+  TEAM_GAMES.forEach(function(g){
+    var w = S.wins[g.key];
+    if(w !== "a" && w !== "b") return;
+    var side = sideOf(id, g.key);
+    if(!side) return;
+    parts.push(g.short + " " + (side === w ? "+3" : "+1"));
+  });
+  var hr = Number(S.halli[id]) || 0;
+  if(hr && HALLI_PTS[hr-1]) parts.push("할리갈리 +"+HALLI_PTS[hr-1]);
   var pb = photoBase(id);
   if(pb) parts.push("사진 "+(pb>0?"+":"")+pb);
   var bb = bestBonus(id);
@@ -2197,39 +2298,51 @@ function renderPrizes(){
 }
 
 /* ══════════════════ 입력: 팀전 ══════════════════ */
-function teamBlock(key, title, sub, opts){
-  var cur = S[key];
-  var html = '<div class="tghead">'+esc(title)+' <span class="sub">'+esc(sub)+'</span></div><div class="vs-row">';
-  opts.forEach(function(o){
-    var win = (cur === o.key);
-    html += '<button type="button" class="vs-btn'+(win?" win":"")+'" data-teamkey="'+key+'" data-teamval="'+o.key+'">'+
-      '<span class="vs-name">'+esc(o.name)+'</span>'+
-      '<span class="vs-mem">'+esc(members(GROUPS[o.key]))+'</span>'+
-      '<span class="vs-pts">'+(win ? "👑 승리 +3" : (cur ? "+1" : "승리팀!"))+'</span></button>';
+function namesOf(ids){ return (ids||[]).map(function(id){ return P[id] ? P[id].short : id; }).join(" · "); }
+function teamWinBlock(g){
+  var t = S.teams[g.key], w = S.wins[g.key];
+  var html = '<div class="tghead">'+esc(g.title)+'</div>';
+  if(!hasAssign(t)){
+    return '<div class="teamgame">'+html+
+      '<div class="teamempty">이 게임 조가 아직 없어요.<br>게임 안내 카드의 <b>🎲 조 나누기</b>로 먼저 뽑아주세요.</div>'+
+      '<button type="button" class="drawbtn" data-draw="'+g.key+'">🎲 조 나누기 (부부 분리)</button></div>';
+  }
+  html += '<div class="vs-row">';
+  ["a","b"].forEach(function(k){
+    var win = (w === k);
+    html += '<button type="button" class="vs-btn'+(win?" win":"")+'" data-win="'+g.key+'" data-winval="'+k+'">'+
+      '<span class="vs-name">🏆 '+TEAM_LABEL[k].label+' 승리</span>'+
+      '<span class="vs-mem">'+esc(namesOf(t[k]))+'</span>'+
+      '<span class="vs-pts">'+(win ? "👑 승리 +3" : (w ? "+1" : "승리팀!"))+'</span></button>';
   });
   html += '</div>';
-  html += cur ? '<button type="button" class="undo" data-clear="'+key+'">선택 취소</button>'
-              : '<span class="hint" style="margin-top:6px">이긴 팀을 누르면 5명 점수가 한 번에 들어가요 (이긴 팀 +3 / 진 팀 +1)</span>';
+  html += w ? '<button type="button" class="undo" data-winclear="'+g.key+'">선택 취소</button>'
+            : '<span class="hint" style="margin-top:6px">이긴 조를 누르면 5명 점수가 한 번에 들어가요 (이긴 조 +3 / 진 조 +1)</span>';
   return '<div class="teamgame">'+html+'</div>';
 }
 function renderTeamInputs(){
   var box = $("#teamInputs");
   if(!box) return;
-  box.innerHTML = teamBlock("team1","팀전 1 · 소 띠 vs 돼지 띠","가면 그릇치기",[{key:"cow",name:"소 띠 팀"},{key:"pig",name:"돼지 띠 팀"}]) +
-                  teamBlock("team2","팀전 2 · 남편 vs 아내","종이컵 왈츠",[{key:"husband",name:"남편 팀"},{key:"wife",name:"아내 팀"}]);
+  box.innerHTML = TEAM_GAMES.map(teamWinBlock).join("");
   updateCounts();
 }
 
-/* ══════════════════ 입력: 등수 ══════════════════ */
-function rankBlock(kind, gkey, pts){
-  var map = S[kind][gkey], ids = GROUPS[gkey], gl = GROUP_LABEL[gkey];
-  var done = Object.keys(map).filter(function(id){ return Number(map[id]) >= 1; }).length;
-  var html = '<div class="rankblock"><div class="rbhead"><span class="chip '+gl.cls+'">'+gl.label+'</span>'+
+/* ══════════════════ 입력: 등수 (할리갈리) ══════════════════ */
+function halliGroups(){
+  if(hasAssign(S.teams.halli)) return {a:S.teams.halli.a, b:S.teams.halli.b, own:true};
+  var g = TEAM_GAMES.filter(function(x){ return hasAssign(S.teams[x.key]); })[0];
+  if(g) return {a:S.teams[g.key].a, b:S.teams[g.key].b, own:false, from:g.short};
+  return null;
+}
+function rankBlock(gkey, ids, label, cls, pts){
+  var map = S.halli;
+  var done = ids.filter(function(id){ return Number(map[id]) >= 1; }).length;
+  var html = '<div class="rankblock"><div class="rbhead"><span class="chip '+cls+'">'+esc(label)+'</span>'+
     '<span class="sp"></span><span style="font-size:12px;color:#8a8482">'+done+'/5</span></div>';
   for(var r=1;r<=5;r++){
     var cur = "";
-    Object.keys(map).forEach(function(id){ if(Number(map[id]) === r) cur = id; });
-    html += '<div class="rline"><span class="rn">'+r+'등</span><select data-rk="'+kind+'" data-g="'+gkey+'" data-r="'+r+'">'+
+    ids.forEach(function(id){ if(Number(map[id]) === r) cur = id; });
+    html += '<div class="rline"><span class="rn">'+r+'등</span><select data-rk="halli" data-g="'+gkey+'" data-r="'+r+'">'+
       '<option value="">— 선택 —</option>'+ids.map(function(id){
         return '<option value="'+id+'"'+(cur===id?" selected":"")+'>'+esc(P[id].name)+'</option>';
       }).join("")+'</select><span class="rp">+'+pts[r-1]+'</span></div>';
@@ -2237,21 +2350,31 @@ function rankBlock(kind, gkey, pts){
   return html+'</div>';
 }
 function renderRankInputs(){
-  var h = $("#halliInputs"), b = $("#bingoInputs");
-  if(h) h.innerHTML = rankBlock("halli","husband",HALLI_PTS) + rankBlock("halli","wife",HALLI_PTS);
-  if(b) b.innerHTML = rankBlock("bingo","cow",BINGO_PTS) + rankBlock("bingo","pig",BINGO_PTS);
+  var h = $("#halliInputs");
+  if(!h) return;
+  var g = halliGroups();
+  if(!g){
+    h.innerHTML = '<div class="teamempty">할리갈리 조가 아직 없어요.<br>게임 안내 카드나 룰렛 탭 MC 도구에서 <b>🔔 할리갈리 1·2조 뽑기</b>를 눌러주세요.</div>'+
+      '<button type="button" class="drawbtn" data-draw="halli">🔔 할리갈리 1·2조 뽑기</button>';
+    updateCounts(); return;
+  }
+  h.innerHTML = rankBlock("a", g.a, "1조 (A)", "solid-red", HALLI_PTS) +
+                rankBlock("b", g.b, "2조 (B)", "solid-green", HALLI_PTS) +
+                '<span class="hint">'+(g.own ? "할리갈리 전용 조로 뽑혔어요" : "지금은 <b>"+esc(g.from)+"</b> 게임 조를 그대로 쓴 조예요")+' · 따로 섞으려면 <b>🔔 할리갈리 1·2조 뽑기</b></span>';
   updateCounts();
 }
-function assignRank(kind, gkey, r, id){
-  var map = S[kind][gkey];
+function assignRank(gkey, r, id){
+  var g = halliGroups();
+  if(!g) return;
+  var ids = (gkey === "b") ? g.b : g.a;
   if(!id){
-    Object.keys(map).forEach(function(k){ if(Number(map[k]) === r) delete map[k]; });
+    ids.forEach(function(k){ if(Number(S.halli[k]) === r) delete S.halli[k]; });
   } else {
-    var oldRank = map[id] ? Number(map[id]) : 0;
+    var oldRank = S.halli[id] ? Number(S.halli[id]) : 0;
     var occupant = null;
-    Object.keys(map).forEach(function(k){ if(Number(map[k]) === r && k !== id) occupant = k; });
-    if(occupant){ if(oldRank) map[occupant] = oldRank; else delete map[occupant]; }
-    map[id] = r;
+    ids.forEach(function(k){ if(Number(S.halli[k]) === r && k !== id) occupant = k; });
+    if(occupant){ if(oldRank) S.halli[occupant] = oldRank; else delete S.halli[occupant]; }
+    S.halli[id] = r;
   }
   save(); renderRankInputs(); renderBoard(); queuePush();
 }
@@ -2313,14 +2436,55 @@ function renderBonusInputs(){
   updateCounts();
 }
 
+/* ══════════════════ 업데이트: 게임별 조 표시 ══════════════════ */
+function gameTeamsHTML(key){
+  var t = S.teams[key];
+  var isHalli = (key === "halli");
+  var la = isHalli ? "1조" : "A조", lb = isHalli ? "2조" : "B조";
+  var btn = isHalli ? "🎲 할리갈리 1·2조 뽑기 (부부 분리)" : "🎲 조 나누기 (부부 분리)";
+  if(!hasAssign(t)){
+    return '<div class="row"><span class="lbl">'+(isHalli?"조":"팀")+'</span>'+
+        '<span style="font-size:13.5px;color:#7a7472">🎲 '+(isHalli?"1·2조 뽑기":"조 나누기")+'를 누르면 '+la+'·'+lb+'가 배정돼요 (부부 분리)</span></div>'+
+      '<div class="row"><span class="lbl"></span><button type="button" class="gdrawbtn" data-draw="'+key+'">'+btn+'</button></div>';
+  }
+  return '<div class="row"><span class="lbl">'+(isHalli?"조":"팀")+'</span><span class="chip solid-red">'+la+'</span><span style="font-size:14px">'+esc(namesOf(t.a))+'</span></div>'+
+    '<div class="row"><span class="lbl"></span><span class="chip solid-green">'+lb+'</span><span style="font-size:14px">'+esc(namesOf(t.b))+'</span></div>'+
+    '<div class="row"><span class="lbl"></span><button type="button" class="minibtn" data-draw="'+key+'">🔁 다시 뽑기</button>'+
+      '<span style="font-size:12px;color:#8a8482;padding:4px 0">'+(t.at?"🕐 "+hhmm(t.at):"")+(t.by&&P[t.by]?" · "+esc(P[t.by].short)+" 뽑음":"")+'</span></div>';
+}
+function renderGameTeams(){
+  var map = {g1:"g1", g2:"g2", g3:"halli", g4:"g4"};
+  Object.keys(map).forEach(function(id){
+    var box = $("#"+id+"Teams");
+    if(box) box.innerHTML = gameTeamsHTML(map[id]);
+  });
+  renderTeamSummary();
+}
+function renderTeamSummary(){
+  var box = $("#teamLive");
+  if(!box) return;
+  var html = TEAM_GAMES.map(function(g){
+    var t = S.teams[g.key];
+    return '<div class="tsrow"><b>'+esc(g.title.replace("팀전 ",""))+'</b>'+
+      (hasAssign(t)
+        ? '<span class="tsnames"><span class="chip solid-red">A조</span> '+esc(namesOf(t.a))+'<br><span class="chip solid-green">B조</span> '+esc(namesOf(t.b))+'</span>'
+        : '<span class="tsnames muted">아직 안 뽑았어요</span>')+'</div>';
+  }).join("");
+  var h = S.teams.halli;
+  var anyTeam = TEAM_GAMES.some(function(g){ return hasAssign(S.teams[g.key]); });
+  html += '<div class="tsrow"><b>3 할리갈리</b>'+
+    (hasAssign(h)
+      ? '<span class="tsnames"><span class="chip solid-red">1조</span> '+esc(namesOf(h.a))+'<br><span class="chip solid-green">2조</span> '+esc(namesOf(h.b))+'</span>'
+      : '<span class="tsnames muted">'+(anyTeam ? "위 팀 조를 그대로 사용 · 따로 뽑을 수도 있어요" : "아직 안 뽑았어요")+'</span>')+'</div>';
+  box.innerHTML = html + '<span class="hint" style="margin-top:4px">각 게임 카드 안의 <b>🎲 조 나누기</b>로 그 게임 조를 뽑아요 (관리자 PIN 필요).</span>';
+}
+
 /* ══════════════════ 개수 표시 ══════════════════ */
 function updateCounts(){
-  var t = (S.team1?1:0)+(S.team2?1:0);
-  setCnt("team", t+"/2", t===0);
-  var h = Object.keys(S.halli.husband).length + Object.keys(S.halli.wife).length;
+  var t = TEAM_GAMES.filter(function(g){ return S.wins[g.key]==="a" || S.wins[g.key]==="b"; }).length;
+  setCnt("team", t+"/3", t===0);
+  var h = Object.keys(S.halli||{}).length;
   setCnt("halli", h+"/10", h===0);
-  var b = Object.keys(S.bingo.cow).length + Object.keys(S.bingo.pig).length;
-  setCnt("bingo", b+"/10", b===0);
   var ph = PEOPLE.filter(function(p){
     var d = S.photo[p.id];
     return d && (d.rank || (d.score !== null && d.score !== undefined && d.score !== ""));
@@ -2450,7 +2614,7 @@ var OLD_SEED_NAMES = {
   "seed-cola":"콜라·사이다 2L", "seed-snack":"감자칩·초코", "seed-baby":"아기 간식·물티슈",
   "seed-veg":"쌈채소·마늘", "seed-water":"삼다수 500ml (게임용)", "seed-string":"노끈·허리끈", "seed-bowl":"일회용 그릇"
 };
-var SHOP_SEED_VER = 2;
+var SHOP_SEED_VER = 3;
 /* 기본 항목(seed id)을 새 이름·분류·수량/단위로 맞춰요.
    사용자가 ✏️로 고친 항목(ed 있음)은 건드리지 않아요. */
 function normalizeSeedItems(){
@@ -2981,16 +3145,18 @@ document.addEventListener("click", function(e){
     setTimeout(function(){ toast("티맵 앱이 안 열리면 설치 후 다시 눌러주세요"); }, 1200);
     return;
   }
-  var teamBtn = t.closest("[data-teamkey]");
-  if(teamBtn){
-    var key = teamBtn.getAttribute("data-teamkey");
-    var val = teamBtn.getAttribute("data-teamval");
-    S[key] = (S[key] === val) ? null : val;
-    save(); renderTeamInputs(); renderBoard(); queuePush();
+  var winBtn = t.closest("[data-win]");
+  if(winBtn){
+    var wgk = winBtn.getAttribute("data-win");
+    var wv = winBtn.getAttribute("data-winval");
+    S.wins[wgk] = (S.wins[wgk] === wv) ? null : wv;
+    save(); renderTeamInputs(); renderBoard(); queuePush(); vibrate(8);
     return;
   }
-  var clr = t.closest("[data-clear]");
-  if(clr){ S[clr.getAttribute("data-clear")] = null; save(); renderTeamInputs(); renderBoard(); queuePush(); return; }
+  var winClr = t.closest("[data-winclear]");
+  if(winClr){ S.wins[winClr.getAttribute("data-winclear")] = null; save(); renderTeamInputs(); renderBoard(); queuePush(); return; }
+  var drawBtn = t.closest("[data-draw]");
+  if(drawBtn){ requireDraw(drawBtn.getAttribute("data-draw")); return; }
 
   var bb = t.closest("[data-best]");
   if(bb){ S.best.bonus = Number(bb.getAttribute("data-best")) === 2 ? 2 : 3; save(); renderBestInputs(); renderBoard(); queuePush(); return; }
@@ -3047,7 +3213,7 @@ document.addEventListener("change", function(e){
   var t = e.target;
   if(!t || !t.getAttribute) return;
   if(t.hasAttribute("data-rk")){
-    assignRank(t.getAttribute("data-rk"), t.getAttribute("data-g"), Number(t.getAttribute("data-r")), t.value);
+    assignRank(t.getAttribute("data-g"), Number(t.getAttribute("data-r")), t.value);
     return;
   }
   if(t.hasAttribute("data-ph-rank")){
@@ -3112,7 +3278,7 @@ $("#resetBtn").addEventListener("click", function(){
   var m = $("#modal");
   m.className = "modal";
   m.innerHTML = '<span class="big">🧹</span><div class="mode">점수를 모두 지울까요?</div>'+
-    '<p class="msub">팀전·할리갈리·빙고·사진·보너스 점수가 전부 초기화돼요.<br>공지와 장보기는 그대로 남아요.</p>'+
+    '<p class="msub">팀전·할리갈리·사진·보너스 점수와 <b>게임별 조 배정</b>까지 전부 초기화돼요.<br>공지와 장보기는 그대로 남아요.</p>'+
     '<div class="btns"><button type="button" data-act="no">취소</button><button type="button" class="primary" data-act="yes">초기화</button></div>';
   $("#overlay").classList.add("on");
   m.querySelector('[data-act="no"]').addEventListener("click", closeModal);
@@ -3134,6 +3300,7 @@ function renderAll(){
   renderNotice();
   renderLockBar();
   renderBoard();
+  renderGameTeams();
   renderTeamInputs();
   renderRankInputs();
   renderPhotoInputs();
