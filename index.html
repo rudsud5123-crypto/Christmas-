@@ -1281,7 +1281,6 @@ function applyRemote(rootVal){
         if(g && (g.t || g.p) && (Date.now() - (Number(g.at)||0) < 180000)) next.guestbook[id] = g;
       });
     }
-    });
 
     S = Object.assign(next, {});
     save();
@@ -2298,7 +2297,7 @@ function renderShop(){
               '<select data-secat="'+x.id+'" aria-label="분류">'+catOptions(shopDraft.cat)+'</select>'+
             '</div>'+
             '<input class="se-in" type="text" maxlength="40" data-sememo="'+x.id+'" value="'+esc(shopDraft.memo)+'" placeholder="담당·메모 (선택) 예: 윤민이 사오기" autocomplete="off">'+
-            '<div class="se-btns"><button type="button" data-secancel="'+x.id+'">취소</button>'++
+            '<div class="se-btns"><button type="button" data-secancel="'+x.id+'">취소</button>'+
             '<button type="button" class="pri" data-sesave="'+x.id+'">저장</button></div>'+
             '</div></div>';
         }
@@ -2425,6 +2424,25 @@ function migrateShopOnce(){
   });
   try{ localStorage.setItem(flagKey, "1"); }catch(e){}
   if(changed){ save(); queuePush(); }
+}
+/* 첫 버전의 기본 장보기 11개가 하나라도 빠져 있으면 한 번 채워요 */
+function restoreSeedsOnce(){
+  var flagKey = "xmasParty.seedRestore.v1";
+  try{ if(localStorage.getItem(flagKey)) return; }catch(e){}
+  var added = false;
+  SEED_SHOP.forEach(function(x){
+    if(S.shop[x.id]) return;
+    var dup = Object.keys(S.shop).some(function(id){
+      var it = S.shop[id] || {};
+      var nm = String(it.name||"").replace(/\s+/g,"");
+      return nm && nm.indexOf(String(x.name).replace(/\s+/g,"")) === 0;
+    });
+    if(dup) return;
+    S.shop[x.id] = { name:x.name, cat:x.cat, qty:x.qty, unit:x.unit, checked:false, at:Date.now(), by:"seed" };
+    added = true;
+  });
+  try{ localStorage.setItem(flagKey, "1"); }catch(e){}
+  if(added){ save(); queuePush(); }
 }
 
 /* ══════════════════ 방명록 ══════════════════ */
@@ -3049,6 +3067,7 @@ renderModeList();
 seedShopIfEmpty();
 seedExtrasOnce();
 migrateShopOnce();
+restoreSeedsOnce();
 renderAll();
 showTab(S.tab || "guide");
 startSync();
