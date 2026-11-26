@@ -960,7 +960,7 @@ var ROOM_TOKEN = (function(){
   return (m ? m[1] : DEFAULT_TOKEN).toLowerCase();
 })();
 var ROOM_ID = "christmas2026-" + ROOM_TOKEN.replace(/[^a-z0-9]/g,"").slice(0,24);
-var CK = null, roomRef = null, syncReady = false, applyToken = 0, pushTimer = null;
+var CK = null, roomRef = null, syncReady = false, applyToken = 0, pushTimer = null, lastEdit = 0;
 var lastPub = {};
 
 function b64(buf){
@@ -1033,8 +1033,9 @@ function flatten(){
 
 function queuePush(){
   if(!syncReady) return;
+  lastEdit = Date.now();
   clearTimeout(pushTimer);
-  pushTimer = setTimeout(pushNow, 260);
+  pushTimer = setTimeout(pushNow, 300);
 }
 function pushNow(){
   if(!syncReady || !CK) return;
@@ -1053,7 +1054,14 @@ function pushNow(){
     if(!(k in cur)) jobs.push(roomRef.child(k).remove());
   });
   lastPub = cur;
-  Promise.all(jobs).catch(function(){});
+  Promise.all(jobs).then(function(){
+    if(jobs.length) setSyncChip("on", "실시간 연결됨");
+  }).catch(function(err){
+    window.__syncErr = String((err && err.message) || err);
+    setSyncChip("err", "동기화 오류 · 다시 시도 중");
+    lastPub = {};
+    setTimeout(function(){ queuePush(); }, 2500);
+  });
 }
 
 /* 원격 스냅샷 → 로컬 상태 */
@@ -1131,6 +1139,11 @@ function startSync(){
         return;
       }
       syncReady = true;
+      if(Date.now() - lastEdit < 700){
+        /* 방금 내가 고친 게 아직 안 올라갔을 수 있어요. 잠시 뒤 다시 읽어요 */
+        setTimeout(function(){ roomRef.once("value", function(s){ if(s.val()) applyRemote(s.val()); }); }, 1100);
+        return;
+      }
       applyRemote(val);
     }, function(err){
       setSyncChip("err","동기화 오류 · 혼자 사용 중");
@@ -1142,6 +1155,8 @@ function startSync(){
         return roomRef.set({v:1, iv:"AAAAAAAAAAAAAAAA", ct:"AAAAAAAAAAAAAAAAAAAA", ts:Date.now(), by:"init", app:"xmas-party"});
       }
     }).catch(function(){});
+    /* 15초마다 안전하게 한 번 더 밀어 넣어요 (누락 방지) */
+    setInterval(function(){ if(syncReady) pushNow(); }, 15000);
   }).catch(function(){
     setSyncChip("err","동기화 준비 실패 · 혼자 사용 중");
   });
