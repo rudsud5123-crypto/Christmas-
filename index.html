@@ -528,7 +528,8 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
 .photoView img{max-width:94vw;max-height:78vh;border:3px solid #fff;border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,.5)}
 .photoView .pvclose{color:#fff;font-size:14px;font-weight:700;background:rgba(255,255,255,.16);border:2px solid rgba(255,255,255,.6);border-radius:999px;padding:6px 16px;cursor:pointer}
 .pcard .pinfo{min-width:0;flex:1}
-.pcard .pmotto{display:inline-block;max-width:100%;margin:1px 0;background:var(--gold);color:#4a3200;border:1.5px solid var(--ink);border-radius:999px;padding:0 7px;font-size:11.5px;font-weight:700;line-height:1.6;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pcard .psub{font-size:11px;color:#9b948f;font-weight:400}
+.pcard .pmotto{display:inline-block;max-width:100%;margin-top:2px;background:var(--cream);color:var(--red);border:1.5px dashed #d6cbb9;border-radius:999px;padding:0 7px;font-size:11.5px;font-weight:700;line-height:1.6;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 @media (max-width:400px){ 
   body{font-size:16.5px}
@@ -1618,11 +1619,12 @@ function renderPeople(){
   if(!box) return;
   box.innerHTML = PEOPLE.map(function(p){
     var pr = S.profiles[p.id] || {};
+    var hasNick = !!pr.nick;
     var mo = String(pr.motto || "").slice(0,5);
     return '<div class="pcard">'+avatarHTML(p.id)+
-      '<div class="pinfo"><div class="pn">'+esc(nickOf(p.id))+'</div>'+
-      (mo ? '<div class="pmotto">“'+esc(mo)+'”</div>' : '')+
-      '<div class="ps">'+esc(subOf(p.id))+'</div></div></div>';
+      '<div class="pinfo"><div class="pn">'+esc(nickOf(p.id))+
+        (hasNick ? ' <span class="psub">('+esc(p.short)+')</span>' : '')+'</div>'+
+      (mo ? '<div class="pmotto">'+esc(mo)+'</div>' : '')+'</div></div>';
   }).join("");
 }
 
