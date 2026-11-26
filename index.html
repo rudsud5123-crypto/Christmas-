@@ -206,6 +206,11 @@ h3{font-size:18px;margin:0;line-height:1.25}
 .notice{background:var(--cream);border:2px dashed #d6cbb9;border-radius:14px;padding:11px 12px;font-size:15.5px;line-height:1.65;white-space:pre-wrap;word-break:break-word}
 .notice.empty{color:#9b948f;font-size:14.5px}
 .notice-meta{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:12.5px;color:#8a8482}
+.noticelist{display:flex;flex-direction:column;gap:8px}
+.noticecard{background:var(--cream);border:2px dashed #d6cbb9;border-radius:14px;padding:10px 12px}
+.noticetext{font-size:15.5px;line-height:1.65;white-space:pre-wrap;word-break:break-word}
+.noticemeta{display:flex;align-items:center;gap:6px;margin-top:7px;font-size:12px;color:#8a8482}
+.noticedel{border:0;background:transparent;color:var(--red);font-size:12px;font-weight:700;text-decoration:underline;cursor:pointer;padding:0}
 .notice-meta .sp{flex:1}
 .minibtn{border:2px solid var(--ink);background:#fff;border-radius:999px;padding:3px 10px;font-size:12.5px;font-weight:700;cursor:pointer}
 .minibtn.pri{background:var(--red);color:#fff;border-color:var(--red)}
@@ -892,7 +897,7 @@ function freshShared(){
     best:{bonus:3, ids:[]},
     bonus:{},
     wheel:{history:[], last:null},
-    notice:{text:"", place:"", at:0, by:""},
+    notices:{},
     lock:{score:false, notice:true},
     shop:{},
     tools:null,
@@ -926,8 +931,10 @@ function load(){
     if(raw.toolsCustom) f.toolsCustom = Object.assign({pool:"people",items:"",couples:true,cat:"전체"}, raw.toolsCustom);
     if(!f.wheel || !Array.isArray(f.wheel.history)) f.wheel = {history:[], last:null};
     if(!f.lock) f.lock = {score:false, notice:true};
-    if(!f.notice) f.notice = {text:"", place:"", at:0, by:""};
-    if(f.notice && f.notice.place === undefined) f.notice.place = "";
+    if(!f.notices || typeof f.notices !== "object") f.notices = {};
+    if(raw.notice && raw.notice.text && !Object.keys(f.notices).length){
+      f.notices["n-legacy"] = {text:raw.notice.text, place:raw.notice.place||"", at:raw.notice.at||Date.now(), by:raw.notice.by||""};
+    }
     if(!f.best || !Array.isArray(f.best.ids)) f.best = {bonus:3, ids:[]};
   }catch(e){ return fresh(); }
   return f;
@@ -1012,7 +1019,7 @@ function flatten(){
   m["state/best"] = { bonus:S.best.bonus, ids:S.best.ids.slice() };
   Object.keys(S.bonus).forEach(function(id){ if(Number(S.bonus[id])) m["state/bonus/"+id] = Number(S.bonus[id]); });
   m["wheel"] = { history:(S.wheel.history||[]).slice(0,20), last:S.wheel.last||null };
-  m["notice"] = S.notice;
+  Object.keys(S.notices).forEach(function(id){ m["notice/"+id] = S.notices[id]; });
   m["lock"] = S.lock;
   m["prizes"] = S.prizes;
   Object.keys(S.shop).forEach(function(id){ m["shop/"+id] = S.shop[id]; });
@@ -1085,7 +1092,7 @@ function applyRemote(rootVal){
       else if(seg[0]==="state" && seg[1]==="bonus" && seg[2]) next.bonus[seg[2]] = Number(v);
       else if(path==="state/best" && v) next.best = {bonus:(v.bonus===2?2:3), ids:Array.isArray(v.ids)?v.ids:[]};
       else if(path==="wheel" && v) next.wheel = {history:Array.isArray(v.history)?v.history:[], last:v.last||null};
-      else if(path==="notice" && v) next.notice = {text:v.text||"", place:v.place||"", at:v.at||0, by:v.by||""};
+      else if(seg[0]==="notice" && seg[1] && v) next.notices[seg[1]] = {text:v.text||"", place:v.place||"", at:v.at||0, by:v.by||""};
       else if(path==="lock" && v) next.lock = {score:!!v.score, notice:!!v.notice};
       else if(path==="prizes" && v) next.prizes = {p1:v.p1||"", p2:v.p2||"", p3:v.p3||"", open:!!v.open};
       else if(path==="tools" && v) next.tools = v;
@@ -1422,17 +1429,28 @@ function renderPeople(){
 
 /* ══════════════════ 공지 + 잠금 ══════════════════ */
 function renderNotice(){
-  var body = $("#noticeBody"), meta = $("#noticeMeta"), badge = $("#noticeBadge"), adminBox = $("#noticeAdmin");
+  var body = $("#noticeBody"), badge = $("#noticeBadge"), adminBox = $("#noticeAdmin");
   if(!body) return;
-  if(S.notice && S.notice.text){
-    body.className = "notice";
-    body.innerHTML = esc(S.notice.text).replace(/\n/g,"<br>") + (S.notice.place ? noticeNavHTML(S.notice.place) : "");
-    meta.innerHTML = "🕊 "+(S.notice.at?hhmm(S.notice.at):"")+(S.notice.by?" · "+esc(nickOf(S.notice.by)):"");
-  } else {
+  var list = Object.keys(S.notices || {}).map(function(id){
+    var n = S.notices[id] || {};
+    return {id:id, text:n.text||"", place:n.place||"", at:n.at||0, by:n.by||""};
+  }).filter(function(n){ return n.text || n.place; }).sort(function(a,b){ return b.at - a.at; });
+
+  if(!list.length){
     body.className = "notice empty";
-    body.textContent = "아직 공지가 없어요. 관리자(경녕·한길)가 남길 수 있어요 📢";
-    meta.textContent = "";
+    body.innerHTML = "아직 공지가 없어요. 관리자(경녕·한길)가 남길 수 있어요 📢";
+  } else {
+    body.className = "noticelist";
+    body.innerHTML = list.map(function(n){
+      return '<div class="noticecard">'+
+        '<div class="noticetext">'+esc(n.text).replace(/\n/g,"<br>")+'</div>'+
+        (n.place ? noticeNavHTML(n.place) : '')+
+        '<div class="noticemeta"><span>🕊 '+(n.at?hhmm(n.at):'')+(n.by?' · '+esc(nickOf(n.by)):'')+'</span><span class="sp" style="flex:1"></span>'+
+        (isAdminPerson() ? '<button class="noticedel" type="button" data-noticedel="'+n.id+'">삭제</button>' : '')+
+        '</div></div>';
+    }).join("");
   }
+
   badge.textContent = S.lock.notice ? "🔒 관리자 작성" : "📢 누구나 작성";
   var canWrite = !S.lock.notice || isAdmin();
   adminBox.innerHTML = "";
@@ -1440,7 +1458,7 @@ function renderNotice(){
     var b = document.createElement("button");
     b.className = "minibtn pri";
     b.type = "button";
-    b.textContent = S.notice && S.notice.text ? "✏️ 공지 수정" : "✏️ 공지 쓰기";
+    b.textContent = "✏️ 공지 쓰기";
     b.addEventListener("click", function(){
       if(S.lock.notice && !isAdmin()){ requireAdmin(noticeEditor); return; }
       noticeEditor();
@@ -1448,7 +1466,7 @@ function renderNotice(){
     adminBox.appendChild(b);
   } else if(isAdminPerson()) {
     var bb = document.createElement("button");
-    bb.className = "minibtn";
+    bb.className = "minibtn pri";
     bb.type = "button";
     bb.textContent = "🔐 공지 쓰기 (PIN)";
     bb.addEventListener("click", function(){ requireAdmin(noticeEditor); });
@@ -1480,10 +1498,10 @@ function noticeNavHTML(place){
 function noticeEditor(){
   var m = $("#modal");
   m.className = "modal";
-  m.innerHTML = '<h3>📢 공지사항</h3><p class="msub">모두에게 보이는 공지예요</p>'+
-    '<textarea id="noticeInput" style="width:100%;min-height:110px;border:2px solid #1B1B1B;border-radius:12px;padding:9px;font-family:inherit;font-size:15.5px;line-height:1.6;resize:vertical" placeholder="공지 내용">'+esc(S.notice.text||"")+'</textarea>'+
+  m.innerHTML = '<h3>📢 새 공지</h3><p class="msub">여러 개 올릴 수 있어요. 모두에게 보여요</p>'+
+    '<textarea id="noticeInput" style="width:100%;min-height:110px;border:2px solid #1B1B1B;border-radius:12px;padding:9px;font-family:inherit;font-size:15.5px;line-height:1.6;resize:vertical" placeholder="공지 내용"></textarea>'+
     '<div class="fieldrow" style="margin-top:10px"><label>장소/주소 (선택)</label>'+
-    '<input type="text" id="noticePlace" maxlength="60" placeholder="가게 이름 또는 주소 (예: 경주 보문단지 스타벅스)" value="'+esc(S.notice.place||"")+'"></div>'+
+    '<input type="text" id="noticePlace" maxlength="60" placeholder="가게 이름 또는 주소 (예: 경주 보문단지 스타벅스)" value=""></div>'+
     '<div class="hint" style="text-align:left;margin:-4px 0 8px">가게 이름만 적어도 지도·내비로 찾아가요</div>'+
     '<div class="btns"><button type="button" data-act="close">닫기</button>'+
     '<button type="button" class="primary" data-act="save">저장</button></div>';
@@ -1492,8 +1510,10 @@ function noticeEditor(){
   m.querySelector('[data-act="save"]').addEventListener("click", function(){
     var v = $("#noticeInput").value.trim();
     var pl = $("#noticePlace") ? $("#noticePlace").value.trim() : "";
-    S.notice = { text:v, place:pl, at:Date.now(), by:S.me||"" };
-    save(); renderNotice(); queuePush(); closeModal(); toast("공지 저장했어요 📢");
+    if(!v && !pl){ toast("내용을 적어주세요"); return; }
+    var nid = "n" + Date.now().toString(36) + Math.floor(Math.random()*1000).toString(36);
+    S.notices[nid] = { text:v, place:pl, at:Date.now(), by:S.me||"" };
+    save(); renderNotice(); queuePush(); closeModal(); toast("공지 올렸어요 📢");
   });
 }
 
@@ -2287,6 +2307,15 @@ document.addEventListener("click", function(e){
   var t = e.target;
   if(!t || !t.closest) return;
 
+  var nd = t.closest("[data-noticedel]");
+  if(nd){
+    var nid = nd.getAttribute("data-noticedel");
+    requireAdmin(function(){
+      delete S.notices[nid];
+      save(); renderNotice(); queuePush(); toast("공지 삭제했어요");
+    });
+    return;
+  }
   var tm = t.closest("[data-tmaps]");  if(tm){
     e.preventDefault();
     location.href = "tmap://search?name=" + encodeURIComponent(tm.getAttribute("data-tmaps"));
@@ -2399,7 +2428,7 @@ $("#resetBtn").addEventListener("click", function(){
   $("#overlay").classList.add("on");
   m.querySelector('[data-act="no"]').addEventListener("click", closeModal);
   m.querySelector('[data-act="yes"]').addEventListener("click", function(){
-    var keep = { check:S.check, tab:S.tab, me:S.me, toolsCustom:S.toolsCustom, notice:S.notice, lock:S.lock, shop:S.shop, profiles:S.profiles };
+    var keep = { check:S.check, tab:S.tab, me:S.me, toolsCustom:S.toolsCustom, notices:S.notices, lock:S.lock, shop:S.shop, profiles:S.profiles, prizes:S.prizes };
     var ns = freshShared();
     Object.keys(keep).forEach(function(k){ ns[k] = keep[k]; });
     S = ns;
