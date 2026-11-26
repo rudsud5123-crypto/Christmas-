@@ -1065,6 +1065,8 @@ var ROOM_TOKEN = (function(){
 var ROOM_ID = "christmas2026-" + ROOM_TOKEN.replace(/[^a-z0-9]/g,"").slice(0,24);
 var CK = null, roomRef = null, syncReady = false, applyToken = 0, pushTimer = null, lastEdit = 0;
 var lastPub = {};
+/*DBG*/ var DBG = []; window.__dbg = DBG;
+/*DBG*/ function dbg(o){ try{ o.t = new Date().toTimeString().slice(0,8); DBG.push(o); if(DBG.length > 400) DBG.shift(); }catch(e){} }
 
 function b64(buf){
   var a = new Uint8Array(buf), s = "";
@@ -1161,6 +1163,7 @@ function pushNow(){
   Object.keys(lastPub).forEach(function(k){
     if(!(k in cur)) jobs.push(roomRef.child(k).remove());
   });
+  /*DBG*/ dbg({k:"push", curGb:Object.keys(S.guestbook||{}).length, curHasGb:keys.filter(function(x){return x.indexOf("gb/")===0;}), lastHasGb:Object.keys(lastPub).filter(function(x){return x.indexOf("gb/")===0;}), removals:Object.keys(lastPub).filter(function(k){return !(k in cur);})});
   /* 중요: lastPub는 '그때의 값'을 복사해 둬야 나중에 같은 객체를 고쳐도 차이를 잡아요 */
   lastPub = JSON.parse(JSON.stringify(cur));
   Promise.all(jobs).then(function(){
@@ -1206,6 +1209,7 @@ function applyRemote(rootVal){
       if(!(k in map)) same = false;
     });
     if(same){ lastPub = localMap; return; }
+    /*DBG*/ dbg({k:"apply", mapGb:Object.keys(map).filter(function(x){return x.indexOf("gb/")===0;}), sGbBefore:Object.keys(S.guestbook||{}).length, mapKeys:Object.keys(map).length});
 
     var next = freshShared();
     next.check = S.check; next.tab = S.tab; next.me = S.me; next.toolsCustom = S.toolsCustom; next.adminOk = S.adminOk;
@@ -1253,6 +1257,7 @@ function startSync(){
     });
     roomRef.on("value", function(snap){
       var val = snap.val();
+      /*DBG*/ dbg({k:"val", hasGb:!!(val&&val.gb), gbIds:(val&&val.gb)?Object.keys(val.gb):[], lastEditAgo:Date.now()-lastEdit});
       if(!val){
         syncReady = true;
         lastPub = {};
