@@ -1191,6 +1191,7 @@ var ROOM_TOKEN = (function(){
 })();
 var ROOM_ID = "christmas2026-" + ROOM_TOKEN.replace(/[^a-z0-9]/g,"").slice(0,24);
 var CK = null, roomRef = null, syncReady = false, applyToken = 0, pushTimer = null, lastEdit = 0;
+var remoteApplied = false, pendingPush = false;
 var lastPub = {};
 
 function b64(buf){
@@ -1276,12 +1277,14 @@ function flatten(){
 
 function queuePush(){
   if(!syncReady) return;
+  if(!remoteApplied){ pendingPush = true; return; }   /* 방 상태를 받기 전엔 내 저장본으로 덮어쓰지 않아요 */
   lastEdit = Date.now();
   clearTimeout(pushTimer);
   pushTimer = setTimeout(pushNow, 300);
 }
 function pushNow(){
   if(!syncReady || !CK) return;
+  if(!remoteApplied){ pendingPush = true; return; }
   var cur = flatten();
   var keys = Object.keys(cur);
   var jobs = [];
@@ -1341,6 +1344,7 @@ function applyRemote(rootVal){
     Object.keys(localMap).forEach(function(k){
       if(!(k in map)) same = false;
     });
+    remoteApplied = true;
     if(same){ lastPub = localMap; return; }
 
     var next = freshShared();
@@ -1388,6 +1392,7 @@ function applyRemote(rootVal){
     save();
     try{ lastPub = JSON.parse(JSON.stringify(flatten())); }catch(e){ lastPub = {}; }
     if(!hadMeta){ lastPub = {}; queuePush(); }   /* meta 마커가 없던 방이면 전체를 한 번 다시 올려 마커를 심어요 */
+    if(pendingPush){ pendingPush = false; queuePush(); }
     renderAll();
   });
 }
@@ -1420,6 +1425,7 @@ function startSync(){
       var val = snap.val();
       if(!val){
         syncReady = true;
+        remoteApplied = true;
         lastPub = {};
         pushNow();
         setSyncChip("on","실시간 연결됨");
@@ -1512,6 +1518,17 @@ function askPin(cb, msg){
   m.querySelector('[data-act="ok"]').addEventListener("click", tryOk);
   inp.addEventListener("keydown", function(ev){ if(ev.key === "Enter"){ ev.preventDefault(); tryOk(); } });
   inp.addEventListener("input", function(){ if(inp.value.length >= 4) tryOk(); });
+}
+function askConfirm(icon, title, msg, okLabel, cb){
+  var m = $("#modal");
+  m.className = "modal";
+  m.innerHTML = '<span class="big">'+icon+'</span><div class="mode">'+esc(title)+'</div>'+
+    '<p class="msub">'+msg+'</p>'+
+    '<div class="btns"><button type="button" data-act="no">취소</button>'+
+    '<button type="button" class="primary" data-act="yes">'+esc(okLabel||"확인")+'</button></div>';
+  $("#overlay").classList.add("on");
+  m.querySelector('[data-act="no"]').addEventListener("click", closeModal);
+  m.querySelector('[data-act="yes"]').addEventListener("click", function(){ closeModal(); cb(); });
 }
 function requireAdmin(cb){
   if(!isAdminPerson()){ toast("관리자(경녕·한길)만 할 수 있어요"); return; }
@@ -2166,7 +2183,13 @@ function drawTeams(kind){
   toast((nm ? nm + " " : "") + "배정 완료! 모든 폰에 보여요 🎲" + (cleared ? " (승리 표시는 초기화)" : ""));
 }
 function requireDraw(kind){
-  requireAdmin(function(){ drawTeams(kind); });
+  requireAdmin(function(){
+    if(!hasAssign(S.teams[kind])){ drawTeams(kind); return; }   /* 처음 뽑기는 바로 */
+    var nm = kind === "g3" ? "할리갈리 1·2조" : ((TEAM_GAMES.filter(function(g){ return g.key===kind; })[0] || {}).title || "조");
+    askConfirm("🎲", nm + "를 다시 뽑을까요?",
+      "지금 조가 <b>새 조로 바뀌고</b>, 그 게임의 <b>승리 표시도 초기화</b>돼요.<br>게임 중에는 신중하게!",
+      "다시 뽑기", function(){ drawTeams(kind); });
+  });
 }
 $all("[data-pool]").forEach(function(b){
   b.addEventListener("click", function(){ S.toolsCustom.pool = b.getAttribute("data-pool"); save(); renderTools(); });
@@ -3323,10 +3346,14 @@ document.addEventListener("keydown", function(e){
 $("#shopAdd").addEventListener("click", addShop);
 $("#shopInput").addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); addShop(); } });
 $("#shopClearDone").addEventListener("click", function(){
-  Object.keys(S.shop).forEach(function(id){
-    if(S.shop[id] && S.shop[id].checked){ markSeedDrop(id); delete S.shop[id]; }
+  var n = Object.keys(S.shop).filter(function(id){ return S.shop[id] && S.shop[id].checked; }).length;
+  if(!n){ toast("담은 항목이 없어요"); return; }
+  askConfirm("🧺", "담은 " + n + "개를 지울까요?", "체크한 장보기 항목이 목록에서 사라져요.", "지우기", function(){
+    Object.keys(S.shop).forEach(function(id){
+      if(S.shop[id] && S.shop[id].checked){ markSeedDrop(id); delete S.shop[id]; }
+    });
+    save(); renderShop(); queuePush(); toast("담은 것 지웠어요 🧺");
   });
-  save(); renderShop(); queuePush(); toast("담은 것 지웠어요 🧺");
 });
 
 $("#resetBtn").addEventListener("click", function(){
