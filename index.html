@@ -552,11 +552,11 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
 
     <article class="game">
       <div class="gtop"><span class="num red">1</span><h3>가면 그릇치기</h3><span class="badge red">팀전</span><span class="tm">25분</span></div>
-      <p class="rule">우스꽝스러운 <b>가면</b>을 쓰고, 배(허리)에 <b>끈</b>을 묶은 뒤 그 끈을 휘둘러 <b>일회용 그릇</b>을 쳐서 넘어뜨리고, 다음 주자에게 바통 터치!<br><b>5명 릴레이</b>로 먼저 완주한 팀 승리!</p>
+      <p class="rule">가면을 쓰고 허리에 <b>생수병</b>(삼다수 등)을 매달아, <b>골반을 튕기며</b> 바닥의 <b>일회용 그릇</b>을 쳐서 앞으로 전진시키는 <b>이어달리기</b>!<br>반환점(분기점)을 돌아와 다음 주자에게 <b>바통터치</b>하면 완주!</p>
       <div class="gmeta">
         <div class="row"><span class="lbl">팀</span><span class="chip solid-red">소 띠 팀</span><span style="font-size:14px">한길 · 경녕 · 예진 · 지수 · 태성</span></div>
         <div class="row"><span class="lbl"></span><span class="chip solid-orange">돼지 띠 팀</span><span style="font-size:14px">가영 · 윤민 · 봉수 · 정석 · 수정</span></div>
-        <div class="row"><span class="lbl">준비</span><span style="font-size:14px">가면 · 끈(추) · 일회용 그릇</span></div>
+        <div class="row"><span class="lbl">준비</span><span style="font-size:14px">가면 · 생수병(500ml) · 끈/노끈 · 일회용 그릇</span></div>
         <div class="row"><span class="lbl">점수</span><span style="font-size:14px">이긴 팀 전원 <b>+3</b> / 진 팀 <b>+1</b></span></div>
       </div>
     </article>
@@ -822,7 +822,7 @@ var MODES = [
 var WHEEL_COLORS = ["#A60C0E","#FFFFFF","#1E7B3C","#FBF0DA","#FFFFFF"];
 var WHEEL_TEXT   = ["#FFFFFF","#1B1B1B","#FFFFFF","#1B1B1B","#1B1B1B"];
 
-var PREP = ["가면","끈(추)","일회용 그릇","종이컵","할리갈리","마스킹테이프","안대 1개","폰 카메라","쫀쫀이"];
+var PREP = ["가면","생수병(500ml)","끈/노끈","일회용 그릇","종이컵","할리갈리","마스킹테이프","안대 1개","폰 카메라","쫀쫀이"];
 /* 초성퀴즈용 알짜 초성 13개 + 사회자 참고 예시 (펜션·아기용품에서 찾을 수 있는 것) */
 var CHO_LIST = [
   {c:"ㄱ", ex:"기저귀·국자·거울·가위·과자"},
@@ -848,7 +848,10 @@ var SEED_SHOP = [
   {id:"seed-cola", cat:"음료", name:"콜라·사이다 2L"},
   {id:"seed-snack",cat:"과자", name:"감자칩·초코"},
   {id:"seed-baby", cat:"아기", name:"아기 간식·물티슈"},
-  {id:"seed-veg",  cat:"기타", name:"쌈채소·마늘"}
+  {id:"seed-veg",  cat:"기타", name:"쌈채소·마늘"},
+  {id:"seed-water",cat:"기타", name:"삼다수 500ml (게임용)"},
+  {id:"seed-string",cat:"기타", name:"노끈·허리끈"},
+  {id:"seed-bowl", cat:"기타", name:"일회용 그릇"}
 ];
 var SCHEDULE = [
   ["10:00","만남 & 아침/아점 식사"],
@@ -2142,6 +2145,22 @@ function seedShopIfEmpty(){
   });
   save();
 }
+/* 예전 목록에 빠진 게임 준비물(생수병·끈·그릇)을 한 번만 채워요 */
+function seedExtrasOnce(){
+  var flagKey = "xmasParty.seedExtra.v1";
+  try{ if(localStorage.getItem(flagKey)) return; }catch(e){}
+  var extra = ["seed-water","seed-string","seed-bowl"];
+  var added = false;
+  extra.forEach(function(id){
+    if(!S.shop[id]){
+      var x = null;
+      SEED_SHOP.forEach(function(s){ if(s.id === id) x = s; });
+      if(x){ S.shop[id] = { name:x.name, cat:x.cat, checked:false, at:Date.now(), by:"seed" }; added = true; }
+    }
+  });
+  try{ localStorage.setItem(flagKey, "1"); }catch(e){}
+  if(added){ save(); queuePush(); }
+}
 
 /* ══════════════════ 프로필 ══════════════════ */
 var pendingPhoto = null, pickTarget = null;
@@ -2490,6 +2509,7 @@ setupNav();
 renderWheel();
 renderModeList();
 seedShopIfEmpty();
+seedExtrasOnce();
 renderAll();
 showTab(S.tab || "guide");
 startSync();
