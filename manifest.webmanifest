@@ -1,0 +1,14 @@
+{
+  "name": "크리스마스 파티 대시보드",
+  "short_name": "크리스마스 파티",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#A60C0E",
+  "theme_color": "#A60C0E",
+  "lang": "ko",
+  "icons": [
+    { "src": "icon-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
