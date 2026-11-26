@@ -694,12 +694,12 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
     </details>
 
     <details class="game" id="g2">
-      <summary class="gtop"><span class="num red">2</span><h3>종이컵 왈츠</h3><span class="badge red">팀전</span><a class="vico" data-vlink href="https://www.instagram.com/reel/DZwx2YgJrzd/?evlk=MTRwc3BkN3hvdjdoMA==" target="_blank" rel="noopener noreferrer" aria-label="종이컵 왈츠 예시 영상">🎬</a><span class="tm">20분</span><span class="chev">▾</span></summary>
-      <p class="rule">한 손등에 <b>종이컵</b>을 올려두고, 다른 한 손으로 <b>상대 팀 종이컵</b>을 쳐서 떨어뜨리기!<br>마지막까지 컵을 지킨 팀 승리!</p>
+      <summary class="gtop"><span class="num">2</span><h3>종이컵 왈츠</h3><span class="badge green">개인전</span><a class="vico" data-vlink href="https://www.instagram.com/reel/DZwx2YgJrzd/?evlk=MTRwc3BkN3hvdjdoMA==" target="_blank" rel="noopener noreferrer" aria-label="종이컵 왈츠 예시 영상">🎬</a><span class="tm">20분</span><span class="chev">▾</span></summary>
+      <p class="rule"><b>5명씩 1조·2조</b>로 나눠 <b>각자 손등에 종이컵</b>을 올리고, 다른 한 손으로 <b>다른 조의 컵</b>을 쳐서 떨어뜨리기!<br>컵이 떨어진 사람은 <b>탈락</b> — <b>마지막까지 컵을 지킨 순서</b>대로 1~5등!</p>
       <div class="gmeta">
         <div id="g2Teams"></div>
         <div class="row"><span class="lbl">준비</span><span style="font-size:14px">종이컵 넉넉히</span></div>
-        <div class="row"><span class="lbl">점수</span><span style="font-size:14px">이긴 팀 전원 <b>+3</b> / 진 팀 <b>+1</b></span></div>
+        <div class="row"><span class="lbl">점수</span><span style="font-size:14px">조별 생존 1~5등 = <b>7, 5, 3, 2, 1점</b></span></div>
       </div>
     </details>
 
@@ -872,8 +872,13 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
 
     <div id="scoreInputs">
       <details class="sect" id="sectTeam" open>
-        <summary>🏁 팀전 (1·2·4번) <span class="cnt" data-cnt="team">0/3</span><span class="arw">▲</span></summary>
+        <summary>🏁 팀전 (1·4번) <span class="cnt" data-cnt="team">0/2</span><span class="arw">▲</span></summary>
         <div class="sectbody" id="teamInputs"></div>
+      </details>
+
+      <details class="sect" id="sectWalts">
+        <summary>🥤 종이컵 왈츠 <span class="cnt" data-cnt="walts">0/10</span><span class="arw">▲</span></summary>
+        <div class="sectbody" id="waltsInputs"></div>
       </details>
 
       <details class="sect" id="sectHalli">
@@ -970,8 +975,12 @@ var TEAM_KEYS = ["g1","g2","g3","g4"];
 var TEAM_LABEL = { a:{label:"A조", cls:"solid-red"}, b:{label:"B조", cls:"solid-green"} };
 var TEAM_GAMES = [
   {key:"g1", title:"팀전 1 · 가면 그릇치기", short:"가면"},
-  {key:"g2", title:"팀전 2 · 종이컵 왈츠", short:"왈츠"},
-  {key:"g4", title:"팀전 3 · 컵 세우기 빙고", short:"빙고"}
+  {key:"g4", title:"팀전 2 · 컵 세우기 빙고", short:"빙고"}
+];
+/* 개인전 2조 서바이벌 (1조·2조, 조별 1~5등) */
+var INDIV_GAMES = [
+  {key:"g2", title:"종이컵 왈츠", short:"왈츠"},
+  {key:"g3", title:"할리갈리", short:"할리갈리"}
 ];
 var COUPLES = [["hangil","gayoung"],["yunmin","gyeong"],["bongsu","yejin"],["jeongseok","jisu"],["taeseong","sujeong"]];
 var ADMINS = ["gyeong","hangil"];
@@ -1068,8 +1077,9 @@ function freshTeams(){
 function freshShared(){
   return {
     teams:freshTeams(),
-    wins:{g1:null, g2:null, g4:null},
+    wins:{g1:null, g4:null},
     halli:{},
+    walts:{},
     photo:{},
     best:{bonus:3, ids:[]},
     bonus:{},
@@ -1105,9 +1115,9 @@ function normTeams(v){
   return t;
 }
 function normWins(v){
-  var out = {g1:null, g2:null, g4:null};
+  var out = {g1:null, g4:null};
   if(v && typeof v === "object"){
-    ["g1","g2","g4"].forEach(function(k){ out[k] = (v[k]==="a"||v[k]==="b") ? v[k] : null; });
+    ["g1","g4"].forEach(function(k){ out[k] = (v[k]==="a"||v[k]==="b") ? v[k] : null; });
   }
   return out;
 }
@@ -1166,6 +1176,7 @@ function load(){
     f.teams = normTeams(f.teams);
     f.wins = normWins(f.wins);
     f.halli = normHalli(f.halli);
+    f.walts = normHalli(f.walts);
   }catch(e){ return fresh(); }
   return f;
 }
@@ -1243,11 +1254,15 @@ function flatten(){
     if(hasAssign(t)) m["teams/"+k] = {a:t.a.slice(), b:t.b.slice(), at:t.at||0, by:t.by||""};
   });
   var wins = {};
-  ["g1","g2","g4"].forEach(function(k){ if(S.wins[k]==="a" || S.wins[k]==="b") wins[k] = S.wins[k]; });
+  ["g1","g4"].forEach(function(k){ if(S.wins[k]==="a" || S.wins[k]==="b") wins[k] = S.wins[k]; });
   if(Object.keys(wins).length) m["state/wins"] = wins;
   Object.keys(S.halli).forEach(function(id){
     var r = Number(S.halli[id]);
     if(r >= 1 && r <= 5) m["state/halli/"+id] = r;
+  });
+  Object.keys(S.walts || {}).forEach(function(id){
+    var r = Number(S.walts[id]);
+    if(r >= 1 && r <= 5) m["state/walts/"+id] = r;
   });
   Object.keys(S.photo).forEach(function(id){
     var d = S.photo[id] || {};
@@ -1376,6 +1391,10 @@ function applyRemote(rootVal){
       if(seg[0]==="state" && seg[1]==="halli" && seg[2] && seg.length===3 && P[seg[2]]){
         var rr = Number(v);
         if(rr >= 1 && rr <= 5) next.halli[seg[2]] = rr;
+      }
+      else if(seg[0]==="state" && seg[1]==="walts" && seg[2] && seg.length===3 && P[seg[2]]){
+        var ww = Number(v);
+        if(ww >= 1 && ww <= 5) next.walts[seg[2]] = ww;
       }
       else if(seg[0]==="state" && seg[1]==="photo" && seg[2]) next.photo[seg[2]] = {rank:(v&&v.r)||null, score:(v&&v.s!==undefined?v.s:null)};
       else if(seg[0]==="state" && seg[1]==="bonus" && seg[2]) next.bonus[seg[2]] = Number(v);
@@ -2200,7 +2219,9 @@ function drawTeams(kind){
 function requireDraw(kind){
   requireAdmin(function(){
     if(!hasAssign(S.teams[kind])){ drawTeams(kind); return; }   /* 처음 뽑기는 바로 */
-    var nm = kind === "g3" ? "할리갈리 1·2조" : ((TEAM_GAMES.filter(function(g){ return g.key===kind; })[0] || {}).title || "조");
+    var all = TEAM_GAMES.concat(INDIV_GAMES);
+    var nm = (all.filter(function(g){ return g.key===kind; })[0] || {}).title || "조";
+    if(kind === "g2" || kind === "g3") nm += " 1·2조";
     askConfirm("🎲", nm + "를 다시 뽑을까요?",
       "지금 조가 <b>새 조로 바뀌고</b>, 그 게임의 <b>승리 표시도 초기화</b>돼요.<br>게임 중에는 신중하게!",
       "다시 뽑기", function(){ drawTeams(kind); });
@@ -2244,9 +2265,11 @@ function compute(){
       sc[p.id] += (side === w) ? 3 : 1;
     });
   });
-  Object.keys(S.halli).forEach(function(id){
-    var r = Number(S.halli[id]);
-    if(HALLI_PTS[r-1] && sc[id] !== undefined) sc[id] += HALLI_PTS[r-1];
+  [S.halli, S.walts].forEach(function(map){
+    Object.keys(map || {}).forEach(function(id){
+      var r = Number(map[id]);
+      if(HALLI_PTS[r-1] && sc[id] !== undefined) sc[id] += HALLI_PTS[r-1];
+    });
   });
   PEOPLE.forEach(function(p){
     sc[p.id] += photoBase(p.id) + bestBonus(p.id) + (Number(S.bonus[p.id])||0);
@@ -2264,6 +2287,8 @@ function breakdown(id){
   });
   var hr = Number(S.halli[id]) || 0;
   if(hr && HALLI_PTS[hr-1]) parts.push("할리갈리 +"+HALLI_PTS[hr-1]);
+  var wr = Number((S.walts||{})[id]) || 0;
+  if(wr && HALLI_PTS[wr-1]) parts.push("왈츠 +"+HALLI_PTS[wr-1]);
   var pb = photoBase(id);
   if(pb) parts.push("사진 "+(pb>0?"+":"")+pb);
   var bb = bestBonus(id);
@@ -2384,51 +2409,56 @@ function renderTeamInputs(){
 }
 
 /* ══════════════════ 입력: 등수 (할리갈리) ══════════════════ */
-function halliGroups(){
-  if(hasAssign(S.teams.g3)) return {a:S.teams.g3.a, b:S.teams.g3.b, own:true};
+function indivGroups(key){
+  if(hasAssign(S.teams[key])) return {a:S.teams[key].a, b:S.teams[key].b};
   return null;
 }
-function rankBlock(gkey, ids, label, cls, pts){
-  var map = S.halli;
+function rankBlock(kind, gkey, ids, label, cls, pts){
+  var map = (kind === "walts") ? S.walts : S.halli;
   var done = ids.filter(function(id){ return Number(map[id]) >= 1; }).length;
   var html = '<div class="rankblock"><div class="rbhead"><span class="chip '+cls+'">'+esc(label)+'</span>'+
     '<span class="sp"></span><span style="font-size:12px;color:#8a8482">'+done+'/5</span></div>';
   for(var r=1;r<=5;r++){
     var cur = "";
     ids.forEach(function(id){ if(Number(map[id]) === r) cur = id; });
-    html += '<div class="rline"><span class="rn">'+r+'등</span><select data-rk="halli" data-g="'+gkey+'" data-r="'+r+'">'+
+    html += '<div class="rline"><span class="rn">'+r+'등</span><select data-rk="'+kind+'" data-g="'+gkey+'" data-r="'+r+'">'+
       '<option value="">— 선택 —</option>'+ids.map(function(id){
         return '<option value="'+id+'"'+(cur===id?" selected":"")+'>'+esc(P[id].name)+'</option>';
       }).join("")+'</select><span class="rp">+'+pts[r-1]+'</span></div>';
   }
   return html+'</div>';
 }
-function renderRankInputs(){
-  var h = $("#halliInputs");
-  if(!h) return;
-  var g = halliGroups();
+function renderIndivInputs(boxSel, kind, label){
+  var box = $(boxSel);
+  if(!box) return;
+  var g = indivGroups(kind);
   if(!g){
-    h.innerHTML = '<div class="teamempty">할리갈리 조가 아직 없어요.<br>게임 안내 카드나 룰렛 탭 MC 도구에서 <b>🎲 할리갈리 조 나누기 (1조 / 2조)</b>를 눌러주세요.</div>'+
-      '<button type="button" class="drawbtn" data-draw="g3">🎲 할리갈리 조 나누기 (1조 / 2조)</button>';
-    updateCounts(); return;
+    box.innerHTML = '<div class="teamempty">'+label+' 조가 아직 없어요.<br>게임 안내 카드나 룰렛 탭 MC 도구에서 <b>🎲 '+label+' 조 나누기 (1조 / 2조)</b>를 눌러주세요.</div>'+
+      '<button type="button" class="drawbtn" data-draw="'+kind+'">🎲 '+label+' 조 나누기 (1조 / 2조)</button>';
+    return;
   }
-  h.innerHTML = rankBlock("a", g.a, "1조 (A)", "solid-red", HALLI_PTS) +
-                rankBlock("b", g.b, "2조 (B)", "solid-green", HALLI_PTS) +
-                '<span class="hint">할리갈리 전용 조예요 · 다시 섞으려면 <b>🎲 할리갈리 조 나누기 (1조 / 2조)</b></span>';
+  box.innerHTML = rankBlock(kind, "a", g.a, "1조 (A)", "solid-red", HALLI_PTS) +
+                  rankBlock(kind, "b", g.b, "2조 (B)", "solid-green", HALLI_PTS) +
+                  '<span class="hint">조별 최후 생존 1~5등 → <b>7, 5, 3, 2, 1점</b> · 조를 다시 섞으려면 <b>🎲 '+label+' 조 나누기</b></span>';
+}
+function renderRankInputs(){
+  renderIndivInputs("#waltsInputs", "g2", "종이컵 왈츠");
+  renderIndivInputs("#halliInputs", "g3", "할리갈리");
   updateCounts();
 }
-function assignRank(gkey, r, id){
-  var g = halliGroups();
+function assignRank(kind, gkey, r, id){
+  var g = indivGroups(kind);
   if(!g) return;
+  var map = (kind === "walts") ? S.walts : S.halli;
   var ids = (gkey === "b") ? g.b : g.a;
   if(!id){
-    ids.forEach(function(k){ if(Number(S.halli[k]) === r) delete S.halli[k]; });
+    ids.forEach(function(k){ if(Number(map[k]) === r) delete map[k]; });
   } else {
-    var oldRank = S.halli[id] ? Number(S.halli[id]) : 0;
+    var oldRank = map[id] ? Number(map[id]) : 0;
     var occupant = null;
-    ids.forEach(function(k){ if(Number(S.halli[k]) === r && k !== id) occupant = k; });
-    if(occupant){ if(oldRank) S.halli[occupant] = oldRank; else delete S.halli[occupant]; }
-    S.halli[id] = r;
+    ids.forEach(function(k){ if(Number(map[k]) === r && k !== id) occupant = k; });
+    if(occupant){ if(oldRank) map[occupant] = oldRank; else delete map[occupant]; }
+    map[id] = r;
   }
   save(); renderRankInputs(); renderBoard(); queuePush();
 }
@@ -2492,15 +2522,14 @@ function renderBonusInputs(){
 
 /* ══════════════════ 업데이트: 게임별 조 표시 ══════════════════ */
 function gameTeamsHTML(key){
-  var isHalli = (key === "g3");
-  var la = isHalli ? "1조" : "A조", lb = isHalli ? "2조" : "B조";
-  var btn = isHalli ? "🎲 조 나누기 (1조 / 2조)" : "🎲 조 나누기 (부부 분리)";
+  var isIndiv = (key === "g2" || key === "g3");
+  var la = isIndiv ? "1조" : "A조", lb = isIndiv ? "2조" : "B조";
+  var btn = isIndiv ? "🎲 조 나누기 (1조 / 2조)" : "🎲 조 나누기 (부부 분리)";
   var src = null, own = true, from = "";
   if(hasAssign(S.teams[key])){ src = S.teams[key]; }
-  if(isHalli && !src){ var g = halliGroups(); if(g){ src = g; } }
   if(!src){
-    return '<div class="row"><span class="lbl">'+(isHalli?"조":"팀")+'</span>'+
-        '<span style="font-size:13.5px;color:#7a7472">🎲 '+(isHalli?"1·2조 뽑기":"조 나누기")+'를 누르면 '+la+'·'+lb+'가 정해져요</span></div>'+
+    return '<div class="row"><span class="lbl">'+(isIndiv?"조":"팀")+'</span>'+
+        '<span style="font-size:13.5px;color:#7a7472">🎲 '+(isIndiv?"1·2조 뽑기":"조 나누기")+'를 누르면 '+la+'·'+lb+'가 정해져요</span></div>'+
       '<div class="row"><span class="lbl"></span><button type="button" class="gdrawbtn" data-draw="'+key+'">'+btn+'</button></div>';
   }
   var t = S.teams[key] || {at:0,by:""};
@@ -2512,7 +2541,7 @@ function gameTeamsHTML(key){
     tail = '<div class="row"><span class="lbl"></span><span style="font-size:12.5px;color:#7a7472;padding:4px 0">'+esc(from)+' 게임 조 그대로 · 따로 섞으려면</span>'+
       '<button type="button" class="minibtn" data-draw="'+key+'">'+btn+'</button></div>';
   }
-  return '<div class="row"><span class="lbl">'+(isHalli?"조":"팀")+'</span><span class="chip solid-red">'+la+'</span><span style="font-size:14px">'+esc(namesOf(src.a))+'</span></div>'+
+  return '<div class="row"><span class="lbl">'+(isIndiv?"조":"팀")+'</span><span class="chip solid-red">'+la+'</span><span style="font-size:14px">'+esc(namesOf(src.a))+'</span></div>'+
     '<div class="row"><span class="lbl"></span><span class="chip solid-green">'+lb+'</span><span style="font-size:14px">'+esc(namesOf(src.b))+'</span></div>'+
     tail;
 }
@@ -2546,6 +2575,8 @@ function renderTeamSummary(){
 function updateCounts(){
   var t = TEAM_GAMES.filter(function(g){ return S.wins[g.key]==="a" || S.wins[g.key]==="b"; }).length;
   setCnt("team", t+"/3", t===0);
+  var w = Object.keys(S.walts||{}).length;
+  setCnt("walts", w+"/10", w===0);
   var h = Object.keys(S.halli||{}).length;
   setCnt("halli", h+"/10", h===0);
   var ph = PEOPLE.filter(function(p){
@@ -3304,7 +3335,7 @@ document.addEventListener("change", function(e){
   var t = e.target;
   if(!t || !t.getAttribute) return;
   if(t.hasAttribute("data-rk")){
-    assignRank(t.getAttribute("data-g"), Number(t.getAttribute("data-r")), t.value);
+    assignRank(t.getAttribute("data-rk"), t.getAttribute("data-g"), Number(t.getAttribute("data-r")), t.value);
     return;
   }
   if(t.hasAttribute("data-ph-rank")){
