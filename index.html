@@ -1053,7 +1053,8 @@ function pushNow(){
   Object.keys(lastPub).forEach(function(k){
     if(!(k in cur)) jobs.push(roomRef.child(k).remove());
   });
-  lastPub = cur;
+  /* 중요: lastPub는 '그때의 값'을 복사해 둬야 나중에 같은 객체를 고쳐도 차이를 잡아요 */
+  lastPub = JSON.parse(JSON.stringify(cur));
   Promise.all(jobs).then(function(){
     if(jobs.length) setSyncChip("on", "실시간 연결됨");
   }).catch(function(err){
@@ -1110,7 +1111,7 @@ function applyRemote(rootVal){
 
     S = Object.assign(next, {});
     save();
-    lastPub = flatten();
+    try{ lastPub = JSON.parse(JSON.stringify(flatten())); }catch(e){ lastPub = {}; }
     renderAll();
   });
 }
