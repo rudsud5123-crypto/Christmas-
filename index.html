@@ -3323,6 +3323,7 @@ $("#resetBtn").addEventListener("click", function(){
     var ns = freshShared();
     Object.keys(keep).forEach(function(k){ ns[k] = keep[k]; });
     S = ns;
+    seedShopDefaults();          /* 기본 장보기(색깔 종이컵 포함)는 초기화 후에도 유지 */
     save(); renderAll(); queuePush(); closeModal(); toast("점수 초기화 완료");
   });
 });
