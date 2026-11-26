@@ -183,8 +183,8 @@ details.game[open]>summary{margin-bottom:8px;border-bottom:1.5px dashed #e6ded3;
 .gtop{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:7px}
 .gtop h3{flex:0 0 auto}
 .gtop .tm{margin-left:auto;font-size:13.5px;font-weight:700;color:var(--red)}
-.rule{font-size:15.5px;line-height:1.7;margin:2px 0 8px}
-.gmeta{border-top:1.5px dashed #e6ded3;padding-top:8px;font-size:14px;line-height:1.55}
+.rule{font-size:15.5px;line-height:1.7;margin:2px 0 8px;word-break:keep-all}
+.gmeta{border-top:1.5px dashed #e6ded3;padding-top:8px;font-size:14px;line-height:1.55;word-break:keep-all}
 .gmeta .row{display:flex;gap:6px;margin-top:3px;flex-wrap:wrap}
 .gmeta .row:first-child{margin-top:0}
 .gmeta .lbl{color:#7a7472;flex:0 0 42px;font-weight:700}
@@ -2467,7 +2467,7 @@ function gameTeamsHTML(key){
   if(isHalli && !src){ var g = halliGroups(); if(g){ src = g; } }
   if(!src){
     return '<div class="row"><span class="lbl">'+(isHalli?"조":"팀")+'</span>'+
-        '<span style="font-size:13.5px;color:#7a7472">🎲 '+(isHalli?"1·2조 뽑기":"조 나누기")+'를 누르면 '+la+'·'+lb+'가 배정돼요 (부부 분리)</span></div>'+
+        '<span style="font-size:13.5px;color:#7a7472">🎲 '+(isHalli?"1·2조 뽑기":"조 나누기")+'를 누르면 '+la+'·'+lb+'가 정해져요</span></div>'+
       '<div class="row"><span class="lbl"></span><button type="button" class="gdrawbtn" data-draw="'+key+'">'+btn+'</button></div>';
   }
   var t = S.teams[key] || {at:0,by:""};
