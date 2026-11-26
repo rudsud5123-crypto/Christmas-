@@ -1082,7 +1082,7 @@ function freshShared(){
     prizes:{p1:"", p2:"", p3:"", open:false},
     profiles:{},
     guestbook:{},
-    meta:{shopSeed:0}
+    meta:{shopSeed:0, drop:{}}
   };
 }
 function hasAssign(o){ return !!(o && o.a && o.b && o.a.length && o.b.length); }
@@ -1160,7 +1160,8 @@ function load(){
     }
     if(!f.best || !Array.isArray(f.best.ids)) f.best = {bonus:3, ids:[]};
     if(!f.guestbook || typeof f.guestbook !== "object") f.guestbook = {};
-    if(!f.meta || typeof f.meta !== "object") f.meta = {shopSeed:0};
+    if(!f.meta || typeof f.meta !== "object") f.meta = {shopSeed:0, drop:{}};
+    if(!f.meta.drop || typeof f.meta.drop !== "object") f.meta.drop = {};
     /* 옛 고정 팀 기록은 새 랜덤 조 모델로 옮기지 않아요 */
     delete f.team1; delete f.team2; delete f.bingo;
     f.teams = normTeams(f.teams);
@@ -1259,7 +1260,7 @@ function flatten(){
   m["prizes"] = S.prizes;
   Object.keys(S.shop).forEach(function(id){ m["shop/"+id] = S.shop[id]; });
   if(S.tools) m["tools"] = S.tools;
-  m["meta"] = { shopSeed:Number((S.meta||{}).shopSeed)||0 };
+  m["meta"] = { shopSeed:Number((S.meta||{}).shopSeed)||0, drop:((S.meta||{}).drop||{}) };
   Object.keys(S.profiles).forEach(function(id){
     var pr = S.profiles[id] || {};
     if(pr.nick || pr.photo || pr.motto) m["prof/"+id] = { nick:pr.nick||"", photo:pr.photo||"", motto:cap5(pr.motto), at:pr.at||0 };
@@ -1368,7 +1369,7 @@ function applyRemote(rootVal){
       else if(path==="lock" && v) next.lock = {score:!!v.score, notice:!!v.notice, gb:(v.gb===undefined?true:!!v.gb)};
       else if(path==="prizes" && v) next.prizes = {p1:v.p1||"", p2:v.p2||"", p3:v.p3||"", open:!!v.open};
       else if(path==="tools" && v) next.tools = v;
-      else if(path==="meta" && v) next.meta = {shopSeed:Number(v.shopSeed)||0};
+      else if(path==="meta" && v) next.meta = {shopSeed:Number(v.shopSeed)||0, drop:(v.drop&&typeof v.drop==="object")?v.drop:{}};
       else if(seg[0]==="shop" && seg[1] && v) next.shop[seg[1]] = v;
       else if(seg[0]==="prof" && seg[1] && v) next.profiles[seg[1]] = {nick:v.nick||"", photo:v.photo||"", motto:cap5(v.motto), at:v.at||0};
       else if(seg[0]==="gb" && seg[1] && v) next.guestbook[seg[1]] = { t:String(v.t||"").slice(0,80), at:Number(v.at)||0, by:v.by||"", l:Array.isArray(v.l)?v.l.slice(0,12):[], p:(v.p||"") };
@@ -2662,24 +2663,30 @@ function normalizeSeedItems(){
   return changed;
 }
 /* 첫 버전 기본 장보기 11개가 통째로 사라지지 않게 한 번 채워요 (Firebase meta 마커로 공유) */
+function markSeedDrop(id){
+  if(!SEED_SHOP.some(function(x){ return x.id === id; })) return;   /* 기본 항목만 기억 */
+  if(!S.meta) S.meta = { shopSeed:0, drop:{} };
+  if(!S.meta.drop || typeof S.meta.drop !== "object") S.meta.drop = {};
+  S.meta.drop[id] = 1;
+}
 function seedShopDefaults(){
   if(!S.shop) S.shop = {};
-  if(!S.meta) S.meta = { shopSeed:0 };
+  if(!S.meta) S.meta = { shopSeed:0, drop:{} };
+  if(!S.meta.drop || typeof S.meta.drop !== "object") S.meta.drop = {};
   var changed = normalizeSeedItems();
-  if(Number(S.meta.shopSeed||0) < SHOP_SEED_VER){
-    SEED_SHOP.forEach(function(x){
-      if(S.shop[x.id]) return;
-      var dup = Object.keys(S.shop).some(function(id){
-        var it = S.shop[id] || {};
-        var nm = String(it.name||"").replace(/\s+/g,"");
-        return nm && nm.indexOf(String(x.name).replace(/\s+/g,"")) === 0;
-      });
-      if(dup) return;
-      S.shop[x.id] = { name:x.name, cat:x.cat, qty:x.qty, unit:x.unit, checked:false, at:Date.now(), by:"seed" };
-      changed = true;
+  /* 기본 항목은 '내가 지운 항목'이 아니면 언제든 다시 채워요 (기기 간 경합으로 사라지지 않게) */
+  SEED_SHOP.forEach(function(x){
+    if(S.shop[x.id] || S.meta.drop[x.id]) return;
+    var dup = Object.keys(S.shop).some(function(id){
+      var it = S.shop[id] || {};
+      var nm = String(it.name||"").replace(/\s+/g,"");
+      return nm && nm.indexOf(String(x.name).replace(/\s+/g,"")) === 0;
     });
-    S.meta.shopSeed = SHOP_SEED_VER;
-  }
+    if(dup) return;
+    S.shop[x.id] = { name:x.name, cat:x.cat, qty:x.qty, unit:x.unit, checked:false, at:Date.now(), by:"seed" };
+    changed = true;
+  });
+  if(Number(S.meta.shopSeed||0) !== SHOP_SEED_VER){ S.meta.shopSeed = SHOP_SEED_VER; changed = true; }
   if(changed){ save(); queuePush(); }
 }
 
@@ -3231,7 +3238,10 @@ document.addEventListener("click", function(e){
   var del = t.closest("[data-shopdel]");
   if(del){
     var did = del.getAttribute("data-shopdel");
-    if(S.shop[did]){ delete S.shop[did]; save(); renderShop(); queuePush(); }
+    if(S.shop[did]){
+      markSeedDrop(did);
+      delete S.shop[did]; save(); renderShop(); queuePush();
+    }
     return;
   }
   var cat = t.closest("[data-cat]");
@@ -3314,7 +3324,9 @@ document.addEventListener("keydown", function(e){
 $("#shopAdd").addEventListener("click", addShop);
 $("#shopInput").addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); addShop(); } });
 $("#shopClearDone").addEventListener("click", function(){
-  Object.keys(S.shop).forEach(function(id){ if(S.shop[id] && S.shop[id].checked) delete S.shop[id]; });
+  Object.keys(S.shop).forEach(function(id){
+    if(S.shop[id] && S.shop[id].checked){ markSeedDrop(id); delete S.shop[id]; }
+  });
   save(); renderShop(); queuePush(); toast("담은 것 지웠어요 🧺");
 });
 
