@@ -1050,7 +1050,8 @@ function freshShared(){
     tools:null,
     prizes:{p1:"", p2:"", p3:"", open:false},
     profiles:{},
-    guestbook:{}
+    guestbook:{},
+    meta:{shopSeed:0}
   };
 }
 function fresh(){
@@ -1086,6 +1087,7 @@ function load(){
     }
     if(!f.best || !Array.isArray(f.best.ids)) f.best = {bonus:3, ids:[]};
     if(!f.guestbook || typeof f.guestbook !== "object") f.guestbook = {};
+    if(!f.meta || typeof f.meta !== "object") f.meta = {shopSeed:0};
   }catch(e){ return fresh(); }
   return f;
 }
@@ -1174,6 +1176,7 @@ function flatten(){
   m["prizes"] = S.prizes;
   Object.keys(S.shop).forEach(function(id){ m["shop/"+id] = S.shop[id]; });
   if(S.tools) m["tools"] = S.tools;
+  m["meta"] = { shopSeed:Number((S.meta||{}).shopSeed)||0 };
   Object.keys(S.profiles).forEach(function(id){
     var pr = S.profiles[id] || {};
     if(pr.nick || pr.photo || pr.motto) m["prof/"+id] = { nick:pr.nick||"", photo:pr.photo||"", motto:String(pr.motto||"").slice(0,5), at:pr.at||0 };
@@ -1275,6 +1278,7 @@ function applyRemote(rootVal){
       else if(path==="lock" && v) next.lock = {score:!!v.score, notice:!!v.notice, gb:(v.gb===undefined?true:!!v.gb)};
       else if(path==="prizes" && v) next.prizes = {p1:v.p1||"", p2:v.p2||"", p3:v.p3||"", open:!!v.open};
       else if(path==="tools" && v) next.tools = v;
+      else if(path==="meta" && v) next.meta = {shopSeed:Number(v.shopSeed)||0};
       else if(seg[0]==="shop" && seg[1] && v) next.shop[seg[1]] = v;
       else if(seg[0]==="prof" && seg[1] && v) next.profiles[seg[1]] = {nick:v.nick||"", photo:v.photo||"", motto:String(v.motto||"").slice(0,5), at:v.at||0};
       else if(seg[0]==="gb" && seg[1] && v) next.guestbook[seg[1]] = { t:String(v.t||"").slice(0,80), at:Number(v.at)||0, by:v.by||"", l:Array.isArray(v.l)?v.l.slice(0,12):[], p:(v.p||"") };
@@ -1289,6 +1293,7 @@ function applyRemote(rootVal){
     }
 
     S = Object.assign(next, {});
+    seedShopDefaults();
     save();
     try{ lastPub = JSON.parse(JSON.stringify(flatten())); }catch(e){ lastPub = {}; }
     renderAll();
@@ -2419,60 +2424,32 @@ function addShop(){
   save(); renderShop(); queuePush(); vibrate(8);
   inp.focus();
 }
-function seedShopIfEmpty(){
-  if(Object.keys(S.shop).length) return;
-  SEED_SHOP.forEach(function(x){
-    S.shop[x.id] = { name:x.name, cat:x.cat, qty:x.qty, unit:x.unit, checked:false, at:Date.now(), by:"seed" };
-  });
-  save();
-}
-/* 예전 목록에 빠진 게임 준비물(생수병·끈·그릇)을 한 번만 채워요 */
-function seedExtrasOnce(){
-  var flagKey = "xmasParty.seedExtra.v1";
-  try{ if(localStorage.getItem(flagKey)) return; }catch(e){}
-  var extra = ["seed-water","seed-string","seed-bowl"];
-  var added = false;
-  extra.forEach(function(id){
-    if(!S.shop[id]){
-      var x = null;
-      SEED_SHOP.forEach(function(s){ if(s.id === id) x = s; });
-      if(x){ S.shop[id] = { name:x.name, cat:x.cat, qty:x.qty, unit:x.unit, checked:false, at:Date.now(), by:"seed" }; added = true; }
-    }
-  });
-  try{ localStorage.setItem(flagKey, "1"); }catch(e){}
-  if(added){ save(); queuePush(); }
-}
-/* 예전 장보기 항목 → 수량/단위·새 분류로 한 번만 정리 */
 var OLD_SEED_NAMES = {
   "seed-pork":"삼겹살 2kg", "seed-mok":"목살 1kg", "seed-beer":"맥주 2박스", "seed-soju":"소주 3병",
   "seed-cola":"콜라·사이다 2L", "seed-snack":"감자칩·초코", "seed-baby":"아기 간식·물티슈",
   "seed-veg":"쌈채소·마늘", "seed-water":"삼다수 500ml (게임용)", "seed-string":"노끈·허리끈", "seed-bowl":"일회용 그릇"
 };
-function migrateShopOnce(){
-  var flagKey = "xmasParty.shopV4";
-  try{ if(localStorage.getItem(flagKey)) return; }catch(e){}
+var SHOP_SEED_VER = 2;
+/* 첫 버전의 기본 장보기 11개를 그대로 유지 + 새 분류·수량/단위로 한 번만 정리
+   (정리 여부는 Firebase meta.shopSeed 로 공유해서 모든 폰이 같은 목록을 봐요) */
+function seedShopDefaults(){
+  if(!S.shop) S.shop = {};
+  if(!S.meta) S.meta = { shopSeed:0 };
+  if(Number(S.meta.shopSeed||0) >= SHOP_SEED_VER) return;
   var changed = false;
-  Object.keys(S.shop || {}).forEach(function(id){
+  Object.keys(S.shop).forEach(function(id){
     var it = S.shop[id]; if(!it) return;
     var seed = null;
-    SEED_SHOP.forEach(function(s){ if(s.id === id) seed = s; });
+    SEED_SHOP.forEach(function(x){ if(x.id === id) seed = x; });
     if(seed){
       if(OLD_SEED_NAMES[id] && it.name === OLD_SEED_NAMES[id]){ it.name = seed.name; changed = true; }
-      if(it.qty === undefined || it.qty === null){ it.qty = seed.qty; it.unit = seed.unit; changed = true; }
+      if(!it.qty){ it.qty = seed.qty; it.unit = seed.unit; changed = true; }
       if(SHOP_CATS.indexOf(it.cat) < 0){ it.cat = seed.cat; changed = true; }
     } else {
       if(CAT_OLD[it.cat]){ it.cat = CAT_OLD[it.cat]; changed = true; }
       if(SHOP_CATS.indexOf(it.cat) < 0){ it.cat = "음식/장보기"; changed = true; }
     }
   });
-  try{ localStorage.setItem(flagKey, "1"); }catch(e){}
-  if(changed){ save(); queuePush(); }
-}
-/* 첫 버전의 기본 장보기 11개가 하나라도 빠져 있으면 한 번 채워요 */
-function restoreSeedsOnce(){
-  var flagKey = "xmasParty.seedRestore.v1";
-  try{ if(localStorage.getItem(flagKey)) return; }catch(e){}
-  var added = false;
   SEED_SHOP.forEach(function(x){
     if(S.shop[x.id]) return;
     var dup = Object.keys(S.shop).some(function(id){
@@ -2482,10 +2459,11 @@ function restoreSeedsOnce(){
     });
     if(dup) return;
     S.shop[x.id] = { name:x.name, cat:x.cat, qty:x.qty, unit:x.unit, checked:false, at:Date.now(), by:"seed" };
-    added = true;
+    changed = true;
   });
-  try{ localStorage.setItem(flagKey, "1"); }catch(e){}
-  if(added){ save(); queuePush(); }
+  S.meta.shopSeed = SHOP_SEED_VER;
+  save();
+  if(changed) queuePush();
 }
 
 /* ══════════════════ 방명록 ══════════════════ */
@@ -2523,7 +2501,7 @@ function renderGuestbook(){
     if(S.me && P[S.me]){
       var meNick = nickOf(S.me), meReal = P[S.me].name;
       meLine.innerHTML = avatarHTML(S.me,"sm")+'<div><b>'+esc(meNick)+'</b>'+
-        (meNick === meReal ? '' : ' <span style="color:#8a8482">('+esc(meReal)+')</span>')+'로 남겨요</div>'+
+        (meNick === meReal ? '' : ' <span style="color:#8a8482">('+esc(meReal)+')</span>')+' 님으로 남겨요</div>'+
         '<span class="sp"></span><button type="button" data-gbprofile="1">바꾸기</button>';
     } else {
       meLine.innerHTML = '<span class="ava sm">?</span><div>먼저 <b>내 프로필</b>에서 본인을 골라주세요</div>'+
@@ -3109,10 +3087,7 @@ renderTimeline();
 setupNav();
 renderWheel();
 renderModeList();
-seedShopIfEmpty();
-seedExtrasOnce();
-migrateShopOnce();
-restoreSeedsOnce();
+seedShopDefaults();
 renderAll();
 showTab(S.tab || "guide");
 startSync();
