@@ -463,6 +463,7 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
 .tab{flex:1 1 0;min-width:0;padding:6px 0;overflow:hidden}
 .tab .tl{display:block;max-width:100%;white-space:nowrap;font-size:11.5px;letter-spacing:-.03em}
 .tab .te{display:block;font-size:17px;line-height:1.1}
+.tab[hidden]{display:none!important}
 
 /* ---------- 방명록 ---------- */
 .gbwrite{background:linear-gradient(#FFFDF7,#FFF7EA)}
@@ -857,13 +858,13 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
 
   <div class="gbtitle">🎀 다 같이 남긴 글 <span class="badge ghost" id="gbBadge">0개</span></div>
   <div class="gblist" id="gbList"></div>
+
+  <footer class="footnote">
+    <div class="footline">🎅 수고하셨습니다! <span class="hl">메리 크리스마스</span> 🎄</div>
+    <div class="footsub">2026.12.07 · 다섯 부부 + 왕자 두명</div>
+  </footer>
 </section>
 </main>
-
-<footer class="footnote">
-  <div class="footline">🎅 수고하셨습니다! <span class="hl">메리 크리스마스</span> 🎄</div>
-  <div class="footsub">2026.12.07 · 다섯 부부 + 왕자 두명</div>
-</footer>
 
 <div class="overlay" id="overlay"><div class="modal" id="modal"></div></div>
 <input type="file" id="photoFile" accept="image/*" hidden>
@@ -997,7 +998,7 @@ function freshShared(){
     bonus:{},
     wheel:{history:[], last:null},
     notices:{},
-    lock:{score:false, notice:true},
+    lock:{score:false, notice:true, gb:true},
     shop:{},
     tools:null,
     prizes:{p1:"", p2:"", p3:"", open:false},
@@ -1030,7 +1031,8 @@ function load(){
     f.adminOk = !!raw.adminOk;
     if(raw.toolsCustom) f.toolsCustom = Object.assign({pool:"people",items:"",couples:true,cat:"전체"}, raw.toolsCustom);
     if(!f.wheel || !Array.isArray(f.wheel.history)) f.wheel = {history:[], last:null};
-    if(!f.lock) f.lock = {score:false, notice:true};
+    if(!f.lock) f.lock = {score:false, notice:true, gb:true};
+    if(f.lock.gb === undefined) f.lock.gb = true;
     if(!f.notices || typeof f.notices !== "object") f.notices = {};
     if(raw.notice && raw.notice.text && !Object.keys(f.notices).length){
       f.notices["n-legacy"] = {text:raw.notice.text, place:raw.notice.place||"", at:raw.notice.at||Date.now(), by:raw.notice.by||""};
@@ -1220,7 +1222,7 @@ function applyRemote(rootVal){
       else if(path==="state/best" && v) next.best = {bonus:(v.bonus===2?2:3), ids:Array.isArray(v.ids)?v.ids:[]};
       else if(path==="wheel" && v) next.wheel = {history:Array.isArray(v.history)?v.history:[], last:v.last||null};
       else if(seg[0]==="notice" && seg[1] && v) next.notices[seg[1]] = {text:v.text||"", place:v.place||"", at:v.at||0, by:v.by||""};
-      else if(path==="lock" && v) next.lock = {score:!!v.score, notice:!!v.notice};
+      else if(path==="lock" && v) next.lock = {score:!!v.score, notice:!!v.notice, gb:(v.gb===undefined?true:!!v.gb)};
       else if(path==="prizes" && v) next.prizes = {p1:v.p1||"", p2:v.p2||"", p3:v.p3||"", open:!!v.open};
       else if(path==="tools" && v) next.tools = v;
       else if(seg[0]==="shop" && seg[1] && v) next.shop[seg[1]] = v;
@@ -1343,6 +1345,7 @@ function requireAdmin(cb){
 /* ══════════════════ 탭 ══════════════════ */
 var TABS = ["guide","games","score","wheel","guest"];
 function showTab(name){
+  if(name === "guest" && !gbTabAllowed()) name = "guide";
   if(TABS.indexOf(name) < 0) name = "guide";
   S.tab = name; save();
   $all(".tab").forEach(function(b){ b.classList.toggle("on", b.getAttribute("data-tab") === name); });
@@ -1620,6 +1623,14 @@ function renderNotice(){
       });
     });
     adminBox.appendChild(t);
+
+    var gbt = document.createElement("button");
+    gbt.className = "minibtn";
+    gbt.type = "button";
+    gbt.style.marginLeft = "6px";
+    gbt.setAttribute("data-gbtoggle", "1");
+    gbt.textContent = (S.lock.gb === false) ? "💌 방명록 열기" : "🙈 방명록 숨기기";
+    adminBox.appendChild(gbt);
   }
 }
 function noticeNavHTML(place){
@@ -2384,6 +2395,22 @@ function renderGuestbook(){
   var cnt = $("#gbCount");
   if(cnt) cnt.innerHTML = '<span>✍️ 한마디 <b>'+items.length+'</b>개</span><span class="sp"></span><span>📡 모든 폰에 바로 보여요</span>';
 }
+function gbTabAllowed(){ return S.lock.gb !== false || isAdminPerson(); }
+function applyGuestVisibility(){
+  var btn = document.querySelector('.tab[data-tab="guest"]');
+  var show = gbTabAllowed();
+  if(btn) btn.hidden = !show;
+  if(!show && S.tab === "guest") showTab("guide");
+}
+function toggleGuestbook(){
+  requireAdmin(function(){
+    var hidden = (S.lock.gb === false);
+    S.lock.gb = hidden;   /* 숨김이었으면 다시 열기 */
+    save(); renderNotice(); renderGuestbook(); applyGuestVisibility(); queuePush();
+    vibrate(12);
+    toast(hidden ? "방명록 다시 공개 💌 모두에게 탭이 보여요" : "방명록 숨김 🙈 관리자만 볼 수 있어요");
+  });
+}
 function gbNeedMe(){
   if(S.me && P[S.me]) return false;
   toast("먼저 내 프로필에서 본인을 골라주세요");
@@ -2660,6 +2687,8 @@ document.addEventListener("click", function(e){
   if(gbChip){ gbFillChip(gbChip.getAttribute("data-gbchip")); return; }
   var gbProf = t.closest("[data-gbprofile]");
   if(gbProf){ openProfileModal(true); return; }
+  var gbTog = t.closest("[data-gbtoggle]");
+  if(gbTog){ toggleGuestbook(); return; }
   var tm = t.closest("[data-tmaps]");  if(tm){
     e.preventDefault();
     location.href = "tmap://search?name=" + encodeURIComponent(tm.getAttribute("data-tmaps"));
@@ -2820,6 +2849,7 @@ function renderAll(){
   renderTools();
   renderShop();
   renderGuestbook();
+  applyGuestVisibility();
   refreshMe();
 }
 
