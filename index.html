@@ -1154,7 +1154,7 @@ function load(){
     f.check = raw.check || {};
     f.tab = raw.tab || "guide";
     f.me = raw.me || null;
-    f.adminOk = !!raw.adminOk;
+    f.adminOk = !!raw.adminOk || adminAuthed();
     if(raw.toolsCustom) f.toolsCustom = Object.assign({pool:"people",items:"",couples:true,cat:"전체"}, raw.toolsCustom);
     if(!f.wheel || !Array.isArray(f.wheel.history)) f.wheel = {history:[], last:null};
     if(!f.lock) f.lock = {score:false, notice:true, gb:true};
@@ -1471,8 +1471,20 @@ function nickOf(id){
 }
 function subOf(id){ return P[id] ? "(" + P[id].short + ")" : ""; }
 function nameHTML(id){ return esc(nickOf(id)) + ' <span class="sub2">'+esc(subOf(id))+'</span>'; }
+var ADMIN_KEY = "xmasParty.adminAuthed";   /* 이 기기에서 PIN 인증을 마친 관리자 */
+function adminAuthed(){
+  try{ var v = localStorage.getItem(ADMIN_KEY) || ""; return ADMINS.indexOf(v) >= 0; }catch(e){ return false; }
+}
+function setAdminAuthed(){
+  S.adminOk = true; save();
+  try{ localStorage.setItem(ADMIN_KEY, S.me || ""); }catch(e){}
+}
+function clearAdminAuthed(){
+  S.adminOk = false; save();
+  try{ localStorage.removeItem(ADMIN_KEY); }catch(e){}
+}
 function isAdminPerson(){ return ADMINS.indexOf(S.me) >= 0; }
-function isAdmin(){ return isAdminPerson() && !!S.adminOk; }
+function isAdmin(){ return isAdminPerson() && (!!S.adminOk || adminAuthed()); }
 function canEditScore(){ return !S.lock.score || isAdmin(); }
 
 /* 관리자 PIN 확인 */
@@ -1490,7 +1502,7 @@ function askPin(cb, msg){
   setTimeout(function(){ try{ inp.focus(); }catch(e){} }, 120);
   function tryOk(){
     if(inp.value === ADMIN_PIN){
-      S.adminOk = true; save(); closeModal();
+      setAdminAuthed(); closeModal();
       vibrate(20);
       if(cb) cb();
     } else {
@@ -1508,7 +1520,7 @@ function askPin(cb, msg){
 }
 function requireAdmin(cb){
   if(!isAdminPerson()){ toast("관리자(경녕·한길)만 할 수 있어요"); return; }
-  if(S.adminOk){ cb(); return; }
+  if(isAdmin()){ cb(); return; }        /* 한 번 인증하면 이 기기에서는 계속 유지 */
   askPin(cb, "관리자 확인 후 진행할게요");
 }
 
@@ -2135,7 +2147,10 @@ function pickCho(){
   publishTools({ kind:"cho", value:pick.c, ex:pick.ex, at:Date.now(), by:S.me||"" });
 }
 /* 게임별 랜덤 조 뽑기 — 부부는 서로 다른 조 */
+var lastDrawAt = 0;
 function drawTeams(kind){
+  if(Date.now() - lastDrawAt < 1200) return;   /* 더블탭으로 두 번 뽑히지 않게 */
+  lastDrawAt = Date.now();
   var couples = S.toolsCustom.couples !== false;
   var a = [], b = [];
   if(couples){
@@ -2923,9 +2938,12 @@ function openProfileModal(highlight){
       var picked = b.getAttribute("data-pick");
       var prevMe = S.me;
       S.me = picked;
-      if(picked !== prevMe) S.adminOk = false;
+      if(picked !== prevMe){
+        if(ADMINS.indexOf(picked) < 0) clearAdminAuthed();   /* 비관리자 프로필이면 해제 */
+        else S.adminOk = adminAuthed();                       /* 관리자끼리는 유지 */
+      }
       save(); refreshMe(); renderBoard(); renderNotice(); renderLockBar(); renderShop(); renderGuestbook(); applyGuestVisibility();
-      if(ADMINS.indexOf(picked) >= 0 && !S.adminOk){
+      if(ADMINS.indexOf(picked) >= 0 && !isAdmin()){
         askPin(function(){ openProfileModal(); }, "관리자(경녕·한길)로 접속합니다. PIN 4자리를 입력해 주세요");
       } else {
         openProfileModal();

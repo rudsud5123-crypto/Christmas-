@@ -10,14 +10,16 @@
 </style>
 </head>
 <body>
-<div id="wrap"><iframe id="f" src="./index.html?qa=1"></iframe></div>
+<div id="wrap"><iframe id="f"></iframe></div>
 <script>
 (function(){
   var q = new URLSearchParams(location.search);
   var tab = q.get("tab") || "games";
   var y = Number(q.get("y") || 0);
   var open = q.get("open");           /* 상세 섹션 이름 (예: sectHalli) */
+  var v = q.get("v") || String(Date.now());
   var f = document.getElementById("f");
+  f.src = "./index.html?qa=1&v=" + encodeURIComponent(v);
   f.addEventListener("load", function(){
     try{
       var d = f.contentDocument, w = f.contentWindow;
