@@ -497,6 +497,9 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
 .awardrow .an{flex:1;min-width:0}
 .awardrow .an b{display:block;font-size:17px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .awardrow .an span{font-size:12px;color:#8a8482}
+.awardprize{margin:-5px 6px 9px 48px;font-size:13.5px;font-weight:700;color:var(--red-deep);line-height:1.5}
+.awardprize.dim{color:#8a8482;font-weight:400}
+.awardsecret{margin:8px 0 2px;text-align:center;font-size:13px;color:#7a7472;background:var(--cream);border:1.5px dashed #d9d2ca;border-radius:12px;padding:8px 10px;line-height:1.5}
 .awardrow .ap{font-size:19px;font-weight:700;color:var(--red);flex:0 0 auto}
 
 .footnote{text-align:center;color:#F7E1E1;font-size:13px;padding:2px 16px 20px;line-height:1.6;position:relative;z-index:1}
@@ -3093,6 +3096,13 @@ function confetti(duration){
   frame(performance.now() + 1);   /* 첫 프레임은 바로 그림 */
   window.requestAnimationFrame(frame);
 }
+function prizesOpen(){ return !!(S.prizes && S.prizes.open); }
+function awardPrizeHTML(i){
+  if(!prizesOpen()) return "";             /* 비밀 모드면 상품 내용은 숨김 */
+  var val = (S.prizes && S.prizes["p"+(i+1)]) || "";
+  if(!val) return '<div class="awardprize dim">🎁 경품 준비 중</div>';
+  return '<div class="awardprize">🎁 '+esc(val)+'</div>';
+}
 function showAward(){
   var arr = ranking();
   var top = arr.slice(0,3);
@@ -3105,9 +3115,9 @@ function showAward(){
       return '<div class="awardrow'+(i===0?" first":"")+'"><span class="medal">'+medal[i]+'</span>'+
         avatarHTML(r.id,"lg")+'<div class="an"><b>'+esc(nickOf(r.id))+'</b>'+
         '<span>'+esc(subOf(r.id))+' · '+(r.rank!==i+1?"공동 "+r.rank+"위":"")+'</span></div>'+
-        '<span class="ap">'+r.total+'점</span></div>'+
-        ((S.prizes && S.prizes.open && S.prizes["p"+(i+1)]) ? '<div style="text-align:right;font-size:12.5px;color:#7a7472;margin:-4px 4px 6px">🎁 '+esc(S.prizes["p"+(i+1)])+'</div>' : '');
+        '<span class="ap">'+r.total+'점</span></div>'+ awardPrizeHTML(i);
     }).join("")+
+    (prizesOpen() ? '' : '<div class="awardsecret">🤫 경품은 비밀! 공개하면 여기에 보여요</div>')+
     '<div class="btns" style="margin-top:10px"><button type="button" class="primary" data-act="close">메리 크리스마스! 🎄</button></div>';
   $("#overlay").classList.add("on");
   m.querySelector('[data-act="close"]').addEventListener("click", closeModal);
