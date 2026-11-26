@@ -473,6 +473,8 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
 .modal .btns{display:flex;gap:8px}
 .modal .btns button{flex:1;padding:11px 6px;font-size:16px;font-weight:700;border:2.5px solid var(--ink);border-radius:13px;cursor:pointer;background:#fff}
 .modal .btns .primary{background:var(--red);color:#fff;border-color:var(--red)}
+.modal .logoutbtn{display:block;width:100%;margin-top:8px;border:2px dashed #d6cbb9;border-radius:13px;padding:9px 6px;font-size:14.5px;font-weight:700;color:var(--red);background:var(--cream);cursor:pointer}
+.modal .logoutbtn:active{transform:translateY(1px)}
 .modal h3{font-size:21px;margin:0 0 4px}
 .modal .msub{font-size:13.5px;color:#8a8482;margin:0 0 12px;line-height:1.5}
 
@@ -3015,6 +3017,7 @@ function openProfileModal(highlight){
     (me && S.profiles[me] && S.profiles[me].photo ? '<button type="button" id="photoDel">지우기</button>' : '')+'</div></div>'+
     '<div class="btns" style="margin-top:12px"><button type="button" data-act="close">닫기</button>'+
     '<button type="button" class="primary" data-act="save">저장</button></div>'+
+    (me ? '<button type="button" class="logoutbtn" data-act="logout">🚪 로그아웃</button>' : '')+
     '<div class="linkbox"><input type="text" id="shareLink" readonly value="'+esc(location.href)+'"><button type="button" id="shareCopy">복사</button></div>'+
     '<div class="sharednote" style="justify-content:center">📡 이 링크를 부부들에게 보내면 같이 써요</div>';
   $("#overlay").classList.add("on");
@@ -3097,7 +3100,18 @@ function openProfileModal(highlight){
     save(); queuePush(); renderAll(); refreshMe(); closeModal();
     toast(v ? (v + " 저장 완료!") : "저장 완료!");
   });
+  var lo = m.querySelector('[data-act="logout"]');
+  if(lo) lo.addEventListener("click", function(){ logoutMe(); });
   if(highlight && !me) nk.focus();
+}
+/* 이 기기의 로그인 선택만 해제 — 다른 사람 프로필·점수·방명록 등 방 데이터는 그대로 둡니다 */
+function logoutMe(){
+  S.me = "";
+  clearAdminAuthed();          /* 관리자 인증도 함께 해제 (localStorage 포함) */
+  save();
+  closeModal();
+  renderAll();
+  toast("로그아웃 했어요 👋");
 }
 function refreshMe(){
   var ava = $("#meAva"), nm = $("#meName");
