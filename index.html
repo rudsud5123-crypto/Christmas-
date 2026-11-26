@@ -136,8 +136,8 @@ h3{font-size:18px;margin:0;line-height:1.25}
 
 /* ---------- 일정표 ---------- */
 .tl{list-style:none;margin:0;padding:0}
-.tl li{display:grid;grid-template-columns:48px 14px 1fr;gap:7px;align-items:start;padding:5px 0}
-.tl .tt{font-weight:700;color:var(--red);font-size:14.5px;padding-top:1px}
+.tl li{display:grid;grid-template-columns:54px 14px 1fr;gap:7px;align-items:start;padding:5px 0}
+.tl .tt{font-weight:700;color:var(--red);font-size:13.5px;padding-top:1px;white-space:nowrap}
 .tl .dot{width:11px;height:11px;border-radius:50%;background:var(--red);border:2px solid var(--ink);margin-top:4px;position:relative}
 .tl li:not(:last-child) .dot::after{content:"";position:absolute;left:50%;top:11px;transform:translateX(-50%);width:2px;height:calc(100% + 14px);background:#e6ded3}
 .tl .tc{font-size:15.5px;line-height:1.45}
@@ -544,18 +544,18 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
       <div class="gmeta">
         <div class="row"><span class="lbl">조</span><span class="chip solid-red">남편 조</span><span style="font-size:14px">한길 · 윤민 · 봉수 · 정석 · 태성</span></div>
         <div class="row"><span class="lbl"></span><span class="chip solid-green">아내 조</span><span style="font-size:14px">가영 · 경녕 · 예진 · 지수 · 수정</span></div>
-        <div class="row"><span class="lbl">준비</span><span style="font-size:14px">할리갈리 · 밴드/스타킹(쫀쫀이용)</span></div>
+        <div class="row"><span class="lbl">준비</span><span style="font-size:14px">할리갈리 · 쫀쫀이</span></div>
         <div class="row"><span class="lbl">점수</span><span style="font-size:14px">1~5등 = <b>7, 5, 3, 2, 1점</b></span></div>
       </div>
     </article>
 
     <article class="game">
       <div class="gtop"><span class="num">4</span><h3>컵 세우기 빙고</h3><span class="badge green">개인전</span><span class="tm">25분</span></div>
-      <p class="rule">테이블 끝에서 <b>종이컵 밑동</b>을 손으로 쳐서 돌려 세운 뒤, 내 <b>빙고판 한 칸</b> 채우기!<br>빙고판은 <b>3×3</b>, 한 줄만 채우면 빙고! 먼저 완성한 순서로 점수!</p>
+      <p class="rule">테이블 끝에서 <b>종이컵 밑동</b>을 손으로 쳐서 돌려 세운 뒤, 내 <b>빙고판 한 칸</b> 채우기!<br>빙고판은 <b>마스킹테이프로 3×3</b>, 한 줄만 채우면 빙고! 먼저 완성한 순서로 점수!</p>
       <div class="gmeta">
         <div class="row"><span class="lbl">조</span><span class="chip solid-red">소 띠 조</span><span style="font-size:14px">한길 · 경녕 · 예진 · 지수 · 태성</span></div>
         <div class="row"><span class="lbl"></span><span class="chip solid-orange">돼지 띠 조</span><span style="font-size:14px">가영 · 윤민 · 봉수 · 정석 · 수정</span></div>
-        <div class="row"><span class="lbl">준비</span><span style="font-size:14px">종이컵 · 빙고판 · 마스킹테이프</span></div>
+        <div class="row"><span class="lbl">준비</span><span style="font-size:14px">종이컵 · 마스킹테이프</span></div>
         <div class="row"><span class="lbl">점수</span><span style="font-size:14px">1~5등 = <b>6, 4, 3, 2, 1점</b></span></div>
       </div>
     </article>
@@ -609,7 +609,7 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
     <h2><span class="u">준비물 체크</span></h2>
     <div class="prep" id="prepList"></div>
     <div class="prepbar"><div class="track"><div class="fill" id="prepFill"></div></div><span id="prepCount">0 / 0</span></div>
-    <span class="hint">눌러서 체크하면 이 폰에 저장돼요. (밴드·스타킹은 쫀쫀이 할리갈리용)</span>
+    <span class="hint">눌러서 체크하면 이 폰에 저장돼요. (빙고판은 마스킹테이프로 직접 그려요)</span>
   </div>
 </section>
 
@@ -801,13 +801,13 @@ var MODES = [
   {name:"멀리갈리", emoji:"🔔", rule:"종을 멀리 두고 달려가서 치기!"},
   {name:"스쿼트 할리갈리", emoji:"🏋️", rule:"스쿼트 2번 하고 종 치기!"},
   {name:"발리갈리", emoji:"🦶", rule:"손 금지! 발로만 종 누르기!"},
-  {name:"쫀쫀이 할리갈리", emoji:"🎗️", rule:"밴드/스타킹 당기며 종 치기!"},
+  {name:"쫀쫀이 할리갈리", emoji:"🎗️", rule:"쫀쫀이 당기며 종 치기!"},
   {name:"숨어갈리", emoji:"🔍", rule:"숨긴 종을 찾아서 치기!"}
 ];
 var WHEEL_COLORS = ["#A60C0E","#FFFFFF","#1E7B3C","#FBF0DA","#FFFFFF"];
 var WHEEL_TEXT   = ["#FFFFFF","#1B1B1B","#FFFFFF","#1B1B1B","#1B1B1B"];
 
-var PREP = ["가면","끈(추)","일회용 그릇","종이컵","할리갈리","빙고판","마스킹테이프","안대 1개","폰 카메라","밴드·스타킹"];
+var PREP = ["가면","끈(추)","일회용 그릇","종이컵","할리갈리","마스킹테이프","안대 1개","폰 카메라","쫀쫀이"];
 /* 초성퀴즈용 알짜 초성 13개 + 사회자 참고 예시 (펜션·아기용품에서 찾을 수 있는 것) */
 var CHO_LIST = [
   {c:"ㄱ", ex:"기저귀·국자·거울·가위·과자"},
@@ -841,7 +841,7 @@ var SCHEDULE = [
   ["12:00","카페에서 커피 한잔"],
   ["13:30","펜션으로 출발~"],
   ["15:00","경주 더스테이 스파 펜션 A동 입실<br>(크리스마스 꾸미기 &amp; 바베큐 준비)"],
-  ["17:30","바베큐 시작 🍖 (정석이네 합류!)"],
+  ["17:30","바베큐 시작 🍖 (정석지수 합류!)"],
   ["19:00","<b>크리스마스 파티 게임 시작!</b> (종료 시간 미정)"]
 ];
 var VENUE = {name:"경주 더스테이 스파 펜션", lat:35.664579, lng:129.405497,
@@ -1530,14 +1530,12 @@ function renderWheel(){
     var p0 = pt(a0,R), p1 = pt(a1,R);
     html += '<path d="M'+C+' '+C+' L'+p0[0].toFixed(2)+' '+p0[1].toFixed(2)+' A'+R+' '+R+' 0 0 1 '+p1[0].toFixed(2)+' '+p1[1].toFixed(2)+' Z" fill="'+WHEEL_COLORS[i]+'" stroke="#1B1B1B" stroke-width="3" stroke-linejoin="round"/>';
     var mid = a0 + step/2;
-    var flip = (mid>90 && mid<270) ? 180 : 0;
     var label = m.name.replace(" 할리갈리","");
-    var fs = m.name.length >= 7 ? 15 : 16;
-    html += '<g transform="rotate('+mid+' '+C+' '+C+')">'+
-      '<text x="'+C+'" y="'+(C-94)+'" text-anchor="middle" dominant-baseline="middle" transform="rotate('+flip+' '+C+' '+(C-94)+')" '+
-      'font-family="Gaegu, sans-serif" font-weight="700" font-size="'+fs+'" fill="'+WHEEL_TEXT[i]+'" '+
+    var lp = pt(mid, 92);
+    html += '<text x="'+lp[0].toFixed(1)+'" y="'+lp[1].toFixed(1)+'" text-anchor="middle" dominant-baseline="middle" '+ 
+      'font-family="Gaegu, sans-serif" font-weight="700" font-size="16" fill="'+WHEEL_TEXT[i]+'" '+ 
       'style="paint-order:stroke;stroke:'+(WHEEL_TEXT[i]==="#FFFFFF"?"rgba(0,0,0,.22)":"rgba(255,255,255,.7)")+';stroke-width:3px;stroke-linejoin:round">'+
-      esc(label)+'</text></g>';
+      esc(label)+'</text>';
   });
   html += '<circle cx="160" cy="160" r="28" fill="#fff" stroke="#1B1B1B" stroke-width="3"/>';
   svg.innerHTML = html;
@@ -1691,7 +1689,7 @@ function renderSplit(t){
   area.innerHTML = '<div class="splitcols">'+
     '<div class="splitcol a"><h5>🎅 A조</h5>'+t.a.map(function(x){ return esc(x); }).join("<br>")+'</div>'+
     '<div class="splitcol b"><h5>🤶 B조</h5>'+t.b.map(function(x){ return esc(x); }).join("<br>")+'</div></div>'+
-    '<div class="sharednote">📡 모든 폰에 같이 보여요'+(t.by && P[t.by] ? ' · '+esc(P[t.by].short)+'가 섞음' : '')+'</div>';
+    '<div class="sharednote">📡 모든 폰에 같이 보여요'+(t.by && P[t.by] ? ' · '+esc(P[t.by].short)+' 섞음' : '')+'</div>';
 }
 var pickTimer = null;
 function publishTools(obj){ S.tools = obj; save(); queuePush(); renderSharedTools(); }
@@ -1820,14 +1818,15 @@ function renderPodium(){
   pod.innerHTML = [1,0,2].map(function(i){
     var r = arr[i];
     return '<div class="pod p'+(i+1)+'">'+
-      '<div class="medal">'+medal[i]+'</div>'+avatarHTML(r.id,"lg")+
+      '<div class="medal">'+(medal[r.rank-1] || medal[i])+'</div>'+avatarHTML(r.id,"lg")+
       '<div class="nm">'+esc(nickOf(r.id))+'</div>'+
       '<div class="sub2">'+esc(subOf(r.id))+'</div>'+
       '<div class="pt">'+r.total+'점</div>'+
       (r.rank !== i+1 ? '<span class="tie">공동 '+r.rank+'위</span>' : '')+'</div>';
   }).join("");
   var tieTop = false;
-  for(var k=0;k<3;k++){ if(arr[k] && arr[k+1] && arr[k].total === arr[k+1].total) tieTop = true; }
+  var maxScore = arr.length ? arr[0].total : 0;
+  for(var k=0;k<3;k++){ if(arr[k] && arr[k+1] && arr[k].total === arr[k+1].total && maxScore > 0) tieTop = true; }
   $("#desperate").classList.toggle("on", tieTop);
 }
 function renderRankList(){
@@ -2169,10 +2168,10 @@ function confetti(duration){
   ctx.setTransform(dpr,0,0,dpr,0,0);
   var colors = ["#A60C0E","#E8B23A","#1E7B3C","#FFFFFF","#DE7A1F","#F7C6C6","#2E86DE"];
   var parts = [];
-  for(var i=0;i<160;i++){
+  for(var i=0;i<170;i++){
     parts.push({
-      x: Math.random()*W, y: -20 - Math.random()*H*0.4,
-      vx: (Math.random()-0.5)*110, vy: 110 + Math.random()*190,
+      x: Math.random()*W, y: -20 - Math.random()*H*0.5,
+      vx: (Math.random()-0.5)*150, vy: 60 + Math.random()*120,
       w: 5 + Math.random()*7, h: 8 + Math.random()*8,
       rot: Math.random()*Math.PI*2, vr: (Math.random()-0.5)*10,
       color: colors[Math.floor(Math.random()*colors.length)]
@@ -2185,7 +2184,7 @@ function confetti(duration){
     var fade = Math.max(0, 1 - Math.max(0, t - (duration-700))/700);
     for(var i=0;i<parts.length;i++){
       var p = parts[i];
-      p.vy += 520*0.016; p.x += p.vx*0.016; p.y += p.vy*0.016; p.rot += p.vr*0.016;
+      p.vy += 150*0.016; p.x += p.vx*0.016; p.y += p.vy*0.016; p.rot += p.vr*0.016;
       ctx.save();
       ctx.globalAlpha = fade;
       ctx.translate(p.x, p.y); ctx.rotate(p.rot);
