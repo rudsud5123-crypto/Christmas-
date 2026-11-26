@@ -259,6 +259,10 @@ svg.wheel{width:100%;height:100%;display:block;transform-origin:50% 50%;will-cha
 @keyframes blink{from{opacity:1}to{opacity:.62}}
 .awardbtn{width:100%;margin:8px 0 2px;border:2.5px solid var(--ink);border-radius:13px;padding:10px;font-size:16px;font-weight:700;background:var(--gold);color:#4a3200;cursor:pointer;box-shadow:0 4px 0 rgba(27,27,27,.2)}
 .awardbtn:active{transform:translateY(4px);box-shadow:none}
+.prizerow{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.prizerow .medal{font-size:20px;flex:0 0 auto}
+.prizeinput{flex:1;min-width:0;border:2px solid var(--ink);border-radius:10px;padding:6px 9px;font-size:14.5px;background:#fff}
+.prizetxt{flex:1;font-size:15.5px;font-weight:700;background:var(--cream);border-radius:10px;padding:6px 9px;line-height:1.4}
 
 .ranklist{margin-top:4px;border-top:2px solid var(--ink)}
 .rrow{display:grid;grid-template-columns:26px 34px 1fr auto;align-items:center;gap:6px;padding:6px 2px;border-bottom:1.5px dashed #e6ded3;cursor:pointer}
@@ -715,6 +719,11 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
   </div>
 
   <div class="card">
+    <h2><span class="u">🎁 비밀 경품</span> <span class="badge dark" id="prizeBadge">🔒 비밀</span></h2>
+    <div id="prizeBody"></div>
+  </div>
+
+  <div class="card">
     <h2><span class="u">점수 입력</span></h2>
     <div class="lockbar" id="lockBar"></div>
 
@@ -887,6 +896,7 @@ function freshShared(){
     lock:{score:false, notice:true},
     shop:{},
     tools:null,
+    prizes:{p1:"", p2:"", p3:"", open:false},
     profiles:{}
   };
 }
@@ -1004,6 +1014,7 @@ function flatten(){
   m["wheel"] = { history:(S.wheel.history||[]).slice(0,20), last:S.wheel.last||null };
   m["notice"] = S.notice;
   m["lock"] = S.lock;
+  m["prizes"] = S.prizes;
   Object.keys(S.shop).forEach(function(id){ m["shop/"+id] = S.shop[id]; });
   if(S.tools) m["tools"] = S.tools;
   Object.keys(S.profiles).forEach(function(id){
@@ -1076,6 +1087,7 @@ function applyRemote(rootVal){
       else if(path==="wheel" && v) next.wheel = {history:Array.isArray(v.history)?v.history:[], last:v.last||null};
       else if(path==="notice" && v) next.notice = {text:v.text||"", place:v.place||"", at:v.at||0, by:v.by||""};
       else if(path==="lock" && v) next.lock = {score:!!v.score, notice:!!v.notice};
+      else if(path==="prizes" && v) next.prizes = {p1:v.p1||"", p2:v.p2||"", p3:v.p3||"", open:!!v.open};
       else if(path==="tools" && v) next.tools = v;
       else if(seg[0]==="shop" && seg[1] && v) next.shop[seg[1]] = v;
       else if(seg[0]==="prof" && seg[1] && v) next.profiles[seg[1]] = {nick:v.nick||"", photo:v.photo||"", at:v.at||0};
@@ -1472,7 +1484,7 @@ function noticeEditor(){
     '<textarea id="noticeInput" style="width:100%;min-height:110px;border:2px solid #1B1B1B;border-radius:12px;padding:9px;font-family:inherit;font-size:15.5px;line-height:1.6;resize:vertical" placeholder="공지 내용">'+esc(S.notice.text||"")+'</textarea>'+
     '<div class="fieldrow" style="margin-top:10px"><label>장소/주소 (선택)</label>'+
     '<input type="text" id="noticePlace" maxlength="60" placeholder="예: 경주 황남빵 본점 / 경북 경주시 태종로 64" value="'+esc(S.notice.place||"")+'"></div>'+
-    '<div class="hint" style="text-align:left;margin:-4px 0 8px">주소를 넣으면 공지 아래에 네이버·카카오·티맵 길첮기 버튼이 생겨요</div>'+
+    '<div class="hint" style="text-align:left;margin:-4px 0 8px">주소를 넣으면 공지 아래에 네이버·카카오·티맵 길찾기 버튼이 생겨요</div>'+
     '<div class="btns"><button type="button" data-act="close">닫기</button>'+
     '<button type="button" class="primary" data-act="save">저장</button></div>';
   $("#overlay").classList.add("on");
@@ -1858,7 +1870,40 @@ function renderRankList(){
     row.addEventListener("click", function(){ row.classList.toggle("open"); });
   });
 }
-function renderBoard(){ renderPodium(); renderRankList(); }
+function renderBoard(){ renderPodium(); renderRankList(); renderPrizes(); }
+
+/* ══════════════════ 비밀 경품 ══════════════════ */
+function renderPrizes(){
+  var body = $("#prizeBody"), badge = $("#prizeBadge");
+  if(!body) return;
+  var p = S.prizes || {p1:"",p2:"",p3:"",open:false};
+  var open = !!p.open, admin = isAdmin();
+  if(badge){
+    badge.textContent = open ? "🎉 공개 중" : "🔒 비밀 모드";
+    badge.className = "badge " + (open ? "gold" : "dark");
+  }
+  if(!open && !admin){
+    body.innerHTML = '<div class="notice empty" style="text-align:center">🎁 비밀 경품 (시상식 때 공개!)</div>'+
+      '<span class="hint" style="text-align:center">관리자가 시상식 때 열어줄 거예요 🤫</span>';
+    return;
+  }
+  var medal = ["🥇","🥈","🥉"];
+  var html = [1,2,3].map(function(n,i){
+    var key = "p" + n, val = p[key] || "";
+    if(admin){
+      return '<div class="prizerow"><span class="medal">'+medal[i]+'</span>'+
+        '<input class="prizeinput" type="text" maxlength="40" data-prize="'+key+'" value="'+esc(val)+'" placeholder="'+n+'등 경품"></div>';
+    }
+    return '<div class="prizerow"><span class="medal">'+medal[i]+'</span><span class="prizetxt">'+esc(val || "—")+'</span></div>';
+  }).join("");
+  if(admin){
+    html += '<div class="btnrow" style="margin-top:8px">'+
+      '<button type="button" class="minibtn pri" data-prizesave="1">경품 저장</button>'+
+      '<button type="button" class="minibtn" data-prizetoggle="1">'+(open ? "🔒 다시 숨기기" : "🔓 경품 공개하기")+'</button></div>'+
+      '<span class="hint">저장을 누른 뒤 공개하면 모두에게 보여요</span>';
+  }
+  body.innerHTML = html;
+}
 
 /* ══════════════════ 입력: 팀전 ══════════════════ */
 function teamBlock(key, title, sub, opts){
@@ -2184,7 +2229,8 @@ function confetti(duration){
   var parts = [];
   for(var i=0;i<170;i++){
     parts.push({
-      x: Math.random()*W, y: -20 - Math.random()*H*0.5,
+      x: Math.random()*W,
+      y: (i < 55) ? Math.random()*H*0.55 : (-20 - Math.random()*H*0.5),
       vx: (Math.random()-0.5)*150, vy: 60 + Math.random()*120,
       w: 5 + Math.random()*7, h: 8 + Math.random()*8,
       rot: Math.random()*Math.PI*2, vr: (Math.random()-0.5)*10,
@@ -2209,6 +2255,7 @@ function confetti(duration){
     if(t < duration) window.requestAnimationFrame(frame);
     else { ctx.clearRect(0,0,W,H); c.style.display = "none"; }
   }
+  frame(performance.now() + 1);   /* 첫 프레임은 바로 그림 */
   window.requestAnimationFrame(frame);
 }
 function showAward(){
@@ -2223,7 +2270,8 @@ function showAward(){
       return '<div class="awardrow'+(i===0?" first":"")+'"><span class="medal">'+medal[i]+'</span>'+
         avatarHTML(r.id,"lg")+'<div class="an"><b>'+esc(nickOf(r.id))+'</b>'+
         '<span>'+esc(subOf(r.id))+' · '+(r.rank!==i+1?"공동 "+r.rank+"위":"")+'</span></div>'+
-        '<span class="ap">'+r.total+'점</span></div>';
+        '<span class="ap">'+r.total+'점</span></div>'+
+        ((S.prizes && S.prizes.open && S.prizes["p"+(i+1)]) ? '<div style="text-align:right;font-size:12.5px;color:#7a7472;margin:-4px 4px 6px">🎁 '+esc(S.prizes["p"+(i+1)])+'</div>' : '');
     }).join("")+
     '<div class="btns" style="margin-top:10px"><button type="button" class="primary" data-act="close">메리 크리스마스! 🎄</button></div>';
   $("#overlay").classList.add("on");
@@ -2239,8 +2287,7 @@ document.addEventListener("click", function(e){
   var t = e.target;
   if(!t || !t.closest) return;
 
-  var tm = t.closest("[data-tmaps]");
-  if(tm){
+  var tm = t.closest("[data-tmaps]");  if(tm){
     e.preventDefault();
     location.href = "tmap://search?name=" + encodeURIComponent(tm.getAttribute("data-tmaps"));
     setTimeout(function(){ toast("티맵 앱이 안 열리면 설치 후 다시 눌러주세요"); }, 1200);
@@ -2285,6 +2332,21 @@ document.addEventListener("click", function(e){
   }
   var cat = t.closest("[data-cat]");
   if(cat){ S.toolsCustom.cat = cat.getAttribute("data-cat"); save(); renderShop(); return; }
+
+  var psave = t.closest("[data-prizesave]");
+  if(psave){
+    $all("[data-prize]").forEach(function(inp){ S.prizes[inp.getAttribute("data-prize")] = inp.value.trim(); });
+    save(); queuePush(); renderPrizes(); toast("경품 저장했어요 🎁");
+    return;
+  }
+  var ptog = t.closest("[data-prizetoggle]");
+  if(ptog){
+    $all("[data-prize]").forEach(function(inp){ S.prizes[inp.getAttribute("data-prize")] = inp.value.trim(); });
+    S.prizes.open = !S.prizes.open;
+    save(); queuePush(); renderPrizes();
+    toast(S.prizes.open ? "경품 공개! 모두에게 보여요 🎁" : "경품 다시 숨김 🔒");
+    return;
+  }
 });
 
 document.addEventListener("change", function(e){
@@ -2314,6 +2376,10 @@ document.addEventListener("input", function(e){
     S.photo[id].score = (raw === "") ? null : Number(raw);
     t.classList.toggle("manual", raw !== "");
     save(); renderBoard(); updateCounts(); queuePush();
+  }
+  if(t.hasAttribute("data-prize")){
+    S.prizes[t.getAttribute("data-prize")] = t.value;
+    save();
   }
 });
 
