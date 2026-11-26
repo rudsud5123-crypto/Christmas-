@@ -436,10 +436,61 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
 .awardrow .an span{font-size:12px;color:#8a8482}
 .awardrow .ap{font-size:19px;font-weight:700;color:var(--red);flex:0 0 auto}
 
-.footnote{text-align:center;color:#F7E1E1;font-size:13px;padding:4px 20px 16px;line-height:1.6;position:relative;z-index:1}
+.footnote{text-align:center;color:#F7E1E1;font-size:13px;padding:2px 16px 20px;line-height:1.6;position:relative;z-index:1}
 .footnote a{color:#fff;text-decoration:underline}
+.footline{display:inline-block;max-width:100%;background:#fff;border:3px solid var(--ink);border-radius:999px;padding:8px 17px;font-size:15.5px;font-weight:700;color:var(--red);box-shadow:0 4px 0 rgba(0,0,0,.22);transform:rotate(-1.2deg);letter-spacing:-.01em;word-break:keep-all;line-height:1.4}
+.footline .hl{color:var(--green);text-decoration:underline wavy var(--gold);text-decoration-thickness:2px;text-underline-offset:3px}
+.footsub{margin-top:9px;font-size:11.5px;color:#F7CFCF;letter-spacing:.02em}
 
-@media (max-width:400px){
+/* ---------- 탭 5개 한 줄 ---------- */
+.tabs{gap:3px;padding:4px}
+.tab{flex:1 1 0;min-width:0;padding:6px 0;overflow:hidden}
+.tab .tl{display:block;max-width:100%;white-space:nowrap;font-size:11.5px;letter-spacing:-.03em}
+.tab .te{display:block;font-size:17px;line-height:1.1}
+
+/* ---------- 방명록 ---------- */
+.gbwrite{background:linear-gradient(#FFFDF7,#FFF7EA)}
+.gblead{text-align:center;font-size:15px;line-height:1.6;color:#6f6a68;margin:-2px 0 10px}
+.gbme{display:flex;align-items:center;gap:7px;border:2px dashed #d6cbb9;border-radius:12px;background:#fff;padding:6px 9px;margin-bottom:9px;font-size:13.5px;line-height:1.3;color:#5c5654}
+.gbme .sp{flex:1}
+.gbme button{border:2px solid var(--ink);border-radius:999px;background:#fff;font-size:12px;font-weight:700;padding:3px 9px;cursor:pointer;flex:0 0 auto}
+.gbme button.pri{background:var(--red);color:#fff;border-color:var(--red)}
+.gbchips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+.gbchips button{border:2px solid var(--ink);border-radius:999px;background:#fff;padding:4px 10px;font-size:13px;font-weight:700;cursor:pointer;line-height:1.35;transition:transform .08s,background .15s}
+.gbchips button:active{transform:scale(.95);background:var(--gold)}
+.gbfield{display:flex;gap:6px}
+.gbfield input{flex:1;min-width:0;border:2.5px solid var(--ink);border-radius:12px;padding:9px 11px;font-size:15.5px;background:#fff}
+.gbfield input:focus{outline:2px solid var(--red);outline-offset:1px}
+.gbfield input:disabled{background:#F2EFE9;color:#9b948f;border-color:#b8b1a8}
+.gbfield button{border:2.5px solid var(--ink);background:var(--red);color:#fff;border-radius:12px;padding:0 14px;font-size:15.5px;font-weight:700;cursor:pointer;box-shadow:0 3px 0 rgba(27,27,27,.2);flex:0 0 auto}
+.gbfield button:active{transform:translateY(3px);box-shadow:none}
+.gbfield button:disabled{background:#c9c1b8;border-color:#b8b1a8;box-shadow:none}
+.gbcount{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:12px;color:#8a8482}
+.gbcount .sp{flex:1}
+.gbcount b{color:var(--red)}
+.gbtitle{display:flex;align-items:center;gap:7px;margin:0 13px 9px;font-size:16px;font-weight:700;color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.28)}
+.gblist{display:flex;flex-direction:column;gap:12px;margin:0 10px 16px}
+.gbcard{position:relative;background:#fff;border:3px solid var(--ink);border-radius:16px;padding:12px 13px 9px;box-shadow:var(--shadow)}
+.gbcard:nth-child(odd){transform:rotate(-.35deg)}
+.gbcard:nth-child(even){transform:rotate(.35deg)}
+.gbcard .tape{position:absolute;top:-9px;left:50%;margin-left:-28px;width:56px;height:16px;background:rgba(232,178,58,.5);border:1.5px solid rgba(27,27,27,.16);border-radius:3px;transform:rotate(-2.5deg)}
+.gbhead{display:flex;align-items:center;gap:7px}
+.gbwho{flex:1;min-width:0;line-height:1.25}
+.gbwho b{display:block;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gbwho .real{font-size:11.5px;color:#8a8482}
+.gbtime{font-size:11.5px;color:#a9a3a0;flex:0 0 auto}
+.gbtext{margin:7px 0 0;font-size:16px;line-height:1.55;color:#2a2724;word-break:break-word;white-space:pre-wrap}
+.gbfoot{display:flex;align-items:center;gap:6px;margin-top:9px}
+.gblike{display:inline-flex;align-items:center;gap:4px;border:2px solid var(--ink);background:#fff;border-radius:999px;padding:2px 10px;font-size:13px;font-weight:700;cursor:pointer;line-height:1.5}
+.gblike b{font-size:13px;color:var(--red)}
+.gblike.on{background:var(--red-soft);border-color:var(--red)}
+.gblike.pop{animation:gblikepop .34s ease-out}
+@keyframes gblikepop{0%{transform:scale(1)}45%{transform:scale(1.25)}100%{transform:scale(1)}}
+.gbfoot .sp{flex:1}
+.gbdel{border:0;background:transparent;color:#b9b1a9;font-size:12px;text-decoration:underline;cursor:pointer;padding:0}
+.gbempty{text-align:center;color:#F7E1E1;border:2.5px dashed rgba(255,255,255,.55);border-radius:16px;padding:20px 12px;font-size:14px;line-height:1.7}
+
+@media (max-width:400px){ 
   body{font-size:16.5px}
   .hero h1{font-size:28px}
   .rline{grid-template-columns:34px 1fr 38px}
@@ -472,10 +523,11 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
 </header>
 
 <nav class="tabs" role="tablist">
-  <button class="tab on" data-tab="guide" role="tab"><span class="te">🎄</span>파티 안내</button>
-  <button class="tab" data-tab="games" role="tab"><span class="te">🎮</span>게임 안내</button>
-  <button class="tab" data-tab="score" role="tab"><span class="te">🏆</span>점수판</button>
-  <button class="tab" data-tab="wheel" role="tab"><span class="te">🎡</span>룰렛</button>
+  <button class="tab on" data-tab="guide" role="tab"><span class="te">🎄</span><span class="tl">파티 안내</span></button>
+  <button class="tab" data-tab="games" role="tab"><span class="te">🎮</span><span class="tl">게임 안내</span></button>
+  <button class="tab" data-tab="score" role="tab"><span class="te">🏆</span><span class="tl">점수판</span></button>
+  <button class="tab" data-tab="wheel" role="tab"><span class="te">🎡</span><span class="tl">룰렛</span></button>
+  <button class="tab" data-tab="guest" role="tab"><span class="te">💌</span><span class="tl">방명록</span></button>
 </nav>
 
 <main>
@@ -765,9 +817,37 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
     </div>
   </div>
 
-  <div class="footnote">❤️ 수고하셨습니다! 메리 크리스마스 ⭐</div>
+</section>
+
+<!-- ══════════════ 방명록 ══════════════ -->
+<section id="tab-guest" hidden>
+
+  <div class="card gbwrite">
+    <h2 style="justify-content:center"><span class="u">💌 크리스마스 방명록</span></h2>
+    <p class="gblead">오늘 하루 어땠어요? 🎄<br>덕담·설렘·각오, 한 줄씩 남겨주세요!</p>
+    <div class="gbme" id="gbMeLine"></div>
+    <div class="gbchips">
+      <button type="button" data-gbchip="🎄 메리크리스마스!">🎄 메리크리스마스!</button>
+      <button type="button" data-gbchip="🥂 오늘 밤 불태우자">🥂 오늘 밤 불태우자</button>
+      <button type="button" data-gbchip="👶 왕자님들 잘 부탁해">👶 왕자님들 잘 부탁해</button>
+      <button type="button" data-gbchip="🎁 1등은 내 거!">🎁 1등은 내 거!</button>
+    </div>
+    <div class="gbfield">
+      <input type="text" id="gbInput" maxlength="80" placeholder="한 줄 남기기…" autocomplete="off" enterkeyhint="send">
+      <button type="button" id="gbSend">남기기</button>
+    </div>
+    <div class="gbcount" id="gbCount"></div>
+  </div>
+
+  <div class="gbtitle">🎀 다 같이 남긴 글 <span class="badge ghost" id="gbBadge">0개</span></div>
+  <div class="gblist" id="gbList"></div>
 </section>
 </main>
+
+<footer class="footnote">
+  <div class="footline">🎅 수고하셨습니다! <span class="hl">메리 크리스마스</span> 🎄</div>
+  <div class="footsub">2026.12.07 · 다섯 부부 + 왕자 두명</div>
+</footer>
 
 <div class="overlay" id="overlay"><div class="modal" id="modal"></div></div>
 <input type="file" id="photoFile" accept="image/*" hidden>
@@ -905,7 +985,8 @@ function freshShared(){
     shop:{},
     tools:null,
     prizes:{p1:"", p2:"", p3:"", open:false},
-    profiles:{}
+    profiles:{},
+    guestbook:{}
   };
 }
 function fresh(){
@@ -939,6 +1020,7 @@ function load(){
       f.notices["n-legacy"] = {text:raw.notice.text, place:raw.notice.place||"", at:raw.notice.at||Date.now(), by:raw.notice.by||""};
     }
     if(!f.best || !Array.isArray(f.best.ids)) f.best = {bonus:3, ids:[]};
+    if(!f.guestbook || typeof f.guestbook !== "object") f.guestbook = {};
   }catch(e){ return fresh(); }
   return f;
 }
@@ -1031,6 +1113,11 @@ function flatten(){
     var pr = S.profiles[id] || {};
     if(pr.nick || pr.photo) m["prof/"+id] = { nick:pr.nick||"", photo:pr.photo||"", at:pr.at||0 };
   });
+  Object.keys(S.guestbook || {}).forEach(function(id){
+    var g = S.guestbook[id] || {};
+    if(!g.t) return;
+    m["gb/"+id] = { t:String(g.t).slice(0,80), at:Number(g.at)||0, by:g.by||"", l:(Array.isArray(g.l)?g.l.slice(0,12):[]) };
+  });
   return m;
 }
 
@@ -1122,6 +1209,7 @@ function applyRemote(rootVal){
       else if(path==="tools" && v) next.tools = v;
       else if(seg[0]==="shop" && seg[1] && v) next.shop[seg[1]] = v;
       else if(seg[0]==="prof" && seg[1] && v) next.profiles[seg[1]] = {nick:v.nick||"", photo:v.photo||"", at:v.at||0};
+      else if(seg[0]==="gb" && seg[1] && v) next.guestbook[seg[1]] = { t:String(v.t||"").slice(0,80), at:Number(v.at)||0, by:v.by||"", l:Array.isArray(v.l)?v.l.slice(0,12):[] };
     });
 
     S = Object.assign(next, {});
@@ -1237,7 +1325,7 @@ function requireAdmin(cb){
 }
 
 /* ══════════════════ 탭 ══════════════════ */
-var TABS = ["guide","games","score","wheel"];
+var TABS = ["guide","games","score","wheel","guest"];
 function showTab(name){
   if(TABS.indexOf(name) < 0) name = "guide";
   S.tab = name; save();
@@ -2162,6 +2250,145 @@ function seedExtrasOnce(){
   if(added){ save(); queuePush(); }
 }
 
+/* ══════════════════ 방명록 ══════════════════ */
+var GB_MAX = 100;
+function gbWhen(ts){
+  var d = new Date(Number(ts) || Date.now()), now = new Date();
+  var hm = pad2(d.getHours()) + ":" + pad2(d.getMinutes());
+  var same = d.getFullYear()===now.getFullYear() && d.getMonth()===now.getMonth() && d.getDate()===now.getDate();
+  if(same) return hm;
+  var y = new Date(now.getTime() - 86400000);
+  if(d.getFullYear()===y.getFullYear() && d.getMonth()===y.getMonth() && d.getDate()===y.getDate()) return "어제 " + hm;
+  return (d.getMonth()+1) + "/" + d.getDate() + " " + hm;
+}
+function gbItems(){
+  var out = [];
+  Object.keys(S.guestbook || {}).forEach(function(id){
+    var g = S.guestbook[id] || {};
+    var text = String(g.t || "").trim();
+    if(!text) return;
+    out.push({ id:id, text:text, at:Number(g.at)||0, by:String(g.by||""), likes:(Array.isArray(g.l)?g.l.slice(0,12):[]) });
+  });
+  out.sort(function(a,b){ return (b.at - a.at) || (a.id < b.id ? 1 : -1); });
+  return out;
+}
+function renderGuestbook(){
+  var listEl = $("#gbList");
+  if(!listEl) return;
+  var items = gbItems();
+  var badge = $("#gbBadge");
+  if(badge) badge.textContent = items.length + "개";
+
+  var meLine = $("#gbMeLine");
+  if(meLine){
+    if(S.me && P[S.me]){
+      meLine.innerHTML = avatarHTML(S.me,"sm")+'<div><b>'+esc(nickOf(S.me))+'</b> <span style="color:#8a8482">('+esc(P[S.me].name)+')</span>로 남겨요</div>'+
+        '<span class="sp"></span><button type="button" data-gbprofile="1">바꾸기</button>';
+    } else {
+      meLine.innerHTML = '<span class="ava sm">?</span><div>먼저 <b>내 프로필</b>에서 본인을 골라주세요</div>'+
+        '<span class="sp"></span><button type="button" class="pri" data-gbprofile="1">프로필 고르기</button>';
+    }
+  }
+  var canWrite = !!(S.me && P[S.me]);
+  var inp = $("#gbInput"), send = $("#gbSend");
+  if(inp){
+    inp.disabled = !canWrite;
+    inp.placeholder = canWrite ? "한 줄 남기기…" : "내 프로필에서 본인을 먼저 골라주세요";
+  }
+  if(send) send.disabled = !canWrite;
+
+  if(!items.length){
+    listEl.innerHTML = '<div class="gbempty">🎄 아직 비어 있어요.<br>첫 번째 한마디를 남겨주세요!</div>';
+  } else {
+    listEl.innerHTML = items.map(function(g){
+      var by = (g.by && P[g.by]) ? g.by : "";
+      var liked = S.me ? g.likes.indexOf(S.me) >= 0 : false;
+      var canDel = by && (by === S.me || isAdminPerson());
+      return '<article class="gbcard" data-gbid="'+g.id+'">'+
+        '<span class="tape"></span>'+
+        '<div class="gbhead">'+(by ? avatarHTML(by,"") : '<span class="ava">🎅</span>')+
+          '<div class="gbwho"><b>'+esc(by ? nickOf(by) : "익명")+'</b>'+
+            '<span class="real">'+(by ? '('+esc(P[by].name)+')' : '')+'</span></div>'+
+          '<span class="gbtime">'+gbWhen(g.at)+'</span></div>'+
+        '<p class="gbtext">'+esc(g.text)+'</p>'+
+        '<div class="gbfoot">'+
+          '<button type="button" class="gblike'+(liked?" on":"")+'" data-gblike="'+g.id+'">'+(liked?"❤️":"🤍")+' <b>'+g.likes.length+'</b></button>'+
+          '<span class="sp"></span>'+
+          (canDel ? '<button type="button" class="gbdel" data-gbdel="'+g.id+'">삭제</button>' : '')+
+        '</div></article>';
+    }).join("");
+  }
+
+  var cnt = $("#gbCount");
+  if(cnt) cnt.innerHTML = '<span>✍️ 한마디 <b>'+items.length+'</b>개</span><span class="sp"></span><span>📡 모든 폰에 바로 보여요</span>';
+}
+function gbNeedMe(){
+  if(S.me && P[S.me]) return false;
+  toast("먼저 내 프로필에서 본인을 골라주세요");
+  openProfileModal(true);
+  return true;
+}
+function gbFillChip(text){
+  if(gbNeedMe()) return;
+  var inp = $("#gbInput");
+  if(!inp) return;
+  inp.value = text;
+  try{ inp.focus(); inp.setSelectionRange(inp.value.length, inp.value.length); }catch(e){}
+  vibrate(6);
+}
+function addGuest(){
+  if(gbNeedMe()) return;
+  var inp = $("#gbInput");
+  if(!inp) return;
+  var v = inp.value.replace(/\s+/g," ").trim();
+  if(!v){ toast("한마디 적어주세요 ✍️"); try{ inp.focus(); }catch(e){} return; }
+  var id = "g" + Date.now().toString(36) + Math.floor(Math.random()*1000).toString(36);
+  S.guestbook[id] = { t:v.slice(0,80), at:Date.now(), by:S.me, l:[] };
+  var all = gbItems();
+  if(all.length > GB_MAX){ all.slice(GB_MAX).forEach(function(g){ delete S.guestbook[g.id]; }); }
+  inp.value = "";
+  try{ inp.blur(); }catch(e){}
+  save(); renderGuestbook(); queuePush(); vibrate(10);
+  toast("한마디 남겼어요 💌");
+}
+function toggleGuestLike(id){
+  var g = S.guestbook[id];
+  if(!g) return;
+  if(gbNeedMe()) return;
+  var l = Array.isArray(g.l) ? g.l.slice(0,12) : [];
+  var i = l.indexOf(S.me);
+  if(i >= 0) l.splice(i,1); else l.push(S.me);
+  g.l = l;
+  save(); renderGuestbook(); queuePush();
+  if(i < 0){
+    vibrate(8);
+    var btn = document.querySelector('[data-gblike="'+id+'"]');
+    if(btn){ btn.classList.add("pop"); setTimeout(function(){ btn.classList.remove("pop"); }, 360); }
+  }
+}
+function askGuestDelete(id){
+  var g = S.guestbook[id];
+  if(!g) return;
+  var own = (g.by === S.me && !!S.me);
+  function openConfirm(){
+    var m = $("#modal");
+    m.className = "modal";
+    m.innerHTML = '<span class="big">🗑</span><div class="mode">이 글을 지울까요?</div>'+
+      '<p class="msub">'+(own ? "내가 남긴 한마디를 지워요." : "다른 사람이 남긴 글이에요. 관리자 권한으로 지워요.")+'<br>“'+esc(String(g.t||"").slice(0,40))+'”</p>'+
+      '<div class="btns"><button type="button" data-act="no">취소</button><button type="button" class="primary" data-act="yes">지우기</button></div>';
+    $("#overlay").classList.add("on");
+    m.querySelector('[data-act="no"]').addEventListener("click", closeModal);
+    m.querySelector('[data-act="yes"]').addEventListener("click", function(){
+      delete S.guestbook[id];
+      save(); renderGuestbook(); queuePush(); closeModal(); toast("지웠어요 🧹");
+    });
+  }
+  if(own) openConfirm();
+  else requireAdmin(openConfirm);
+}
+$("#gbSend").addEventListener("click", addGuest);
+$("#gbInput").addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); addGuest(); } });
+
 /* ══════════════════ 프로필 ══════════════════ */
 var pendingPhoto = null, pickTarget = null;
 function openProfileModal(highlight){
@@ -2194,7 +2421,7 @@ function openProfileModal(highlight){
       var prevMe = S.me;
       S.me = picked;
       if(picked !== prevMe) S.adminOk = false;
-      save(); refreshMe(); renderBoard(); renderNotice(); renderLockBar(); renderShop();
+      save(); refreshMe(); renderBoard(); renderNotice(); renderLockBar(); renderShop(); renderGuestbook();
       if(ADMINS.indexOf(picked) >= 0 && !S.adminOk){
         askPin(function(){ openProfileModal(); }, "관리자(경녕·한길)로 접속합니다. PIN 4자리를 입력해 주세요");
       } else {
@@ -2363,6 +2590,14 @@ document.addEventListener("click", function(e){
     });
     return;
   }
+  var gbLike = t.closest("[data-gblike]");
+  if(gbLike){ toggleGuestLike(gbLike.getAttribute("data-gblike")); return; }
+  var gbDel = t.closest("[data-gbdel]");
+  if(gbDel){ askGuestDelete(gbDel.getAttribute("data-gbdel")); return; }
+  var gbChip = t.closest("[data-gbchip]");
+  if(gbChip){ gbFillChip(gbChip.getAttribute("data-gbchip")); return; }
+  var gbProf = t.closest("[data-gbprofile]");
+  if(gbProf){ openProfileModal(true); return; }
   var tm = t.closest("[data-tmaps]");  if(tm){
     e.preventDefault();
     location.href = "tmap://search?name=" + encodeURIComponent(tm.getAttribute("data-tmaps"));
@@ -2475,7 +2710,7 @@ $("#resetBtn").addEventListener("click", function(){
   $("#overlay").classList.add("on");
   m.querySelector('[data-act="no"]').addEventListener("click", closeModal);
   m.querySelector('[data-act="yes"]').addEventListener("click", function(){
-    var keep = { check:S.check, tab:S.tab, me:S.me, toolsCustom:S.toolsCustom, notices:S.notices, lock:S.lock, shop:S.shop, profiles:S.profiles, prizes:S.prizes };
+    var keep = { check:S.check, tab:S.tab, me:S.me, toolsCustom:S.toolsCustom, notices:S.notices, lock:S.lock, shop:S.shop, profiles:S.profiles, prizes:S.prizes, guestbook:S.guestbook };
     var ns = freshShared();
     Object.keys(keep).forEach(function(k){ ns[k] = keep[k]; });
     S = ns;
@@ -2500,6 +2735,7 @@ function renderAll(){
   renderHistory();
   renderTools();
   renderShop();
+  renderGuestbook();
   refreshMe();
 }
 
