@@ -1087,6 +1087,18 @@ function applyRemote(rootVal){
     var map = {};
     results.forEach(function(r){ if(r.value !== undefined) map[r.path] = r.value; });
 
+    /* 내 화면과 이미 같으면 다시 그리지 않아요 (타이핑 중 화면 튐 방지) */
+    var localMap = {};
+    try{ localMap = JSON.parse(JSON.stringify(flatten())); }catch(e){ localMap = {}; }
+    var same = true;
+    Object.keys(map).forEach(function(k){
+      if(JSON.stringify(map[k]) !== JSON.stringify(localMap[k])) same = false;
+    });
+    Object.keys(localMap).forEach(function(k){
+      if(!(k in map)) same = false;
+    });
+    if(same){ lastPub = localMap; return; }
+
     var next = freshShared();
     next.check = S.check; next.tab = S.tab; next.me = S.me; next.toolsCustom = S.toolsCustom; next.adminOk = S.adminOk;
 
