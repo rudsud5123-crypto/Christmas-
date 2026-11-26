@@ -2721,7 +2721,7 @@ function openProfileModal(highlight){
       var prevMe = S.me;
       S.me = picked;
       if(picked !== prevMe) S.adminOk = false;
-      save(); refreshMe(); renderBoard(); renderNotice(); renderLockBar(); renderShop(); renderGuestbook();
+      save(); refreshMe(); renderBoard(); renderNotice(); renderLockBar(); renderShop(); renderGuestbook(); applyGuestVisibility();
       if(ADMINS.indexOf(picked) >= 0 && !S.adminOk){
         askPin(function(){ openProfileModal(); }, "관리자(경녕·한길)로 접속합니다. PIN 4자리를 입력해 주세요");
       } else {
