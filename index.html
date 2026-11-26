@@ -2438,19 +2438,33 @@ function renderBonusInputs(){
 
 /* ══════════════════ 업데이트: 게임별 조 표시 ══════════════════ */
 function gameTeamsHTML(key){
-  var t = S.teams[key];
   var isHalli = (key === "halli");
   var la = isHalli ? "1조" : "A조", lb = isHalli ? "2조" : "B조";
   var btn = isHalli ? "🎲 할리갈리 1·2조 뽑기 (부부 분리)" : "🎲 조 나누기 (부부 분리)";
-  if(!hasAssign(t)){
+  var src = null, own = true, from = "";
+  if(isHalli){
+    var g = halliGroups();
+    if(g){ src = g; own = g.own; from = g.from || ""; }
+  } else if(hasAssign(S.teams[key])){
+    src = S.teams[key];
+  }
+  if(!src){
     return '<div class="row"><span class="lbl">'+(isHalli?"조":"팀")+'</span>'+
         '<span style="font-size:13.5px;color:#7a7472">🎲 '+(isHalli?"1·2조 뽑기":"조 나누기")+'를 누르면 '+la+'·'+lb+'가 배정돼요 (부부 분리)</span></div>'+
       '<div class="row"><span class="lbl"></span><button type="button" class="gdrawbtn" data-draw="'+key+'">'+btn+'</button></div>';
   }
-  return '<div class="row"><span class="lbl">'+(isHalli?"조":"팀")+'</span><span class="chip solid-red">'+la+'</span><span style="font-size:14px">'+esc(namesOf(t.a))+'</span></div>'+
-    '<div class="row"><span class="lbl"></span><span class="chip solid-green">'+lb+'</span><span style="font-size:14px">'+esc(namesOf(t.b))+'</span></div>'+
-    '<div class="row"><span class="lbl"></span><button type="button" class="minibtn" data-draw="'+key+'">🔁 다시 뽑기</button>'+
+  var t = S.teams[key] || {at:0,by:""};
+  var tail;
+  if(own){
+    tail = '<div class="row"><span class="lbl"></span><button type="button" class="minibtn" data-draw="'+key+'">🔁 다시 뽑기</button>'+
       '<span style="font-size:12px;color:#8a8482;padding:4px 0">'+(t.at?"🕐 "+hhmm(t.at):"")+(t.by&&P[t.by]?" · "+esc(P[t.by].short)+" 뽑음":"")+'</span></div>';
+  } else {
+    tail = '<div class="row"><span class="lbl"></span><span style="font-size:12.5px;color:#7a7472;padding:4px 0">'+esc(from)+' 게임 조 그대로 · 따로 섞으려면</span>'+
+      '<button type="button" class="minibtn" data-draw="'+key+'">'+btn+'</button></div>';
+  }
+  return '<div class="row"><span class="lbl">'+(isHalli?"조":"팀")+'</span><span class="chip solid-red">'+la+'</span><span style="font-size:14px">'+esc(namesOf(src.a))+'</span></div>'+
+    '<div class="row"><span class="lbl"></span><span class="chip solid-green">'+lb+'</span><span style="font-size:14px">'+esc(namesOf(src.b))+'</span></div>'+
+    tail;
 }
 function renderGameTeams(){
   var map = {g1:"g1", g2:"g2", g3:"halli", g4:"g4"};
@@ -2470,12 +2484,13 @@ function renderTeamSummary(){
         ? '<span class="tsnames"><span class="chip solid-red">A조</span> '+esc(namesOf(t.a))+'<br><span class="chip solid-green">B조</span> '+esc(namesOf(t.b))+'</span>'
         : '<span class="tsnames muted">아직 안 뽑았어요</span>')+'</div>';
   }).join("");
-  var h = S.teams.halli;
-  var anyTeam = TEAM_GAMES.some(function(g){ return hasAssign(S.teams[g.key]); });
+  var h = S.teams.halli, hb = halliGroups();
   html += '<div class="tsrow"><b>3 할리갈리</b>'+
     (hasAssign(h)
       ? '<span class="tsnames"><span class="chip solid-red">1조</span> '+esc(namesOf(h.a))+'<br><span class="chip solid-green">2조</span> '+esc(namesOf(h.b))+'</span>'
-      : '<span class="tsnames muted">'+(anyTeam ? "위 팀 조를 그대로 사용 · 따로 뽑을 수도 있어요" : "아직 안 뽑았어요")+'</span>')+'</div>';
+      : (hb
+          ? '<span class="tsnames"><span class="chip solid-red">1조</span> '+esc(namesOf(hb.a))+'<br><span class="chip solid-green">2조</span> '+esc(namesOf(hb.b))+'<span class="muted"> ('+esc(hb.from)+' 조 그대로)</span></span>'
+          : '<span class="tsnames muted">아직 안 뽑았어요</span>'))+'</div>';
   box.innerHTML = html + '<span class="hint" style="margin-top:4px">각 게임 카드 안의 <b>🎲 조 나누기</b>로 그 게임 조를 뽑아요 (관리자 PIN 필요).</span>';
 }
 
