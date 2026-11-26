@@ -153,6 +153,15 @@ h3{font-size:18px;margin:0;line-height:1.25}
 .num.red{background:var(--red)}
 .order .nm{flex:1;font-weight:700}
 .order .tm{font-size:13.5px;color:#6f6a68;white-space:nowrap}
+/* 게임 순서 → 상세 이동 */
+.order li.jump{cursor:pointer;border-radius:10px}
+.order li.jump:active{background:var(--cream)}
+.order .go{font-size:11px;color:#c3bab0;margin-left:2px}
+.order .vico{display:inline-flex;align-items:center;border:1.5px solid #d9d2ca;border-radius:999px;padding:0 5px;font-size:11px;text-decoration:none;line-height:1.55;color:var(--red);background:#fff}
+.game.flash,.card.flash{animation:gameflash 1.3s ease}
+@keyframes gameflash{0%{box-shadow:0 0 0 0 rgba(166,12,14,.6), var(--shadow)}30%{box-shadow:0 0 0 7px rgba(166,12,14,.32), var(--shadow)}100%{box-shadow:0 0 0 0 rgba(166,12,14,0), var(--shadow)}}
+.vlink{display:inline-flex;align-items:center;gap:4px;margin:0 0 9px;border:2px solid var(--ink);border-radius:999px;background:var(--red);color:#fff;padding:4px 13px;font-size:13.5px;font-weight:700;text-decoration:none;box-shadow:0 3px 0 rgba(27,27,27,.18)}
+.vlink:active{transform:translateY(2px);box-shadow:none}
 .badge{display:inline-flex;align-items:center;gap:3px;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;color:#fff;white-space:nowrap;border:2px solid transparent}
 .badge.red{background:var(--red)}
 .badge.green{background:var(--green)}
@@ -644,22 +653,24 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
   <div class="card">
     <h2><span class="u">게임 순서</span> <span class="badge ghost">총 2시간</span></h2>
     <ul class="order">
-      <li><span class="num">1</span><span class="nm">가면 그릇치기</span><span class="badge red">팀전</span><span class="tm">25분</span></li>
-      <li><span class="num">2</span><span class="nm">종이컵 왈츠</span><span class="badge red">팀전</span><span class="tm">20분</span></li>
-      <li><span class="num">3</span><span class="nm">할리갈리 랜덤</span><span class="badge green">개인전</span><span class="tm">25분</span></li>
-      <li><span class="num">4</span><span class="nm">컵 세우기 빙고</span><span class="badge green">개인전</span><span class="tm">25분</span></li>
-      <li><span class="num">5</span><span class="nm">사진피하기</span><span class="badge green">개인전</span><span class="tm">25분</span></li>
-      <li><span class="num" style="background:var(--gold);color:#4a3200">+</span><span class="nm">보너스 (인아웃 점프 · 초성퀴즈)</span><span class="tm">여유 있을 때</span></li>
+      <li class="jump" data-jump="g1"><span class="num">1</span><span class="nm">가면 그릇치기</span><a class="vico" data-vlink href="https://www.instagram.com/reel/DeHI0xJSO9V/?jplx=MXJqdDVqMXlubmJnbg==" target="_blank" rel="noopener noreferrer" aria-label="가면 그릇치기 예시 영상">🎬</a><span class="badge red">팀전</span><span class="tm">25분</span><span class="go">↓</span></li>
+      <li class="jump" data-jump="g2"><span class="num">2</span><span class="nm">종이컵 왈츠</span><span class="badge red">팀전</span><span class="tm">20분</span><span class="go">↓</span></li>
+      <li class="jump" data-jump="g3"><span class="num">3</span><span class="nm">할리갈리 랜덤</span><span class="badge green">개인전</span><span class="tm">25분</span><span class="go">↓</span></li>
+      <li class="jump" data-jump="g4"><span class="num">4</span><span class="nm">컵 세우기 빙고</span><span class="badge green">개인전</span><span class="tm">25분</span><span class="go">↓</span></li>
+      <li class="jump" data-jump="g5"><span class="num">5</span><span class="nm">사진피하기</span><span class="badge green">개인전</span><span class="tm">25분</span><span class="go">↓</span></li>
+      <li class="jump" data-jump="g6"><span class="num" style="background:var(--gold);color:#4a3200">+</span><span class="nm">보너스 (인아웃 점프 · 초성퀴즈)</span><span class="tm">여유 있을 때</span><span class="go">↓</span></li>
     </ul>
+    <span class="hint">게임 이름을 누르면 아래 설명으로 바로 이동해요 · 🎬 는 예시 영상</span>
     <div class="tip hint">💡 부부는 <b>서로 다른 팀</b>! 팀 명단은 게임마다 달라요. 점수는 <b>점수판</b> 탭에서 바로바로 넣으면 돼요.</div>
   </div>
 
   <div class="card">
     <h2><span class="u">메인 게임 5</span></h2>
 
-    <article class="game">
+    <article class="game" id="g1">
       <div class="gtop"><span class="num red">1</span><h3>가면 그릇치기</h3><span class="badge red">팀전</span><span class="tm">25분</span></div>
       <p class="rule">가면을 쓰고 허리에 <b>생수병</b>(삼다수 등)을 매달아, <b>골반을 튕기며</b> 바닥의 <b>일회용 그릇</b>을 쳐서 앞으로 전진시키는 <b>이어달리기</b>!<br>반환점(분기점)을 돌아와 다음 주자에게 <b>바통터치</b>하면 완주!</p>
+      <a class="vlink" data-vlink href="https://www.instagram.com/reel/DeHI0xJSO9V/?jplx=MXJqdDVqMXlubmJnbg==" target="_blank" rel="noopener noreferrer">🎬 예시 영상 보기</a>
       <div class="gmeta">
         <div class="row"><span class="lbl">팀</span><span class="chip solid-red">소 띠 팀</span><span style="font-size:14px">한길 · 경녕 · 예진 · 지수 · 태성</span></div>
         <div class="row"><span class="lbl"></span><span class="chip solid-orange">돼지 띠 팀</span><span style="font-size:14px">가영 · 윤민 · 봉수 · 정석 · 수정</span></div>
@@ -668,7 +679,7 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
       </div>
     </article>
 
-    <article class="game">
+    <article class="game" id="g2">
       <div class="gtop"><span class="num red">2</span><h3>종이컵 왈츠</h3><span class="badge red">팀전</span><span class="tm">20분</span></div>
       <p class="rule">한 손등에 <b>종이컵</b>을 올려두고, 다른 한 손으로 <b>상대 팀 종이컵</b>을 쳐서 떨어뜨리기!<br>마지막까지 컵을 지킨 팀 승리!</p>
       <div class="gmeta">
@@ -679,7 +690,7 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
       </div>
     </article>
 
-    <article class="game">
+    <article class="game" id="g3">
       <div class="gtop"><span class="num">3</span><h3>할리갈리 랜덤</h3><span class="badge green">개인전</span><span class="tm">25분</span></div>
       <p class="rule"><b>5인전 × 2판</b>. 남편 조·아내 조가 한 명씩 나와 겨루고, 매 판 <b>룰렛</b>으로 모드를 뽑아요. 먼저 종을 치면 순서대로 <b>1~5등</b>! (동점이면 사다리·가위바위보)</p>
       <div class="gmeta">
@@ -690,7 +701,7 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
       </div>
     </article>
 
-    <article class="game">
+    <article class="game" id="g4">
       <div class="gtop"><span class="num">4</span><h3>컵 세우기 빙고</h3><span class="badge green">개인전</span><span class="tm">25분</span></div>
       <p class="rule">테이블 끝에서 <b>종이컵 밑동</b>을 손으로 쳐서 돌려 세운 뒤, 내 <b>빙고판 한 칸</b> 채우기!<br>빙고판은 <b>마스킹테이프로 3×3</b>, 한 줄만 채우면 빙고! 먼저 완성한 순서로 점수!</p>
       <div class="gmeta">
@@ -701,7 +712,7 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
       </div>
     </article>
 
-    <article class="game">
+    <article class="game" id="g5">
       <div class="gtop"><span class="num">5</span><h3>사진피하기</h3><span class="badge green">개인전</span><span class="tm">25분</span></div>
       <p class="rule"><b>10명 전체가 술래!</b> 술래는 안대를 쓰고 폰 플래시를 켠 뒤 <b>10초</b>를 세고 <b>"하나~다섯!"</b> 외치며 <b>5장</b>을 찍어요. 5장 중 1장이라도 찍히면 <b>-1점</b>, 다 피하면 <b>+1점</b>.<br>합산이 높은 순서대로 <b>10~1점</b>, 가장 많이 찍힌 <b>베스트 술래 +3점</b> (공동이면 +2점).</p>
       <div class="gmeta">
@@ -712,7 +723,7 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
     </article>
   </div>
 
-  <div class="card">
+  <div class="card" id="g6">
     <h2><span class="u">보너스 게임</span> <span class="badge gold">여유 있을 때</span></h2>
     <article class="game">
       <div class="gtop"><span class="num" style="background:var(--gold);color:#4a3200">A</span><h3>인아웃 점프</h3><span class="tm">5인 × 2조</span></div>
@@ -2908,6 +2919,25 @@ $("#awardBtn").addEventListener("click", showAward);
 document.addEventListener("click", function(e){
   var t = e.target;
   if(!t || !t.closest) return;
+
+  /* 예시 영상 링크는 그대로 새 창으로 (부모 클릭 이동/스크롤 막기) */
+  var vlink = t.closest("[data-vlink]");
+  if(vlink){ e.stopPropagation(); return; }
+  /* 게임 순서 → 해당 게임 카드로 부드럽게 이동 + 잠깐 강조 */
+  var jump = t.closest("[data-jump]");
+  if(jump){
+    var target = document.getElementById(jump.getAttribute("data-jump"));
+    if(target){
+      try{ target.scrollIntoView({behavior:"smooth", block:"center"}); }
+      catch(err){ target.scrollIntoView(); }
+      target.classList.remove("flash");
+      void target.offsetWidth;
+      target.classList.add("flash");
+      setTimeout(function(){ target.classList.remove("flash"); }, 1400);
+      vibrate(6);
+    }
+    return;
+  }
 
   var nd = t.closest("[data-noticedel]");
   if(nd){
