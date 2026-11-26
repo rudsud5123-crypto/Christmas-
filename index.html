@@ -1422,9 +1422,14 @@ function applyRemote(rootVal){
 
     var hadMeta = ("meta" in map);
     S = Object.assign(next, {});
-    seedShopDefaults();
+    var seeded = seedShopDefaults();
     save();
     try{ lastPub = JSON.parse(JSON.stringify(flatten())); }catch(e){ lastPub = {}; }
+    if(seeded){
+      /* 방금 채운 기본 항목이 lastPub에 들어가 있으면 다시 안 올라가요 → 강제로 올림 */
+      Object.keys(S.shop).forEach(function(id){ delete lastPub["shop/"+id]; });
+      delete lastPub["meta"];
+    }
     if(!hadMeta){ lastPub = {}; queuePush(); }   /* meta 마커가 없던 방이면 전체를 한 번 다시 올려 마커를 심어요 */
     Object.keys(repub).forEach(function(k){ delete lastPub[k]; });   /* 서버에 다시 밀어넣기 */
     if(pendingPush){ pendingPush = false; queuePush(); }
@@ -2766,6 +2771,7 @@ function seedShopDefaults(){
   });
   if(Number(S.meta.shopSeed||0) !== SHOP_SEED_VER){ S.meta.shopSeed = SHOP_SEED_VER; changed = true; }
   if(changed){ save(); queuePush(); }
+  return changed;
 }
 
 /* ══════════════════ 방명록 ══════════════════ */
