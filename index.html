@@ -158,7 +158,10 @@ h3{font-size:18px;margin:0;line-height:1.25}
 .order li.jump{cursor:pointer;border-radius:10px}
 .order li.jump:active{background:var(--cream)}
 .order .go{font-size:11px;color:#c3bab0;margin-left:2px}
-.order .vico{display:inline-flex;align-items:center;border:1.5px solid #d9d2ca;border-radius:999px;padding:0 5px;font-size:11px;text-decoration:none;line-height:1.55;color:var(--red);background:#fff}
+.vico{display:inline-flex;align-items:center;border:1.5px solid #d9d2ca;border-radius:999px;padding:0 6px;font-size:11px;text-decoration:none;line-height:1.6;color:var(--red);background:#fff;white-space:nowrap}
+.vchips{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+.glist{margin-top:11px}
+details.game>summary .vico{margin-left:1px}
 .game.flash,.card.flash{animation:gameflash 1.3s ease}
 @keyframes gameflash{0%{box-shadow:0 0 0 0 rgba(166,12,14,.6), var(--shadow)}30%{box-shadow:0 0 0 7px rgba(166,12,14,.32), var(--shadow)}100%{box-shadow:0 0 0 0 rgba(166,12,14,0), var(--shadow)}}
 .vlink{display:inline-flex;align-items:center;gap:4px;margin:0 0 9px;border:2px solid var(--ink);border-radius:999px;background:var(--red);color:#fff;padding:4px 13px;font-size:13.5px;font-weight:700;text-decoration:none;box-shadow:0 3px 0 rgba(27,27,27,.18)}
@@ -675,36 +678,11 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
 
   <div class="card">
     <h2><span class="u">게임 순서</span> <span class="badge ghost">총 2시간</span></h2>
-    <ul class="order">
-      <li class="jump" data-jump="g1"><span class="num">1</span><span class="nm">가면 그릇치기</span><a class="vico" data-vlink href="https://www.instagram.com/reel/DeHI0xJSO9V/?jplx=MXJqdDVqMXlubmJnbg==" target="_blank" rel="noopener noreferrer" aria-label="가면 그릇치기 예시 영상">🎬</a><span class="badge red">팀전</span><span class="tm">25분</span><span class="go">↓</span></li>
-      <li class="jump" data-jump="g2"><span class="num">2</span><span class="nm">종이컵 왈츠</span><a class="vico" data-vlink href="https://www.instagram.com/reel/DZwx2YgJrzd/?evlk=MTRwc3BkN3hvdjdoMA==" target="_blank" rel="noopener noreferrer" aria-label="종이컵 왈츠 예시 영상">🎬</a><span class="badge red">팀전</span><span class="tm">20분</span><span class="go">↓</span></li>
-      <li class="jump" data-jump="g3"><span class="num">3</span><span class="nm">할리갈리 랜덤</span><span class="badge green">개인전</span><span class="tm">25분</span><span class="go">↓</span>
-        <span class="vchips">
-          <a class="vico" data-vlink href="https://youtube.com/shorts/KrQa1LA3PUo?si=9Ee4cGzJ_vHWykmJ" target="_blank" rel="noopener noreferrer" aria-label="멀리갈리 예시 영상">🎬 멀리</a>
-          <a class="vico" data-vlink href="https://youtube.com/shorts/9q2qzwmdqew?si=yTs17t8D4owLPqU9" target="_blank" rel="noopener noreferrer" aria-label="발리갈리 예시 영상">🎬 발리</a>
-          <a class="vico" data-vlink href="https://www.instagram.com/reel/DeY9Q7Wv2yr/?dmpr=M3E5OTMwc2t0d2s1" target="_blank" rel="noopener noreferrer" aria-label="쫀쫀이갈리 예시 영상">🎬 쫀쫀</a>
-          <a class="vico" data-vlink href="https://youtube.com/shorts/UmLGGH_7E2E?si=Nxql-nAEw7osocK7" target="_blank" rel="noopener noreferrer" aria-label="스쿼트갈리 예시 영상">🎬 스쿼트</a>
-        </span>
-      </li>
-      <li class="jump" data-jump="g4"><span class="num">4</span><span class="nm">컵 세우기 빙고</span><a class="vico" data-vlink href="https://youtube.com/shorts/znwHlcQvAH0?si=7-Ye6j9RbI2p0UFn" target="_blank" rel="noopener noreferrer" aria-label="컵 세우기 빙고 예시 영상">🎬</a><span class="badge red">팀전</span><span class="tm">25분</span><span class="go">↓</span></li>
-      <li class="jump" data-jump="g5"><span class="num">5</span><span class="nm">사진피하기</span><a class="vico" data-vlink href="https://www.instagram.com/reel/Ddn1oHSpQH7/?evlk=MXZyaHJoZWZxcWM5Zw==" target="_blank" rel="noopener noreferrer" aria-label="사진피하기 예시 영상">🎬</a><span class="badge green">개인전</span><span class="tm">25분</span><span class="go">↓</span></li>
-      <li class="jump" data-jump="g6"><span class="num" style="background:var(--gold);color:#4a3200">+</span><span class="nm">보너스 게임</span><a class="vico" data-vlink href="https://www.instagram.com/reel/Db05LgnRq35/?avpt=MWdnMWdnYzAxajRqZA==" target="_blank" rel="noopener noreferrer" aria-label="인아웃 점프 예시 영상">🎬 인아웃</a><a class="vico" data-vlink href="https://www.instagram.com/reel/Dc3D4EnTdre/?knvt=MXh0bnpuNzJ2eXVvNg==" target="_blank" rel="noopener noreferrer" aria-label="한 글자 초성퀴즈 예시 영상">🎬 초성</a><span class="tm">여유 있을 때</span><span class="go">↓</span></li>
-    </ul>
-    <span class="hint">게임 이름을 누르면 설명이 <b>펼쳐지며</b> 바로 이동해요 · 🎬 는 예시 영상</span>
+    <span class="hint">카드를 누르면 규칙이 <b>펼쳐져요</b> · 🎬 는 예시 영상</span>
     <div class="tip hint">💡 부부는 <b>서로 다른 팀</b>! 조는 <b>당일 랜덤</b>으로 정해요. 점수는 <b>점수판</b> 탭에서 바로바로 넣으면 돼요.</div>
-  </div>
-
-  <div class="card" id="teamCard">
-    <h2><span class="u">🎲 오늘의 조</span> <span class="badge dark" id="teamBadge">랜덤 배정</span></h2>
-    <div id="teamLive"></div>
-    <span class="hint">게임마다 조를 따로 뽑아요. 각 게임 카드 안의 <b>🎲 조 나누기</b>(관리자 PIN)로 뽑으면 모든 폰에 바로 보여요. 부부는 서로 다른 조!</span>
-  </div>
-
-  <div class="card">
-    <h2><span class="u">메인 게임 5</span></h2>
-
+    <div class="glist">
     <details class="game" id="g1">
-      <summary class="gtop"><span class="num red">1</span><h3>가면 그릇치기</h3><span class="badge red">팀전</span><span class="tm">25분</span><span class="chev">▾</span></summary>
+      <summary class="gtop"><span class="num red">1</span><h3>가면 그릇치기</h3><span class="badge red">팀전</span><a class="vico" data-vlink href="https://www.instagram.com/reel/DeHI0xJSO9V/?jplx=MXJqdDVqMXlubmJnbg==" target="_blank" rel="noopener noreferrer" aria-label="가면 그릇치기 예시 영상">🎬</a><span class="tm">25분</span><span class="chev">▾</span></summary>
       <p class="rule">가면을 쓰고 허리에 <b>생수병</b>(삼다수 등)을 매달아, <b>골반을 튕기며</b> 바닥의 <b>일회용 그릇</b>을 쳐서 앞으로 전진시키는 <b>이어달리기</b>!<br>반환점(분기점)을 돌아와 다음 주자에게 <b>바통터치</b>하면 완주!</p>
       <div class="gmeta">
         <div id="g1Teams"></div>
@@ -714,7 +692,7 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
     </details>
 
     <details class="game" id="g2">
-      <summary class="gtop"><span class="num red">2</span><h3>종이컵 왈츠</h3><span class="badge red">팀전</span><span class="tm">20분</span><span class="chev">▾</span></summary>
+      <summary class="gtop"><span class="num red">2</span><h3>종이컵 왈츠</h3><span class="badge red">팀전</span><a class="vico" data-vlink href="https://www.instagram.com/reel/DZwx2YgJrzd/?evlk=MTRwc3BkN3hvdjdoMA==" target="_blank" rel="noopener noreferrer" aria-label="종이컵 왈츠 예시 영상">🎬</a><span class="tm">20분</span><span class="chev">▾</span></summary>
       <p class="rule">한 손등에 <b>종이컵</b>을 올려두고, 다른 한 손으로 <b>상대 팀 종이컵</b>을 쳐서 떨어뜨리기!<br>마지막까지 컵을 지킨 팀 승리!</p>
       <div class="gmeta">
         <div id="g2Teams"></div>
@@ -728,6 +706,12 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
       <p class="rule"><b>5인전 × 2판</b>. <b>1조·2조</b>(당일 랜덤, 부부를 서로 다른 조로)가 한 판씩 겨루고, 매 판 <b>룰렛</b>으로 모드를 뽑아요. 먼저 종을 치면 순서대로 <b>1~5등</b>! (동점이면 사다리·가위바위보)</p>
       <div class="gmeta">
         <div id="g3Teams"></div>
+        <div class="row"><span class="lbl">모드</span><span class="vchips">
+          <a class="vico" data-vlink href="https://youtube.com/shorts/KrQa1LA3PUo?si=9Ee4cGzJ_vHWykmJ" target="_blank" rel="noopener noreferrer" aria-label="멀리갈리 예시 영상">🎬 멀리</a>
+          <a class="vico" data-vlink href="https://youtube.com/shorts/9q2qzwmdqew?si=yTs17t8D4owLPqU9" target="_blank" rel="noopener noreferrer" aria-label="발리갈리 예시 영상">🎬 발리</a>
+          <a class="vico" data-vlink href="https://www.instagram.com/reel/DeY9Q7Wv2yr/?dmpr=M3E5OTMwc2t0d2s1" target="_blank" rel="noopener noreferrer" aria-label="쫀쫀이갈리 예시 영상">🎬 쫀쫀</a>
+          <a class="vico" data-vlink href="https://youtube.com/shorts/UmLGGH_7E2E?si=Nxql-nAEw7osocK7" target="_blank" rel="noopener noreferrer" aria-label="스쿼트갈리 예시 영상">🎬 스쿼트</a>
+        </span></div>
         <div class="row"><span class="lbl">조 섞기</span><span style="font-size:14px">필요하면 <b>룰렛 탭 → 만능 MC 도구 → 🎲 할리갈리 조 나누기</b></span></div>
         <div class="row"><span class="lbl">준비</span><span style="font-size:14px">할리갈리 · 쫀쫀이</span></div>
         <div class="row"><span class="lbl">점수</span><span style="font-size:14px">1~5등 = <b>7, 5, 3, 2, 1점</b></span></div>
@@ -735,7 +719,7 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
     </details>
 
     <details class="game" id="g4">
-      <summary class="gtop"><span class="num red">4</span><h3>컵 세우기 빙고</h3><span class="badge red">팀전</span><span class="tm">25분</span><span class="chev">▾</span></summary>
+      <summary class="gtop"><span class="num red">4</span><h3>컵 세우기 빙고</h3><span class="badge red">팀전</span><a class="vico" data-vlink href="https://youtube.com/shorts/znwHlcQvAH0?si=7-Ye6j9RbI2p0UFn" target="_blank" rel="noopener noreferrer" aria-label="컵 세우기 빙고 예시 영상">🎬</a><span class="tm">25분</span><span class="chev">▾</span></summary>
       <p class="rule">바닥(또는 아일랜드 식탁)에 <b>마스킹테이프 3×3 판</b>을 만들고, 두 팀이 <b>번갈아 릴레이</b>로 달려가 <b>컵을 뒤집어 세우기</b>! 한 사람이 컵 한 개를 세우고 돌아와 터치하면 다음 주자 출발 — 가로·세로·대각선 <b>한 줄을 먼저 완성한 팀</b>이 그 판 승리!<br><b>3판 2선승</b>으로 최종 승자를 정해요.</p>
       <div class="gmeta">
         <div id="g4Teams"></div>
@@ -745,7 +729,7 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
     </details>
 
     <details class="game" id="g5">
-      <summary class="gtop"><span class="num">5</span><h3>사진피하기</h3><span class="badge green">개인전</span><span class="tm">25분</span><span class="chev">▾</span></summary>
+      <summary class="gtop"><span class="num">5</span><h3>사진피하기</h3><span class="badge green">개인전</span><a class="vico" data-vlink href="https://www.instagram.com/reel/Ddn1oHSpQH7/?evlk=MXZyaHJoZWZxcWM5Zw==" target="_blank" rel="noopener noreferrer" aria-label="사진피하기 예시 영상">🎬</a><span class="tm">25분</span><span class="chev">▾</span></summary>
       <p class="rule"><b>10명 전체가 술래!</b> 술래는 안대를 쓰고 폰 플래시를 켠 뒤 <b>10초</b>를 세고 <b>"하나~다섯!"</b> 외치며 <b>5장</b>을 찍어요. 5장 중 1장이라도 찍히면 <b>-1점</b>, 다 피하면 <b>+1점</b>.<br>합산이 높은 순서대로 <b>10~1점</b>, 가장 많이 찍힌 <b>베스트 술래 +3점</b> (공동이면 +2점).</p>
       <div class="gmeta">
         <div class="row"><span class="lbl">금지</span><span style="font-size:14px">❌ 구역 이탈 (화장실·바깥 도망) &nbsp; ❌ 얼굴 가리기 (손·머리카락·물건)</span></div>
@@ -753,16 +737,17 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
         <div class="row"><span class="lbl">팁</span><span style="font-size:14px">마무리 게임! <b>많이 찍힐수록 좋아요</b> 😆</span></div>
       </div>
     </details>
+    </div>
   </div>
 
   <div class="card" id="g6">
     <h2><span class="u">보너스 게임</span> <span class="badge gold">여유 있을 때</span></h2>
     <details class="game">
-      <summary class="gtop"><span class="num" style="background:var(--gold);color:#4a3200">A</span><h3>인아웃 점프</h3><span class="tm">5인 × 2조</span><span class="chev">▾</span></summary>
+      <summary class="gtop"><span class="num" style="background:var(--gold);color:#4a3200">A</span><h3>인아웃 점프</h3><span class="tm">5인 × 2조</span><a class="vico" data-vlink href="https://www.instagram.com/reel/Db05LgnRq35/?avpt=MWdnMWdnYzAxajRqZA==" target="_blank" rel="noopener noreferrer" aria-label="인아웃 점프 예시 영상">🎬 인아웃</a><span class="chev">▾</span></summary>
       <p class="rule">처음 1분은 연습! 사회자가 <b>"안!" / "밖!"</b>을 외치면 반대쪽으로 점프, <b>"그대로!"</b>면 그대로 있기. 틀리면 탈락, 마지막 생존자 <b>+1점</b> (단독 생존 <b>+2점</b>).</p>
     </details>
     <details class="game">
-      <summary class="gtop"><span class="num" style="background:var(--gold);color:#4a3200">B</span><h3>한 글자 초성퀴즈</h3><span class="tm">5인 × 2조</span><span class="chev">▾</span></summary>
+      <summary class="gtop"><span class="num" style="background:var(--gold);color:#4a3200">B</span><h3>한 글자 초성퀴즈</h3><span class="tm">5인 × 2조</span><a class="vico" data-vlink href="https://www.instagram.com/reel/Dc3D4EnTdre/?knvt=MXh0bnpuNzJ2eXVvNg==" target="_blank" rel="noopener noreferrer" aria-label="한 글자 초성퀴즈 예시 영상">🎬 초성</a><span class="chev">▾</span></summary>
       <p class="rule"><b>ㄱ · ㅅ · ㅂ · ㅁ · ㅊ</b> 중 하나를 외치면, 그 초성에 맞는 물건을 가져와 <b>"국자!"</b>처럼 외치며 터치! 남이 이미 외친 물건은 <b>중복 금지</b>. 조별 1~5등 <b>5~1점</b> (또는 보너스 점수).</p>
     </details>
   </div>
@@ -3133,6 +3118,12 @@ function showAward(){
 $("#awardBtn").addEventListener("click", showAward);
 
 /* ══════════════════ 이벤트 위임 ══════════════════ */
+/* 접힌 카드 헤더의 🎬 는 카드를 열지 않고 영상만 열려요 */
+document.addEventListener("click", function(e){
+  var a = e.target && e.target.closest ? e.target.closest("[data-vlink]") : null;
+  if(a){ e.stopPropagation(); }
+}, true);
+
 document.addEventListener("click", function(e){
   var t = e.target;
   if(!t || !t.closest) return;
