@@ -788,6 +788,7 @@ var GROUP_LABEL = {
 };
 var COUPLES = [["hangil","gayoung"],["yunmin","gyeong"],["bongsu","yejin"],["jeongseok","jisu"],["taeseong","sujeong"]];
 var ADMINS = ["gyeong","hangil"];
+var ADMIN_PIN = "1207";   /* 관리자 4자리 PIN (기본 1207) */
 var HALLI_PTS = [7,5,3,2,1];
 var BINGO_PTS = [6,4,3,2,1];
 
@@ -888,6 +889,7 @@ function fresh(){
   s.check = {};
   s.tab = "guide";
   s.me = null;
+  s.adminOk = false;
   s.toolsCustom = {pool:"people", items:"", couples:true, cat:"전체"};
   return s;
 }
@@ -904,6 +906,7 @@ function load(){
     f.check = raw.check || {};
     f.tab = raw.tab || "guide";
     f.me = raw.me || null;
+    f.adminOk = !!raw.adminOk;
     if(raw.toolsCustom) f.toolsCustom = Object.assign({pool:"people",items:"",couples:true,cat:"전체"}, raw.toolsCustom);
     if(!f.wheel || !Array.isArray(f.wheel.history)) f.wheel = {history:[], last:null};
     if(!f.lock) f.lock = {score:false, notice:true};
@@ -1051,7 +1054,7 @@ function applyRemote(rootVal){
     results.forEach(function(r){ if(r.value !== undefined) map[r.path] = r.value; });
 
     var next = freshShared();
-    next.check = S.check; next.tab = S.tab; next.me = S.me; next.toolsCustom = S.toolsCustom;
+    next.check = S.check; next.tab = S.tab; next.me = S.me; next.toolsCustom = S.toolsCustom; next.adminOk = S.adminOk;
 
     if("state/team1" in map) next.team1 = map["state/team1"] || null;
     if("state/team2" in map) next.team2 = map["state/team2"] || null;
@@ -1135,8 +1138,46 @@ function nickOf(id){
 }
 function subOf(id){ return P[id] ? "(" + P[id].short + ")" : ""; }
 function nameHTML(id){ return esc(nickOf(id)) + ' <span class="sub2">'+esc(subOf(id))+'</span>'; }
-function isAdmin(){ return ADMINS.indexOf(S.me) >= 0; }
+function isAdminPerson(){ return ADMINS.indexOf(S.me) >= 0; }
+function isAdmin(){ return isAdminPerson() && !!S.adminOk; }
 function canEditScore(){ return !S.lock.score || isAdmin(); }
+
+/* 관리자 PIN 확인 */
+function askPin(cb, msg){
+  var m = $("#modal");
+  m.className = "modal";
+  m.innerHTML = '<span class="big">🔐</span><div class="mode">관리자 PIN</div>'+
+    '<p class="msub">'+(msg || "4자리 숫자를 입력해 주세요")+'</p>'+
+    '<input id="pinInput" type="tel" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="••••" '+
+    'style="width:150px;border:2.5px solid #1B1B1B;border-radius:14px;padding:9px;font-size:24px;letter-spacing:.4em;text-align:center;font-family:inherit;background:#fff">'+
+    '<div id="pinErr" style="color:#A60C0E;font-size:13px;min-height:20px;margin-top:6px"></div>'+
+    '<div class="btns"><button type="button" data-act="no">취소</button><button type="button" class="primary" data-act="ok">확인</button></div>';
+  $("#overlay").classList.add("on");
+  var inp = $("#pinInput");
+  setTimeout(function(){ try{ inp.focus(); }catch(e){} }, 120);
+  function tryOk(){
+    if(inp.value === ADMIN_PIN){
+      S.adminOk = true; save(); closeModal();
+      vibrate(20);
+      if(cb) cb();
+    } else {
+      var e = $("#pinErr");
+      if(e) e.textContent = "PIN이 맞지 않아요. 다시 입력해 주세요";
+      inp.value = "";
+      inp.focus();
+      vibrate([40,60,40]);
+    }
+  }
+  m.querySelector('[data-act="no"]').addEventListener("click", closeModal);
+  m.querySelector('[data-act="ok"]').addEventListener("click", tryOk);
+  inp.addEventListener("keydown", function(ev){ if(ev.key === "Enter"){ ev.preventDefault(); tryOk(); } });
+  inp.addEventListener("input", function(){ if(inp.value.length >= 4) tryOk(); });
+}
+function requireAdmin(cb){
+  if(!isAdminPerson()){ toast("관리자(경녕·한길)만 할 수 있어요"); return; }
+  if(S.adminOk){ cb(); return; }
+  askPin(cb, "관리자 확인 후 진행할게요");
+}
 
 /* ══════════════════ 탭 ══════════════════ */
 var TABS = ["guide","wheel","score","shop"];
@@ -1374,25 +1415,37 @@ function renderNotice(){
     meta.textContent = "";
   }
   badge.textContent = S.lock.notice ? "🔒 관리자 작성" : "📢 누구나 작성";
-  var canWrite = isAdmin() || !S.lock.notice;
+  var canWrite = !S.lock.notice || isAdmin();
   adminBox.innerHTML = "";
   if(canWrite){
     var b = document.createElement("button");
     b.className = "minibtn pri";
     b.type = "button";
     b.textContent = S.notice && S.notice.text ? "✏️ 공지 수정" : "✏️ 공지 쓰기";
-    b.addEventListener("click", noticeEditor);
+    b.addEventListener("click", function(){
+      if(S.lock.notice && !isAdmin()){ requireAdmin(noticeEditor); return; }
+      noticeEditor();
+    });
     adminBox.appendChild(b);
+  } else if(isAdminPerson()) {
+    var bb = document.createElement("button");
+    bb.className = "minibtn";
+    bb.type = "button";
+    bb.textContent = "🔐 공지 쓰기 (PIN)";
+    bb.addEventListener("click", function(){ requireAdmin(noticeEditor); });
+    adminBox.appendChild(bb);
   }
-  if(isAdmin()){
+  if(isAdminPerson()){
     var t = document.createElement("button");
     t.className = "minibtn";
     t.type = "button";
     t.style.marginLeft = "6px";
     t.textContent = S.lock.notice ? "🔓 공지 잠금 해제" : "🔒 공지 잠그기";
     t.addEventListener("click", function(){
-      S.lock.notice = !S.lock.notice; save(); renderNotice(); queuePush();
-      toast(S.lock.notice ? "공지 잠금 🔒" : "공지 열림 🔓");
+      requireAdmin(function(){
+        S.lock.notice = !S.lock.notice; save(); renderNotice(); queuePush();
+        toast(S.lock.notice ? "공지 잠금 🔒" : "공지 열림 🔓");
+      });
     });
     adminBox.appendChild(t);
   }
@@ -1424,24 +1477,24 @@ function renderLockBar(){
     txt.innerHTML = isAdmin() ? "🔒 점수판 잠김 — 관리자 모드" : "🔒 점수판이 잠겨 있어요. 관리자만 수정할 수 있어요";
     bar.appendChild(txt);
     var b = document.createElement("button");
-    b.className = "minibtn" + (isAdmin() ? " pri" : "");
+    b.className = "minibtn" + (isAdminPerson() ? " pri" : "");
     b.type = "button";
-    b.textContent = isAdmin() ? "잠금 해제" : "경녕·한길로 접속";
+    b.textContent = isAdminPerson() ? "잠금 해제 (PIN)" : "경녕·한길로 접속";
     b.addEventListener("click", function(){
-      if(isAdmin()){ S.lock.score = false; save(); renderLockBar(); applyLockClass(); queuePush(); toast("점수판 열림 🔓"); }
+      if(isAdminPerson()){ requireAdmin(function(){ S.lock.score = false; save(); renderLockBar(); applyLockClass(); queuePush(); toast("점수판 열림 🔓"); }); }
       else openProfileModal(true);
     });
     bar.appendChild(b);
   } else {
     bar.classList.remove("on");
     bar.innerHTML = '<div style="flex:1">🔓 점수판 열림 — 누구나 입력할 수 있어요</div>';
-    if(isAdmin()){
+    if(isAdminPerson()){
       var lb = document.createElement("button");
       lb.className = "minibtn";
       lb.type = "button";
-      lb.textContent = "잠그기";
+      lb.textContent = "잠그기 (PIN)";
       lb.addEventListener("click", function(){
-        S.lock.score = true; save(); renderLockBar(); applyLockClass(); queuePush(); toast("점수판 잠금 🔒");
+        requireAdmin(function(){ S.lock.score = true; save(); renderLockBar(); applyLockClass(); queuePush(); toast("점수판 잠금 🔒"); });
       });
       bar.appendChild(lb);
     }
@@ -2007,9 +2060,16 @@ function openProfileModal(highlight){
 
   $all("[data-pick]", m).forEach(function(b){
     b.addEventListener("click", function(){
-      S.me = b.getAttribute("data-pick");
+      var picked = b.getAttribute("data-pick");
+      var prevMe = S.me;
+      S.me = picked;
+      if(picked !== prevMe) S.adminOk = false;
       save(); refreshMe(); renderBoard(); renderNotice(); renderLockBar(); renderShop();
-      openProfileModal();
+      if(ADMINS.indexOf(picked) >= 0 && !S.adminOk){
+        askPin(function(){ openProfileModal(); }, "관리자(경녕·한길)로 접속합니다. PIN 4자리를 입력해 주세요");
+      } else {
+        openProfileModal();
+      }
     });
   });
   var nk = $("#nickInput");
