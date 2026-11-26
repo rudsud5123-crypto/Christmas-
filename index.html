@@ -172,6 +172,14 @@ h3{font-size:18px;margin:0;line-height:1.25}
 /* ---------- 게임 카드 ---------- */
 .game{border:2.5px solid var(--ink);border-radius:16px;padding:11px 12px 12px;margin-bottom:12px;background:#fff}
 .game:last-child{margin-bottom:0}
+details.game>summary{cursor:pointer;list-style:none}
+details.game>summary::-webkit-details-marker{display:none}
+details.game>summary::marker{content:""}
+details.game>summary:hover{opacity:.92}
+.game .chev{margin-left:6px;font-size:12px;color:#b9b0a6;transition:transform .2s;line-height:1}
+details.game[open] .chev{transform:rotate(180deg)}
+details.game>summary .gtop{margin-bottom:0}
+details.game[open]>summary{margin-bottom:8px;border-bottom:1.5px dashed #e6ded3;padding-bottom:7px}
 .gtop{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:7px}
 .gtop h3{flex:0 0 auto}
 .gtop .tm{margin-left:auto;font-size:13.5px;font-weight:700;color:var(--red)}
@@ -672,9 +680,9 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
       <li class="jump" data-jump="g3"><span class="num">3</span><span class="nm">할리갈리 랜덤</span><span class="badge green">개인전</span><span class="tm">25분</span><span class="go">↓</span></li>
       <li class="jump" data-jump="g4"><span class="num">4</span><span class="nm">컵 세우기 빙고</span><a class="vico" data-vlink href="https://youtube.com/shorts/znwHlcQvAH0?si=7-Ye6j9RbI2p0UFn" target="_blank" rel="noopener noreferrer" aria-label="컵 세우기 빙고 예시 영상">🎬</a><span class="badge red">팀전</span><span class="tm">25분</span><span class="go">↓</span></li>
       <li class="jump" data-jump="g5"><span class="num">5</span><span class="nm">사진피하기</span><a class="vico" data-vlink href="https://www.instagram.com/reel/Ddn1oHSpQH7/?evlk=MXZyaHJoZWZxcWM5Zw==" target="_blank" rel="noopener noreferrer" aria-label="사진피하기 예시 영상">🎬</a><span class="badge green">개인전</span><span class="tm">25분</span><span class="go">↓</span></li>
-      <li class="jump" data-jump="g6"><span class="num" style="background:var(--gold);color:#4a3200">+</span><span class="nm">보너스 (인아웃 점프 · 초성퀴즈)</span><a class="vico" data-vlink href="https://www.instagram.com/reel/Db05LgnRq35/?avpt=MWdnMWdnYzAxajRqZA==" target="_blank" rel="noopener noreferrer" aria-label="인아웃 점프 예시 영상">🎬 인아웃</a><a class="vico" data-vlink href="https://www.instagram.com/reel/Dc3D4EnTdre/?knvt=MXh0bnpuNzJ2eXVvNg==" target="_blank" rel="noopener noreferrer" aria-label="한 글자 초성퀴즈 예시 영상">🎬 초성</a><span class="tm">여유 있을 때</span><span class="go">↓</span></li>
+      <li class="jump" data-jump="g6"><span class="num" style="background:var(--gold);color:#4a3200">+</span><span class="nm">보너스 게임</span><a class="vico" data-vlink href="https://www.instagram.com/reel/Db05LgnRq35/?avpt=MWdnMWdnYzAxajRqZA==" target="_blank" rel="noopener noreferrer" aria-label="인아웃 점프 예시 영상">🎬 인아웃</a><a class="vico" data-vlink href="https://www.instagram.com/reel/Dc3D4EnTdre/?knvt=MXh0bnpuNzJ2eXVvNg==" target="_blank" rel="noopener noreferrer" aria-label="한 글자 초성퀴즈 예시 영상">🎬 초성</a><span class="tm">여유 있을 때</span><span class="go">↓</span></li>
     </ul>
-    <span class="hint">게임 이름을 누르면 아래 설명으로 바로 이동해요 · 🎬 는 예시 영상</span>
+    <span class="hint">게임 이름을 누르면 설명이 <b>펼쳐지며</b> 바로 이동해요 · 🎬 는 예시 영상</span>
     <div class="tip hint">💡 부부는 <b>서로 다른 팀</b>! 조는 <b>당일 랜덤</b>으로 정해요. 점수는 <b>점수판</b> 탭에서 바로바로 넣으면 돼요.</div>
   </div>
 
@@ -687,28 +695,28 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
   <div class="card">
     <h2><span class="u">메인 게임 5</span></h2>
 
-    <article class="game" id="g1">
-      <div class="gtop"><span class="num red">1</span><h3>가면 그릇치기</h3><span class="badge red">팀전</span><span class="tm">25분</span></div>
+    <details class="game" id="g1">
+      <summary class="gtop"><span class="num red">1</span><h3>가면 그릇치기</h3><span class="badge red">팀전</span><span class="tm">25분</span><span class="chev">▾</span></summary>
       <p class="rule">가면을 쓰고 허리에 <b>생수병</b>(삼다수 등)을 매달아, <b>골반을 튕기며</b> 바닥의 <b>일회용 그릇</b>을 쳐서 앞으로 전진시키는 <b>이어달리기</b>!<br>반환점(분기점)을 돌아와 다음 주자에게 <b>바통터치</b>하면 완주!</p>
       <div class="gmeta">
         <div id="g1Teams"></div>
         <div class="row"><span class="lbl">준비</span><span style="font-size:14px">가면 · 생수병(500ml) · 끈/노끈 · 일회용 그릇</span></div>
         <div class="row"><span class="lbl">점수</span><span style="font-size:14px">이긴 팀 전원 <b>+3</b> / 진 팀 <b>+1</b></span></div>
       </div>
-    </article>
+    </details>
 
-    <article class="game" id="g2">
-      <div class="gtop"><span class="num red">2</span><h3>종이컵 왈츠</h3><span class="badge red">팀전</span><span class="tm">20분</span></div>
+    <details class="game" id="g2">
+      <summary class="gtop"><span class="num red">2</span><h3>종이컵 왈츠</h3><span class="badge red">팀전</span><span class="tm">20분</span><span class="chev">▾</span></summary>
       <p class="rule">한 손등에 <b>종이컵</b>을 올려두고, 다른 한 손으로 <b>상대 팀 종이컵</b>을 쳐서 떨어뜨리기!<br>마지막까지 컵을 지킨 팀 승리!</p>
       <div class="gmeta">
         <div id="g2Teams"></div>
         <div class="row"><span class="lbl">준비</span><span style="font-size:14px">종이컵 넉넉히</span></div>
         <div class="row"><span class="lbl">점수</span><span style="font-size:14px">이긴 팀 전원 <b>+3</b> / 진 팀 <b>+1</b></span></div>
       </div>
-    </article>
+    </details>
 
-    <article class="game" id="g3">
-      <div class="gtop"><span class="num">3</span><h3>할리갈리 랜덤</h3><span class="badge green">개인전</span><span class="tm">25분</span></div>
+    <details class="game" id="g3">
+      <summary class="gtop"><span class="num">3</span><h3>할리갈리 랜덤</h3><span class="badge green">개인전</span><span class="tm">25분</span><span class="chev">▾</span></summary>
       <p class="rule"><b>5인전 × 2판</b>. <b>1조·2조</b>(당일 랜덤, 부부를 서로 다른 조로)가 한 판씩 겨루고, 매 판 <b>룰렛</b>으로 모드를 뽑아요. 먼저 종을 치면 순서대로 <b>1~5등</b>! (동점이면 사다리·가위바위보)</p>
       <div class="gmeta">
         <div id="g3Teams"></div>
@@ -716,39 +724,39 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
         <div class="row"><span class="lbl">준비</span><span style="font-size:14px">할리갈리 · 쫀쫀이</span></div>
         <div class="row"><span class="lbl">점수</span><span style="font-size:14px">1~5등 = <b>7, 5, 3, 2, 1점</b></span></div>
       </div>
-    </article>
+    </details>
 
-    <article class="game" id="g4">
-      <div class="gtop"><span class="num red">4</span><h3>컵 세우기 빙고</h3><span class="badge red">팀전</span><span class="tm">25분</span></div>
+    <details class="game" id="g4">
+      <summary class="gtop"><span class="num red">4</span><h3>컵 세우기 빙고</h3><span class="badge red">팀전</span><span class="tm">25분</span><span class="chev">▾</span></summary>
       <p class="rule">바닥(또는 아일랜드 식탁)에 <b>마스킹테이프 3×3 판</b>을 만들고, 두 팀이 <b>번갈아 릴레이</b>로 달려가 <b>컵을 뒤집어 세우기</b>! 한 사람이 컵 한 개를 세우고 돌아와 터치하면 다음 주자 출발 — 가로·세로·대각선 <b>한 줄을 먼저 완성한 팀</b>이 그 판 승리!<br><b>3판 2선승</b>으로 최종 승자를 정해요.</p>
       <div class="gmeta">
         <div id="g4Teams"></div>
         <div class="row"><span class="lbl">준비</span><span style="font-size:14px">색깔 종이컵 2색 (각 5개 이상) · 마스킹테이프</span></div>
         <div class="row"><span class="lbl">점수</span><span style="font-size:14px">이긴 팀 전원 <b>+3</b> / 진 팀 <b>+1</b></span></div>
       </div>
-    </article>
+    </details>
 
-    <article class="game" id="g5">
-      <div class="gtop"><span class="num">5</span><h3>사진피하기</h3><span class="badge green">개인전</span><span class="tm">25분</span></div>
+    <details class="game" id="g5">
+      <summary class="gtop"><span class="num">5</span><h3>사진피하기</h3><span class="badge green">개인전</span><span class="tm">25분</span><span class="chev">▾</span></summary>
       <p class="rule"><b>10명 전체가 술래!</b> 술래는 안대를 쓰고 폰 플래시를 켠 뒤 <b>10초</b>를 세고 <b>"하나~다섯!"</b> 외치며 <b>5장</b>을 찍어요. 5장 중 1장이라도 찍히면 <b>-1점</b>, 다 피하면 <b>+1점</b>.<br>합산이 높은 순서대로 <b>10~1점</b>, 가장 많이 찍힌 <b>베스트 술래 +3점</b> (공동이면 +2점).</p>
       <div class="gmeta">
         <div class="row"><span class="lbl">금지</span><span style="font-size:14px">❌ 구역 이탈 (화장실·바깥 도망) &nbsp; ❌ 얼굴 가리기 (손·머리카락·물건)</span></div>
         <div class="row"><span class="lbl">준비</span><span style="font-size:14px">안대 1개 · 폰 카메라</span></div>
         <div class="row"><span class="lbl">팁</span><span style="font-size:14px">마무리 게임! <b>많이 찍힐수록 좋아요</b> 😆</span></div>
       </div>
-    </article>
+    </details>
   </div>
 
   <div class="card" id="g6">
     <h2><span class="u">보너스 게임</span> <span class="badge gold">여유 있을 때</span></h2>
-    <article class="game">
-      <div class="gtop"><span class="num" style="background:var(--gold);color:#4a3200">A</span><h3>인아웃 점프</h3><span class="tm">5인 × 2조</span></div>
+    <details class="game">
+      <summary class="gtop"><span class="num" style="background:var(--gold);color:#4a3200">A</span><h3>인아웃 점프</h3><span class="tm">5인 × 2조</span><span class="chev">▾</span></summary>
       <p class="rule">처음 1분은 연습! 사회자가 <b>"안!" / "밖!"</b>을 외치면 반대쪽으로 점프, <b>"그대로!"</b>면 그대로 있기. 틀리면 탈락, 마지막 생존자 <b>+1점</b> (단독 생존 <b>+2점</b>).</p>
-    </article>
-    <article class="game">
-      <div class="gtop"><span class="num" style="background:var(--gold);color:#4a3200">B</span><h3>한 글자 초성퀴즈</h3><span class="tm">5인 × 2조</span></div>
+    </details>
+    <details class="game">
+      <summary class="gtop"><span class="num" style="background:var(--gold);color:#4a3200">B</span><h3>한 글자 초성퀴즈</h3><span class="tm">5인 × 2조</span><span class="chev">▾</span></summary>
       <p class="rule"><b>ㄱ · ㅅ · ㅂ · ㅁ · ㅊ</b> 중 하나를 외치면, 그 초성에 맞는 물건을 가져와 <b>"국자!"</b>처럼 외치며 터치! 남이 이미 외친 물건은 <b>중복 금지</b>. 조별 1~5등 <b>5~1점</b> (또는 보너스 점수).</p>
-    </article>
+    </details>
   </div>
 
   <div class="card">
@@ -2482,7 +2490,7 @@ function renderTeamSummary(){
     return '<div class="tsrow"><b>'+esc(g.title.replace("팀전 ",""))+'</b>'+
       (hasAssign(t)
         ? '<span class="tsnames"><span class="chip solid-red">A조</span> '+esc(namesOf(t.a))+'<br><span class="chip solid-green">B조</span> '+esc(namesOf(t.b))+'</span>'
-        : '<span class="tsnames muted">아직 안 뽑았어요</span>')+'</div>';
+        : '<span class="tsnames muted">아직 안 뽑았어요 <button type="button" class="minibtn" data-draw="'+g.key+'">🎲 뽑기</button></span>')+'</div>';
   }).join("");
   var h = S.teams.halli, hb = halliGroups();
   html += '<div class="tsrow"><b>3 할리갈리</b>'+
@@ -2491,7 +2499,7 @@ function renderTeamSummary(){
       : (hb
           ? '<span class="tsnames"><span class="chip solid-red">1조</span> '+esc(namesOf(hb.a))+'<br><span class="chip solid-green">2조</span> '+esc(namesOf(hb.b))+'<span class="muted"> ('+esc(hb.from)+' 조 그대로)</span></span>'
           : '<span class="tsnames muted">아직 안 뽑았어요</span>'))+'</div>';
-  box.innerHTML = html + '<span class="hint" style="margin-top:4px">각 게임 카드 안의 <b>🎲 조 나누기</b>로 그 게임 조를 뽑아요 (관리자 PIN 필요).</span>';
+  box.innerHTML = html + '<span class="hint" style="margin-top:4px">게임 카드를 열거나 위 <b>🎲 뽑기</b>로 그 게임 조를 정해요 (관리자 PIN 필요).</span>';
 }
 
 /* ══════════════════ 개수 표시 ══════════════════ */
@@ -3120,6 +3128,9 @@ document.addEventListener("click", function(e){
   if(jump){
     var target = document.getElementById(jump.getAttribute("data-jump"));
     if(target){
+      /* 접힌 게임 카드는 펼치고 이동해요 */
+      if(target.tagName === "DETAILS"){ target.open = true; }
+      else { $all("details.game", target).forEach(function(d){ d.open = true; }); }
       try{ target.scrollIntoView({behavior:"smooth", block:"center"}); }
       catch(err){ target.scrollIntoView(); }
       target.classList.remove("flash");
