@@ -883,7 +883,7 @@ function freshShared(){
     best:{bonus:3, ids:[]},
     bonus:{},
     wheel:{history:[], last:null},
-    notice:{text:"", at:0, by:""},
+    notice:{text:"", place:"", at:0, by:""},
     lock:{score:false, notice:true},
     shop:{},
     tools:null,
@@ -916,7 +916,8 @@ function load(){
     if(raw.toolsCustom) f.toolsCustom = Object.assign({pool:"people",items:"",couples:true,cat:"전체"}, raw.toolsCustom);
     if(!f.wheel || !Array.isArray(f.wheel.history)) f.wheel = {history:[], last:null};
     if(!f.lock) f.lock = {score:false, notice:true};
-    if(!f.notice) f.notice = {text:"", at:0, by:""};
+    if(!f.notice) f.notice = {text:"", place:"", at:0, by:""};
+    if(f.notice && f.notice.place === undefined) f.notice.place = "";
     if(!f.best || !Array.isArray(f.best.ids)) f.best = {bonus:3, ids:[]};
   }catch(e){ return fresh(); }
   return f;
@@ -1073,7 +1074,7 @@ function applyRemote(rootVal){
       else if(seg[0]==="state" && seg[1]==="bonus" && seg[2]) next.bonus[seg[2]] = Number(v);
       else if(path==="state/best" && v) next.best = {bonus:(v.bonus===2?2:3), ids:Array.isArray(v.ids)?v.ids:[]};
       else if(path==="wheel" && v) next.wheel = {history:Array.isArray(v.history)?v.history:[], last:v.last||null};
-      else if(path==="notice" && v) next.notice = {text:v.text||"", at:v.at||0, by:v.by||""};
+      else if(path==="notice" && v) next.notice = {text:v.text||"", place:v.place||"", at:v.at||0, by:v.by||""};
       else if(path==="lock" && v) next.lock = {score:!!v.score, notice:!!v.notice};
       else if(path==="tools" && v) next.tools = v;
       else if(seg[0]==="shop" && seg[1] && v) next.shop[seg[1]] = v;
@@ -1413,7 +1414,7 @@ function renderNotice(){
   if(!body) return;
   if(S.notice && S.notice.text){
     body.className = "notice";
-    body.innerHTML = esc(S.notice.text).replace(/\n/g,"<br>");
+    body.innerHTML = esc(S.notice.text).replace(/\n/g,"<br>") + (S.notice.place ? noticeNavHTML(S.notice.place) : "");
     meta.innerHTML = "🕊 "+(S.notice.at?hhmm(S.notice.at):"")+(S.notice.by?" · "+esc(nickOf(S.notice.by)):"");
   } else {
     body.className = "notice empty";
@@ -1456,18 +1457,30 @@ function renderNotice(){
     adminBox.appendChild(t);
   }
 }
+function noticeNavHTML(place){
+  var q = encodeURIComponent(place);
+  return '<div class="navrow" style="margin-top:9px">'+
+    '<a class="navbtn n" href="https://map.naver.com/p/search/'+q+'" target="_blank" rel="noopener">🟢 네이버지도</a>'+
+    '<a class="navbtn k" href="https://map.kakao.com/link/search/'+q+'" target="_blank" rel="noopener">🟡 카카오맵</a>'+
+    '<a class="navbtn t" href="#" data-tmaps="'+esc(place)+'">🔵 티맵</a>'+
+    '</div>';
+}
 function noticeEditor(){
   var m = $("#modal");
   m.className = "modal";
   m.innerHTML = '<h3>📢 공지사항</h3><p class="msub">모두에게 보이는 공지예요</p>'+
-    '<textarea id="noticeInput" style="width:100%;min-height:120px;border:2px solid #1B1B1B;border-radius:12px;padding:9px;font-family:inherit;font-size:15.5px;line-height:1.6;resize:vertical">'+esc(S.notice.text||"")+'</textarea>'+
-    '<div class="btns" style="margin-top:12px"><button type="button" data-act="close">닫기</button>'+
+    '<textarea id="noticeInput" style="width:100%;min-height:110px;border:2px solid #1B1B1B;border-radius:12px;padding:9px;font-family:inherit;font-size:15.5px;line-height:1.6;resize:vertical" placeholder="공지 내용">'+esc(S.notice.text||"")+'</textarea>'+
+    '<div class="fieldrow" style="margin-top:10px"><label>장소/주소 (선택)</label>'+
+    '<input type="text" id="noticePlace" maxlength="60" placeholder="예: 경주 황남빵 본점 / 경북 경주시 태종로 64" value="'+esc(S.notice.place||"")+'"></div>'+
+    '<div class="hint" style="text-align:left;margin:-4px 0 8px">주소를 넣으면 공지 아래에 네이버·카카오·티맵 길첮기 버튼이 생겨요</div>'+
+    '<div class="btns"><button type="button" data-act="close">닫기</button>'+
     '<button type="button" class="primary" data-act="save">저장</button></div>';
   $("#overlay").classList.add("on");
   m.querySelector('[data-act="close"]').addEventListener("click", closeModal);
   m.querySelector('[data-act="save"]').addEventListener("click", function(){
     var v = $("#noticeInput").value.trim();
-    S.notice = { text:v, at:Date.now(), by:S.me||"" };
+    var pl = $("#noticePlace") ? $("#noticePlace").value.trim() : "";
+    S.notice = { text:v, place:pl, at:Date.now(), by:S.me||"" };
     save(); renderNotice(); queuePush(); closeModal(); toast("공지 저장했어요 📢");
   });
 }
@@ -2226,6 +2239,13 @@ document.addEventListener("click", function(e){
   var t = e.target;
   if(!t || !t.closest) return;
 
+  var tm = t.closest("[data-tmaps]");
+  if(tm){
+    e.preventDefault();
+    location.href = "tmap://search?name=" + encodeURIComponent(tm.getAttribute("data-tmaps"));
+    setTimeout(function(){ toast("티맵 앱이 안 열리면 설치 후 다시 눌러주세요"); }, 1200);
+    return;
+  }
   var teamBtn = t.closest("[data-teamkey]");
   if(teamBtn){
     var key = teamBtn.getAttribute("data-teamkey");
