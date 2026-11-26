@@ -1192,6 +1192,7 @@ var ROOM_TOKEN = (function(){
 var ROOM_ID = "christmas2026-" + ROOM_TOKEN.replace(/[^a-z0-9]/g,"").slice(0,24);
 var CK = null, roomRef = null, syncReady = false, applyToken = 0, pushTimer = null, lastEdit = 0;
 var remoteApplied = false, pendingPush = false;
+var recentPub = {};        /* 방금 내가 올린 노드 — 서버 스냅샷이 잠시 비어 보여도 지우지 않게 */
 var lastPub = {};
 
 function b64(buf){
@@ -1294,7 +1295,11 @@ function pushNow(){
     if(isSame) return;
     var val = cur[k];
     if(val === null || val === undefined){ jobs.push(roomRef.child(k).remove()); return; }
-    jobs.push(encryptValue(val).then(function(node){ return roomRef.child(k).set(node); }));
+    (function(kk){
+      jobs.push(encryptValue(val).then(function(node){
+        return roomRef.child(kk).set(node).then(function(){ recentPub[kk] = Date.now(); });
+      }));
+    })(k);
   });
   Object.keys(lastPub).forEach(function(k){
     if(k.indexOf("gb/") === 0) return;   /* 방명록은 기록! 상태 비교로는 절대 지우지 않음 (삭제·정리는 직접 명시적으로) */
@@ -1345,6 +1350,14 @@ function applyRemote(rootVal){
       if(!(k in map)) same = false;
     });
     remoteApplied = true;
+    /* 내가 방금 올린 노드가 스냅샷에 비어 있으면(쓰기 경합) 지우지 않고 유지해요 */
+    var repub = {};
+    Object.keys(recentPub).forEach(function(k){
+      if(k in map){ return; }
+      if(Date.now() - recentPub[k] > 12000){ delete recentPub[k]; return; }
+      if(localMap[k] !== undefined && localMap[k] !== null){ map[k] = localMap[k]; repub[k] = 1; }
+    });
+    if(Object.keys(repub).length){ same = false; }
     if(same){ lastPub = localMap; return; }
 
     var next = freshShared();
@@ -1392,7 +1405,9 @@ function applyRemote(rootVal){
     save();
     try{ lastPub = JSON.parse(JSON.stringify(flatten())); }catch(e){ lastPub = {}; }
     if(!hadMeta){ lastPub = {}; queuePush(); }   /* meta 마커가 없던 방이면 전체를 한 번 다시 올려 마커를 심어요 */
+    Object.keys(repub).forEach(function(k){ delete lastPub[k]; });   /* 서버에 다시 밀어넣기 */
     if(pendingPush){ pendingPush = false; queuePush(); }
+    if(Object.keys(repub).length){ queuePush(); }
     renderAll();
   });
 }
