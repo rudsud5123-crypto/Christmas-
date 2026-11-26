@@ -2584,7 +2584,7 @@ function renderTeamSummary(){
 /* ══════════════════ 개수 표시 ══════════════════ */
 function updateCounts(){
   var t = TEAM_GAMES.filter(function(g){ return S.wins[g.key]==="a" || S.wins[g.key]==="b"; }).length;
-  setCnt("team", t+"/3", t===0);
+  setCnt("team", t+"/"+TEAM_GAMES.length, t===0);
   var w = Object.keys(S.walts||{}).length;
   setCnt("walts", w+"/10", w===0);
   var h = Object.keys(S.halli||{}).length;
