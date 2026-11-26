@@ -1322,6 +1322,15 @@ function pushNow(){
   });
   Object.keys(lastPub).forEach(function(k){
     if(k.indexOf("gb/") === 0) return;   /* 방명록은 기록! 상태 비교로는 절대 지우지 않음 (삭제·정리는 직접 명시적으로) */
+    if(k.indexOf("prof/") === 0){
+      /* 참가자 프로필도 기록! 구버전 상태·로그아웃된 기기가 남의 프로필을 실수로 지우지 못하게 함.
+         (내 프로필을 통째로 비운 경우에만 내 기기에서 직접 지웁니다) */
+      if(S.me && k === "prof/" + S.me){
+        var mine = S.profiles[S.me] || {};
+        if(!mine.nick && !mine.photo && !mine.motto) jobs.push(roomRef.child(k).remove());
+      }
+      return;
+    }
     if(!(k in cur)) jobs.push(roomRef.child(k).remove());
   });
   /* 중요: lastPub는 '그때의 값'을 복사해 둬야 나중에 같은 객체를 고쳐도 차이를 잡아요 */
