@@ -654,7 +654,7 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
     <h2><span class="u">게임 순서</span> <span class="badge ghost">총 2시간</span></h2>
     <ul class="order">
       <li class="jump" data-jump="g1"><span class="num">1</span><span class="nm">가면 그릇치기</span><a class="vico" data-vlink href="https://www.instagram.com/reel/DeHI0xJSO9V/?jplx=MXJqdDVqMXlubmJnbg==" target="_blank" rel="noopener noreferrer" aria-label="가면 그릇치기 예시 영상">🎬</a><span class="badge red">팀전</span><span class="tm">25분</span><span class="go">↓</span></li>
-      <li class="jump" data-jump="g2"><span class="num">2</span><span class="nm">종이컵 왈츠</span><span class="badge red">팀전</span><span class="tm">20분</span><span class="go">↓</span></li>
+      <li class="jump" data-jump="g2"><span class="num">2</span><span class="nm">종이컵 왈츠</span><a class="vico" data-vlink href="https://www.instagram.com/reel/DZwx2YgJrzd/?evlk=MTRwc3BkN3hvdjdoMA==" target="_blank" rel="noopener noreferrer" aria-label="종이컵 왈츠 예시 영상">🎬</a><span class="badge red">팀전</span><span class="tm">20분</span><span class="go">↓</span></li>
       <li class="jump" data-jump="g3"><span class="num">3</span><span class="nm">할리갈리 랜덤</span><span class="badge green">개인전</span><span class="tm">25분</span><span class="go">↓</span></li>
       <li class="jump" data-jump="g4"><span class="num">4</span><span class="nm">컵 세우기 빙고</span><span class="badge green">개인전</span><span class="tm">25분</span><span class="go">↓</span></li>
       <li class="jump" data-jump="g5"><span class="num">5</span><span class="nm">사진피하기</span><a class="vico" data-vlink href="https://www.instagram.com/reel/Ddn1oHSpQH7/?evlk=MXZyaHJoZWZxcWM5Zw==" target="_blank" rel="noopener noreferrer" aria-label="사진피하기 예시 영상">🎬</a><span class="badge green">개인전</span><span class="tm">25분</span><span class="go">↓</span></li>
@@ -682,6 +682,7 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
     <article class="game" id="g2">
       <div class="gtop"><span class="num red">2</span><h3>종이컵 왈츠</h3><span class="badge red">팀전</span><span class="tm">20분</span></div>
       <p class="rule">한 손등에 <b>종이컵</b>을 올려두고, 다른 한 손으로 <b>상대 팀 종이컵</b>을 쳐서 떨어뜨리기!<br>마지막까지 컵을 지킨 팀 승리!</p>
+      <a class="vlink" data-vlink href="https://www.instagram.com/reel/DZwx2YgJrzd/?evlk=MTRwc3BkN3hvdjdoMA==" target="_blank" rel="noopener noreferrer">🎬 예시 영상 보기</a>
       <div class="gmeta">
         <div class="row"><span class="lbl">팀</span><span class="chip solid-red">남편 팀</span><span style="font-size:14px">한길 · 윤민 · 봉수 · 정석 · 태성</span></div>
         <div class="row"><span class="lbl"></span><span class="chip solid-green">아내 팀</span><span style="font-size:14px">가영 · 경녕 · 예진 · 지수 · 수정</span></div>
@@ -1309,10 +1310,12 @@ function applyRemote(rootVal){
       });
     }
 
+    var hadMeta = ("meta" in map);
     S = Object.assign(next, {});
     seedShopDefaults();
     save();
     try{ lastPub = JSON.parse(JSON.stringify(flatten())); }catch(e){ lastPub = {}; }
+    if(!hadMeta){ lastPub = {}; queuePush(); }   /* meta 마커가 없던 방이면 전체를 한 번 다시 올려 마커를 심어요 */
     renderAll();
   });
 }
@@ -2447,40 +2450,47 @@ var OLD_SEED_NAMES = {
   "seed-veg":"쌈채소·마늘", "seed-water":"삼다수 500ml (게임용)", "seed-string":"노끈·허리끈", "seed-bowl":"일회용 그릇"
 };
 var SHOP_SEED_VER = 2;
-/* 첫 버전의 기본 장보기 11개를 그대로 유지 + 새 분류·수량/단위로 한 번만 정리
-   (정리 여부는 Firebase meta.shopSeed 로 공유해서 모든 폰이 같은 목록을 봐요) */
-function seedShopDefaults(){
+/* 기본 항목(seed id)을 새 이름·분류·수량/단위로 맞춰요.
+   사용자가 ✏️로 고친 항목(ed 있음)은 건드리지 않아요. */
+function normalizeSeedItems(){
   if(!S.shop) S.shop = {};
-  if(!S.meta) S.meta = { shopSeed:0 };
-  if(Number(S.meta.shopSeed||0) >= SHOP_SEED_VER) return;
   var changed = false;
   Object.keys(S.shop).forEach(function(id){
-    var it = S.shop[id]; if(!it) return;
+    var it = S.shop[id];
+    if(!it || it.ed) return;
     var seed = null;
     SEED_SHOP.forEach(function(x){ if(x.id === id) seed = x; });
     if(seed){
-      if(OLD_SEED_NAMES[id] && it.name === OLD_SEED_NAMES[id]){ it.name = seed.name; changed = true; }
-      if(!it.qty){ it.qty = seed.qty; it.unit = seed.unit; changed = true; }
-      if(SHOP_CATS.indexOf(it.cat) < 0){ it.cat = seed.cat; changed = true; }
+      if(it.name !== seed.name){ it.name = seed.name; changed = true; }
+      if(!it.qty || Number(it.qty) !== Number(seed.qty) || it.unit !== seed.unit){ it.qty = seed.qty; it.unit = seed.unit; changed = true; }
+      if(it.cat !== seed.cat){ it.cat = seed.cat; changed = true; }
     } else {
       if(CAT_OLD[it.cat]){ it.cat = CAT_OLD[it.cat]; changed = true; }
-      if(SHOP_CATS.indexOf(it.cat) < 0){ it.cat = "음식/장보기"; changed = true; }
+      else if(SHOP_CATS.indexOf(it.cat) < 0){ it.cat = "음식/장보기"; changed = true; }
     }
   });
-  SEED_SHOP.forEach(function(x){
-    if(S.shop[x.id]) return;
-    var dup = Object.keys(S.shop).some(function(id){
-      var it = S.shop[id] || {};
-      var nm = String(it.name||"").replace(/\s+/g,"");
-      return nm && nm.indexOf(String(x.name).replace(/\s+/g,"")) === 0;
+  return changed;
+}
+/* 첫 버전 기본 장보기 11개가 통째로 사라지지 않게 한 번 채워요 (Firebase meta 마커로 공유) */
+function seedShopDefaults(){
+  if(!S.shop) S.shop = {};
+  if(!S.meta) S.meta = { shopSeed:0 };
+  var changed = normalizeSeedItems();
+  if(Number(S.meta.shopSeed||0) < SHOP_SEED_VER){
+    SEED_SHOP.forEach(function(x){
+      if(S.shop[x.id]) return;
+      var dup = Object.keys(S.shop).some(function(id){
+        var it = S.shop[id] || {};
+        var nm = String(it.name||"").replace(/\s+/g,"");
+        return nm && nm.indexOf(String(x.name).replace(/\s+/g,"")) === 0;
+      });
+      if(dup) return;
+      S.shop[x.id] = { name:x.name, cat:x.cat, qty:x.qty, unit:x.unit, checked:false, at:Date.now(), by:"seed" };
+      changed = true;
     });
-    if(dup) return;
-    S.shop[x.id] = { name:x.name, cat:x.cat, qty:x.qty, unit:x.unit, checked:false, at:Date.now(), by:"seed" };
-    changed = true;
-  });
-  S.meta.shopSeed = SHOP_SEED_VER;
-  save();
-  if(changed) queuePush();
+    S.meta.shopSeed = SHOP_SEED_VER;
+  }
+  if(changed){ save(); queuePush(); }
 }
 
 /* ══════════════════ 방명록 ══════════════════ */
