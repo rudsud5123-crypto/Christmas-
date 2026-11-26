@@ -473,7 +473,8 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
 .tab{flex:1 1 0;min-width:0;padding:6px 0;overflow:hidden}
 .tab .tl{display:block;max-width:100%;white-space:nowrap;font-size:11.5px;letter-spacing:-.03em}
 .tab .te{display:block;font-size:17px;line-height:1.1}
-.tab[hidden]{display:none!important}
+/* hidden 속성이 CSS display 규칙에 덮이지 않도록 전역 보호 */
+[hidden]{display:none!important}
 
 /* ---------- 방명록 ---------- */
 .gbwrite{background:linear-gradient(#FFFDF7,#FFF7EA)}
