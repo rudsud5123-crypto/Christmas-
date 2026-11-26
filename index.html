@@ -147,7 +147,8 @@ h3{font-size:18px;margin:0;line-height:1.25}
 
 /* ---------- 순서 ---------- */
 .order{list-style:none;margin:0;padding:0}
-.order li{display:flex;align-items:center;gap:7px;padding:6px 0;border-bottom:1.5px dashed #e6ded3;font-size:15.5px}
+.order li{display:flex;align-items:center;gap:7px;padding:6px 0;border-bottom:1.5px dashed #e6ded3;font-size:15.5px;flex-wrap:wrap}
+.order .vchips{flex:0 0 100%;display:flex;gap:5px;flex-wrap:wrap;margin:3px 0 1px 30px}
 .order li:last-child{border-bottom:0}
 .num{flex:0 0 auto;width:23px;height:23px;border-radius:50%;background:var(--green);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13.5px;font-weight:700;border:2px solid var(--ink)}
 .num.red{background:var(--red)}
@@ -677,7 +678,14 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
     <ul class="order">
       <li class="jump" data-jump="g1"><span class="num">1</span><span class="nm">가면 그릇치기</span><a class="vico" data-vlink href="https://www.instagram.com/reel/DeHI0xJSO9V/?jplx=MXJqdDVqMXlubmJnbg==" target="_blank" rel="noopener noreferrer" aria-label="가면 그릇치기 예시 영상">🎬</a><span class="badge red">팀전</span><span class="tm">25분</span><span class="go">↓</span></li>
       <li class="jump" data-jump="g2"><span class="num">2</span><span class="nm">종이컵 왈츠</span><a class="vico" data-vlink href="https://www.instagram.com/reel/DZwx2YgJrzd/?evlk=MTRwc3BkN3hvdjdoMA==" target="_blank" rel="noopener noreferrer" aria-label="종이컵 왈츠 예시 영상">🎬</a><span class="badge red">팀전</span><span class="tm">20분</span><span class="go">↓</span></li>
-      <li class="jump" data-jump="g3"><span class="num">3</span><span class="nm">할리갈리 랜덤</span><span class="badge green">개인전</span><span class="tm">25분</span><span class="go">↓</span></li>
+      <li class="jump" data-jump="g3"><span class="num">3</span><span class="nm">할리갈리 랜덤</span><span class="badge green">개인전</span><span class="tm">25분</span><span class="go">↓</span>
+        <span class="vchips">
+          <a class="vico" data-vlink href="https://youtube.com/shorts/KrQa1LA3PUo?si=9Ee4cGzJ_vHWykmJ" target="_blank" rel="noopener noreferrer" aria-label="멀리갈리 예시 영상">🎬 멀리</a>
+          <a class="vico" data-vlink href="https://youtube.com/shorts/9q2qzwmdqew?si=yTs17t8D4owLPqU9" target="_blank" rel="noopener noreferrer" aria-label="발리갈리 예시 영상">🎬 발리</a>
+          <a class="vico" data-vlink href="https://www.instagram.com/reel/DeY9Q7Wv2yr/?dmpr=M3E5OTMwc2t0d2s1" target="_blank" rel="noopener noreferrer" aria-label="쫀쫀이갈리 예시 영상">🎬 쫀쫀</a>
+          <a class="vico" data-vlink href="https://youtube.com/shorts/UmLGGH_7E2E?si=Nxql-nAEw7osocK7" target="_blank" rel="noopener noreferrer" aria-label="스쿼트갈리 예시 영상">🎬 스쿼트</a>
+        </span>
+      </li>
       <li class="jump" data-jump="g4"><span class="num">4</span><span class="nm">컵 세우기 빙고</span><a class="vico" data-vlink href="https://youtube.com/shorts/znwHlcQvAH0?si=7-Ye6j9RbI2p0UFn" target="_blank" rel="noopener noreferrer" aria-label="컵 세우기 빙고 예시 영상">🎬</a><span class="badge red">팀전</span><span class="tm">25분</span><span class="go">↓</span></li>
       <li class="jump" data-jump="g5"><span class="num">5</span><span class="nm">사진피하기</span><a class="vico" data-vlink href="https://www.instagram.com/reel/Ddn1oHSpQH7/?evlk=MXZyaHJoZWZxcWM5Zw==" target="_blank" rel="noopener noreferrer" aria-label="사진피하기 예시 영상">🎬</a><span class="badge green">개인전</span><span class="tm">25분</span><span class="go">↓</span></li>
       <li class="jump" data-jump="g6"><span class="num" style="background:var(--gold);color:#4a3200">+</span><span class="nm">보너스 게임</span><a class="vico" data-vlink href="https://www.instagram.com/reel/Db05LgnRq35/?avpt=MWdnMWdnYzAxajRqZA==" target="_blank" rel="noopener noreferrer" aria-label="인아웃 점프 예시 영상">🎬 인아웃</a><a class="vico" data-vlink href="https://www.instagram.com/reel/Dc3D4EnTdre/?knvt=MXh0bnpuNzJ2eXVvNg==" target="_blank" rel="noopener noreferrer" aria-label="한 글자 초성퀴즈 예시 영상">🎬 초성</a><span class="tm">여유 있을 때</span><span class="go">↓</span></li>
@@ -846,7 +854,7 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
   </div>
 
   <div class="card tight">
-    <h2 style="font-size:16.5px"><span class="u">5가지 모드</span></h2>
+    <h2 style="font-size:16.5px"><span class="u">4가지 모드</span></h2>
     <div id="modeList"></div>
     <div class="hint" style="margin-top:8px">먼저 종을 치면 순서대로 <b>1~5등</b>. 동점이면 사다리타기나 가위바위보!</div>
   </div>
@@ -985,13 +993,12 @@ var HALLI_PTS = [7,5,3,2,1];
 
 var MODES = [
   {name:"멀리갈리", emoji:"🔔", rule:"종을 멀리 두고 달려가서 치기!"},
-  {name:"스쿼트 할리갈리", emoji:"🏋️", rule:"스쿼트 2번 하고 종 치기!"},
   {name:"발리갈리", emoji:"🦶", rule:"손 금지! 발로만 종 누르기!"},
-  {name:"쫀쫀이 할리갈리", emoji:"🎗️", rule:"쫀쫀이 당기며 종 치기!"},
-  {name:"숨어갈리", emoji:"🔍", rule:"숨긴 종을 찾아서 치기!"}
+  {name:"쫀쫀이갈리", emoji:"🎗️", rule:"쫀쫀이 당기며 종 치기!"},
+  {name:"스쿼트갈리", emoji:"🏋️", rule:"스쿼트 2번 하고 종 치기!"}
 ];
-var WHEEL_COLORS = ["#A60C0E","#FFFFFF","#1E7B3C","#FBF0DA","#FFFFFF"];
-var WHEEL_TEXT   = ["#FFFFFF","#1B1B1B","#FFFFFF","#1B1B1B","#1B1B1B"];
+var WHEEL_COLORS = ["#A60C0E","#FFFFFF","#1E7B3C","#FBF0DA"];
+var WHEEL_TEXT   = ["#FFFFFF","#1B1B1B","#FFFFFF","#1B1B1B"];
 
 var PREP = ["가면","생수병(500ml)","끈/노끈","일회용 그릇","색깔 종이컵 2색 (각 5개 이상)","할리갈리","마스킹테이프","안대 1개","폰 카메라","쫀쫀이"];
 /* 초성퀴즈용 알짜 초성 13개 + 사회자 참고 예시 (펜션·아기용품에서 찾을 수 있는 것) */
