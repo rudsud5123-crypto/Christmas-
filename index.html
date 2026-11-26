@@ -671,7 +671,7 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
   </div>
 
   <div class="card">
-    <h2><span class="u">참가자</span> <span class="badge ghost">10명</span></h2>
+    <h2><span class="u">참가자</span> <span class="badge ghost" id="peopleBadge">0/10명</span></h2>
     <div class="people" id="peopleList"></div>
     <span class="hint">내 프로필에서 닉네임과 사진을 정하면 여기랑 점수판에 같이 보여요.</span>
   </div>
@@ -1794,6 +1794,9 @@ function setupNav(){
 function renderPeople(){
   var box = $("#peopleList");
   if(!box) return;
+  var ready = PEOPLE.filter(function(p){ return profileReady(p.id); }).length;
+  var pb = $("#peopleBadge");
+  if(pb) pb.textContent = ready + "/" + PEOPLE.length + "명";
   box.innerHTML = PEOPLE.map(function(p){
     var pr = S.profiles[p.id] || {};
     var hasNick = !!pr.nick;
