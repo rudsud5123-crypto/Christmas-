@@ -463,10 +463,10 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
 </header>
 
 <nav class="tabs" role="tablist">
-  <button class="tab on" data-tab="guide" role="tab"><span class="te">📋</span>안내</button>
-  <button class="tab" data-tab="wheel" role="tab"><span class="te">🎡</span>룰렛</button>
+  <button class="tab on" data-tab="guide" role="tab"><span class="te">🎄</span>파티 안내</button>
+  <button class="tab" data-tab="games" role="tab"><span class="te">🎮</span>게임 안내</button>
   <button class="tab" data-tab="score" role="tab"><span class="te">🏆</span>점수판</button>
-  <button class="tab" data-tab="shop" role="tab"><span class="te">🛒</span>장보기</button>
+  <button class="tab" data-tab="wheel" role="tab"><span class="te">🎡</span>룰렛</button>
 </nav>
 
 <main>
@@ -499,6 +499,31 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
     <h2><span class="u">12월 7일 (월) 일정</span></h2>
     <ul class="tl" id="timeline"></ul>
   </div>
+
+  <div class="card">
+    <h2><span class="u">참가자</span> <span class="badge ghost">10명</span></h2>
+    <div class="people" id="peopleList"></div>
+    <span class="hint">내 프로필에서 닉네임과 사진을 정하면 여기랑 점수판에 같이 보여요.</span>
+  </div>
+
+  <div class="card">
+    <h2><span class="u">🛒 장보기 리스트</span> <span class="badge ghost" id="shopBadge">0개</span></h2>
+    <div class="shopadd">
+      <input type="text" id="shopInput" placeholder="살 것 적기 (예: 삼겹살)" maxlength="40" autocomplete="off">
+      <select id="shopCat">
+        <option>고기</option><option>주류</option><option>음료</option><option>과자</option><option>아기</option><option>기타</option>
+      </select>
+      <button type="button" id="shopAdd" aria-label="추가">+</button>
+    </div>
+    <div class="cats" id="shopCats"></div>
+    <div id="shopList"></div>
+    <div class="shopbar"><span id="shopStat"></span><span class="sp" style="flex:1"></span><button class="minibtn" id="shopClearDone" type="button">담은 것만 지우기</button></div>
+    <span class="hint">누구나 자유롭게 추가·체크·삭제할 수 있고, 모든 폰에 바로 반영돼요.</span>
+  </div>
+</section>
+
+<!-- ══════════════ 게임 안내 ══════════════ -->
+<section id="tab-games" hidden>
 
   <div class="card">
     <h2><span class="u">게임 순서</span> <span class="badge ghost">총 2시간</span></h2>
@@ -597,12 +622,6 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
       <span class="couple"><b>오정석</b><span class="hh">♥</span><b>김지수</b></span>
       <span class="couple"><b>한태성</b><span class="hh">♥</span><b>이수정</b></span>
     </div>
-  </div>
-
-  <div class="card">
-    <h2><span class="u">참가자</span> <span class="badge ghost">10명</span></h2>
-    <div class="people" id="peopleList"></div>
-    <span class="hint">내 프로필에서 닉네임과 사진을 정하면 여기랑 점수판에 같이 보여요.</span>
   </div>
 
   <div class="card">
@@ -733,24 +752,6 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
   </div>
 
   <div class="footnote">❤️ 수고하셨습니다! 메리 크리스마스 ⭐</div>
-</section>
-
-<!-- ══════════════ 장보기 ══════════════ -->
-<section id="tab-shop" hidden>
-  <div class="card">
-    <h2><span class="u">🛒 장보기 리스트</span> <span class="badge ghost" id="shopBadge">0개</span></h2>
-    <div class="shopadd">
-      <input type="text" id="shopInput" placeholder="살 것 적기 (예: 삼겹살)" maxlength="40" autocomplete="off">
-      <select id="shopCat">
-        <option>고기</option><option>주류</option><option>음료</option><option>과자</option><option>아기</option><option>기타</option>
-      </select>
-      <button type="button" id="shopAdd" aria-label="추가">+</button>
-    </div>
-    <div class="cats" id="shopCats"></div>
-    <div id="shopList"></div>
-    <div class="shopbar"><span id="shopStat"></span><span class="sp" style="flex:1"></span><button class="minibtn" id="shopClearDone" type="button">담은 것만 지우기</button></div>
-    <span class="hint">누구나 자유롭게 추가·체크·삭제할 수 있고, 모든 폰에 바로 반영돼요.</span>
-  </div>
 </section>
 </main>
 
@@ -1185,7 +1186,7 @@ function requireAdmin(cb){
 }
 
 /* ══════════════════ 탭 ══════════════════ */
-var TABS = ["guide","wheel","score","shop"];
+var TABS = ["guide","games","score","wheel"];
 function showTab(name){
   if(TABS.indexOf(name) < 0) name = "guide";
   S.tab = name; save();
