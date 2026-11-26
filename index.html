@@ -445,6 +445,8 @@ input.num:focus{outline:2px solid var(--red);outline-offset:1px}
 .pickgrid button .adm{font-size:10px;background:var(--gold);color:#4a3200;border-radius:999px;padding:0 5px;margin-left:auto;font-weight:700}
 .fieldrow{text-align:left;margin-bottom:10px}
 .fieldrow label{display:block;font-size:13px;font-weight:700;color:#6f6a68;margin-bottom:3px}
+.fieldrow label .mcount{float:right;font-size:11.5px;font-weight:700;color:#a9a3a0}
+.fieldrow label .mcount.full{color:var(--red)}
 .fieldrow input[type=text]{width:100%;border:2px solid var(--ink);border-radius:11px;padding:8px 10px;font-size:16px;background:#fff}
 .photoRow{display:flex;align-items:center;gap:10px;border:2px dashed #d6cbb9;border-radius:14px;padding:8px;background:var(--cream);text-align:left}
 .photoRow .sp{flex:1;font-size:12.5px;color:#7a7472;line-height:1.45}
@@ -1021,6 +1023,7 @@ function shuffle(a){
   return out;
 }
 function pad2(n){ return (n<10?"0":"")+n; }
+function cap5(v){ return Array.prototype.slice.call(String(v==null?"":v)).slice(0,5).join(""); }
 function hhmm(ts){ var d = new Date(ts||Date.now()); return pad2(d.getHours())+":"+pad2(d.getMinutes()); }
 function vibrate(p){ if(navigator.vibrate){ try{ navigator.vibrate(p); }catch(e){} } }
 function toast(msg){
@@ -1180,7 +1183,7 @@ function flatten(){
   m["meta"] = { shopSeed:Number((S.meta||{}).shopSeed)||0 };
   Object.keys(S.profiles).forEach(function(id){
     var pr = S.profiles[id] || {};
-    if(pr.nick || pr.photo || pr.motto) m["prof/"+id] = { nick:pr.nick||"", photo:pr.photo||"", motto:String(pr.motto||"").slice(0,5), at:pr.at||0 };
+    if(pr.nick || pr.photo || pr.motto) m["prof/"+id] = { nick:pr.nick||"", photo:pr.photo||"", motto:cap5(pr.motto), at:pr.at||0 };
   });
   Object.keys(S.guestbook || {}).forEach(function(id){
     var g = S.guestbook[id] || {};
@@ -1281,7 +1284,7 @@ function applyRemote(rootVal){
       else if(path==="tools" && v) next.tools = v;
       else if(path==="meta" && v) next.meta = {shopSeed:Number(v.shopSeed)||0};
       else if(seg[0]==="shop" && seg[1] && v) next.shop[seg[1]] = v;
-      else if(seg[0]==="prof" && seg[1] && v) next.profiles[seg[1]] = {nick:v.nick||"", photo:v.photo||"", motto:String(v.motto||"").slice(0,5), at:v.at||0};
+      else if(seg[0]==="prof" && seg[1] && v) next.profiles[seg[1]] = {nick:v.nick||"", photo:v.photo||"", motto:cap5(v.motto), at:v.at||0};
       else if(seg[0]==="gb" && seg[1] && v) next.guestbook[seg[1]] = { t:String(v.t||"").slice(0,80), at:Number(v.at)||0, by:v.by||"", l:Array.isArray(v.l)?v.l.slice(0,12):[], p:(v.p||"") };
     });
     /* 최근에 내가 남긴 글은 순간적으로 스냅샷에 빠져도 지워지지 않게 보존 */
@@ -1626,7 +1629,7 @@ function renderPeople(){
   box.innerHTML = PEOPLE.map(function(p){
     var pr = S.profiles[p.id] || {};
     var hasNick = !!pr.nick;
-    var mo = String(pr.motto || "").slice(0,5);
+    var mo = cap5(pr.motto);
     return '<div class="pcard">'+avatarHTML(p.id)+
       '<div class="pinfo"><div class="pn">'+esc(nickOf(p.id))+
         (hasNick ? ' <span class="psub">('+esc(p.short)+')</span>' : '')+'</div>'+
@@ -2700,8 +2703,8 @@ function openProfileModal(highlight){
     }).join("")+'</div>'+
     '<div class="fieldrow"><label>닉네임 (점수판에 크게 보여요)</label>'+
     '<input type="text" id="nickInput" maxlength="14" placeholder="예: 눈사람맘" value="'+esc(me && S.profiles[me] ? (S.profiles[me].nick||"") : "")+'"></div>'+
-    '<div class="fieldrow"><label>오늘의 각오 (5글자!)</label>'+
-    '<input type="text" id="mottoInput" maxlength="5" placeholder="예: 오늘1등내꺼" value="'+esc(me && S.profiles[me] ? (S.profiles[me].motto||"") : "")+'"></div>'+
+    '<div class="fieldrow"><label>오늘의 각오 (5글자!) <span class="mcount" id="mottoCount"></span></label>'+
+    '<input type="text" id="mottoInput" maxlength="5" inputmode="text" autocomplete="off" placeholder="예: 오늘1등내꺼" value="'+esc(me && S.profiles[me] ? cap5(S.profiles[me].motto) : "")+'"></div>'+
     '<div class="photoRow">'+avatarHTML(me||"hangil","lg")+
     '<div class="sp" id="photoHint">사진을 올리면 동그랗게 예쁘게 들어가요</div>'+
     '<div class="pbtns"><button type="button" id="photoPick">📷 사진</button>'+
@@ -2736,13 +2739,31 @@ function openProfileModal(highlight){
   });
   $("#photoPick").addEventListener("click", function(){ pickTarget = S.me; $("#photoFile").click(); });
   var mt = $("#mottoInput");
-  if(mt) mt.addEventListener("input", function(){
+  function mottoCount(){
+    var el = $("#mottoCount");
+    if(!el || !mt) return;
+    var n = Array.prototype.slice.call(mt.value).length;
+    el.textContent = n + "/5";
+    el.classList.toggle("full", n >= 5);
+  }
+  function enforceMotto(){
+    if(!mt) return;
+    var capped = cap5(mt.value);
+    if(capped !== mt.value) mt.value = capped;
+    mottoCount();
     if(!S.me) return;
     var pr = S.profiles[S.me] || {};
-    pr.motto = mt.value.slice(0,5);
+    pr.motto = capped;
     pr.at = Date.now();
     S.profiles[S.me] = pr;
-  });
+  }
+  if(mt){
+    mt.addEventListener("input", enforceMotto);
+    mt.addEventListener("compositionend", enforceMotto);
+    mt.addEventListener("blur", enforceMotto);
+    mt.addEventListener("change", enforceMotto);
+    mottoCount();
+  }
   var pd = $("#photoDel");
   if(pd) pd.addEventListener("click", function(){
     if(!S.me) return;
@@ -2762,7 +2783,7 @@ function openProfileModal(highlight){
     var v = $("#nickInput").value.trim();
     pr.nick = v;
     var mv = $("#mottoInput") ? $("#mottoInput").value : "";
-    pr.motto = String(mv || "").slice(0,5);
+    pr.motto = cap5(mv);
     if(pendingPhoto) pr.photo = pendingPhoto;
     pr.at = Date.now();
     S.profiles[S.me] = pr;
