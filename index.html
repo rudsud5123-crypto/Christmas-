@@ -748,7 +748,7 @@ body.invite-open{overflow:hidden}
 <section id="tab-guide">
 
   <div class="card">
-    <h2><span class="u">파티 정보</span> <button class="inviteLink" id="inviteOpen" type="button">💌 초대장</button></h2>
+    <h2><span class="u">파티 정보</span> <span style="margin-left:auto;display:inline-flex;gap:6px;align-items:center"><button class="inviteLink" id="inviteOpen" type="button">💌 초대장</button><button class="inviteLink" id="sharePartyBtn" type="button" title="초대장 공유하기" aria-label="초대장 공유하기"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg></button></span></h2>
     <div class="info">
       <div class="k">일시</div><div class="v"><b>2026년 12월 7일 (월) 19:00</b> (예정)</div>
       <div class="k">장소</div><div class="v"><b>경주 더스테이 스파 펜션 A동</b> (예정)<br><span style="font-size:13.5px;color:#7a7472">경북 경주시 양남면 솔숲3길 9</span></div>
@@ -1090,8 +1090,11 @@ body.invite-open{overflow:hidden}
   var openBtn = document.getElementById("inviteOpen");
   var showing = false;
   var firstTime = false;
-  function seen(){
-    try{ return localStorage.getItem(KEY) === "1"; }catch(e){ return false; }
+  function hasMe(){
+    try{
+      var raw = JSON.parse(localStorage.getItem("xmasParty.v2") || "null");
+      return !!(raw && raw.me);
+    }catch(e){ return false; }
   }
   function open(isFirst){
     if(showing) return;
@@ -1119,11 +1122,29 @@ body.invite-open{overflow:hidden}
   if(btn){
     btn.addEventListener("click", function(){
       try{ if(navigator.vibrate) navigator.vibrate(12); }catch(e){}
+      try{ if(typeof setMusic === "function" && !musicOn) setMusic(true); }catch(e){}
       close(true);
     });
   }
   if(openBtn){
     openBtn.addEventListener("click", function(){ open(false); });
+  }
+  var sharePartyBtn = document.getElementById("sharePartyBtn");
+  if(sharePartyBtn){
+    sharePartyBtn.addEventListener("click", function(){
+      var shareUrl = location.origin + location.pathname;
+      if(navigator.share){
+        navigator.share({
+          title: "2nd Christmas party 🎄",
+          text: "12.7(월)–8(화) · 경주 더스테이 스파 펜션 A동",
+          url: shareUrl
+        }).catch(function(){});
+      } else if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(shareUrl).then(function(){
+          if(typeof toast === "function") toast("초대장 링크를 복사했어요! ✈️");
+        }).catch(function(){});
+      }
+    });
   }
   document.addEventListener("keydown", function(e){
     if(showing && e.key === "Escape") close(true);
@@ -1133,7 +1154,7 @@ body.invite-open{overflow:hidden}
     close: close,
     isShowing: function(){ return showing; }
   };
-  if(!seen()) open(true);
+  if(!hasMe()) open(true);
 })();
 </script>
 
@@ -1832,22 +1853,28 @@ $all(".tab").forEach(function(b){ b.addEventListener("click", function(){ showTa
   document.addEventListener("visibilitychange", function(){ if(document.hidden) stop(); else start(); });
 })();
 
-/* ══════════════════ 오디오 / 캐럴 ══════════════════ */
+/* ══════════════════ 오디오 / 귀여운 오르골 캐럴 ══════════════════ */
 var AC = null, master = null, musicOn = false, loopTimer = null, voices = [];
-var BEAT = 0.40;
+var BEAT = 0.28;
 var NOTE_FREQ = { C3:130.81, D3:146.83, E3:164.81, F3:174.61, G3:196.00, A3:220.00,
-  C4:261.63, D4:293.66, E4:329.63, F4:349.23, G4:392.00, A4:440.00, B4:493.88, C5:523.25, D5:587.33, E5:659.25 };
+  C4:261.63, D4:293.66, E4:329.63, F4:349.23, G4:392.00, A4:440.00, B4:493.88,
+  C5:523.25, D5:587.33, E5:659.25, F5:698.46, G5:783.99, A5:880.00 };
 var MELODY = [
-  ["E4",1],["E4",1],["E4",2], ["E4",1],["E4",1],["E4",2],
-  ["E4",1],["G4",1],["C4",1],["D4",1], ["E4",4],
-  ["F4",1],["F4",1],["F4",1.5],["F4",0.5], ["F4",1],["E4",1],["E4",1],["E4",0.5],["E4",0.5],
-  ["E4",1],["D4",1],["D4",1],["E4",1], ["D4",2],["G4",2],
-  ["E4",1],["E4",1],["E4",2], ["E4",1],["E4",1],["E4",2],
-  ["E4",1],["G4",1],["C4",1],["D4",1], ["E4",4],
-  ["F4",1],["F4",1],["F4",1.5],["F4",0.5], ["F4",1],["E4",1],["E4",1],["E4",0.5],["E4",0.5],
-  ["G4",1],["G4",1],["F4",1],["D4",1], ["C4",4]
+  ["E5",1],["E5",1],["E5",2], ["E5",1],["E5",1],["E5",2],
+  ["E5",1],["G5",1],["C5",1],["D5",1], ["E5",4],
+  ["F5",1],["F5",1],["F5",1.5],["F5",0.5], ["F5",1],["E5",1],["E5",1],["E5",0.5],["E5",0.5],
+  ["E5",1],["D5",1],["D5",1],["E5",1], ["D5",2],["G5",2],
+  ["E5",1],["E5",1],["E5",2], ["E5",1],["E5",1],["E5",2],
+  ["E5",1],["G5",1],["C5",1],["D5",1], ["E5",4],
+  ["F5",1],["F5",1],["F5",1.5],["F5",0.5], ["F5",1],["E5",1],["E5",1],["E5",0.5],["E5",0.5],
+  ["G5",1],["G5",1],["F5",1],["D5",1], ["C5",4]
 ];
-var BASS = ["C3","C3","C3","C3","F3","C3","G3","G3","C3","C3","C3","C3","F3","C3","G3","C3"];
+var CHORDS = [
+  ["C4","E4","G4","E4"],["C4","E4","G4","E4"],["C4","E4","G4","E4"],["C4","E4","G4","E4"],
+  ["F4","A4","C5","A4"],["C4","E4","G4","E4"],["G3","D4","G4","D4"],["G3","D4","G4","D4"],
+  ["C4","E4","G4","E4"],["C4","E4","G4","E4"],["C4","E4","G4","E4"],["C4","E4","G4","E4"],
+  ["F4","A4","C5","A4"],["C4","E4","G4","E4"],["G3","D4","G4","D4"],["C4","E4","G4","C5"]
+];
 
 function ensureAC(){
   if(!AC){
@@ -1865,34 +1892,36 @@ function bell(freq, when, dur, vol){
   var o1 = AC.createOscillator(), o2 = AC.createOscillator();
   var g = AC.createGain(), gHi = AC.createGain();
   o1.type = "sine"; o1.frequency.value = freq;
-  o2.type = "triangle"; o2.frequency.value = freq * 2.004;
-  gHi.gain.value = 0.22;
+  o2.type = "triangle"; o2.frequency.value = freq * 2.002;
+  gHi.gain.value = 0.28;
   o1.connect(g); o2.connect(gHi); gHi.connect(g);
   g.gain.setValueAtTime(0.0001, when);
-  g.gain.exponentialRampToValueAtTime(vol, when + 0.015);
-  g.gain.exponentialRampToValueAtTime(0.0001, when + Math.max(0.45, dur*1.7));
+  g.gain.exponentialRampToValueAtTime(vol, when + 0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001, when + Math.max(0.35, dur*1.5));
   g.connect(master);
-  var end = when + Math.max(0.7, dur*1.7) + 0.05;
+  var end = when + Math.max(0.55, dur*1.5) + 0.04;
   o1.start(when); o2.start(when); o1.stop(end); o2.stop(end);
   voices.push(o1, o2);
 }
-function bassNote(freq, when, dur){
+function arpNote(freq, when, dur){
   var o = AC.createOscillator(), g = AC.createGain();
   o.type = "sine"; o.frequency.value = freq;
   g.gain.setValueAtTime(0.0001, when);
-  g.gain.exponentialRampToValueAtTime(0.085, when + 0.06);
-  g.gain.exponentialRampToValueAtTime(0.0001, when + dur*0.85);
+  g.gain.exponentialRampToValueAtTime(0.055, when + 0.012);
+  g.gain.exponentialRampToValueAtTime(0.0001, when + dur*0.95);
   o.connect(g); g.connect(master);
-  o.start(when); o.stop(when + dur);
+  o.start(when); o.stop(when + dur + 0.02);
   voices.push(o);
 }
 function scheduleLoop(){
   if(!AC || !musicOn) return;
-  var t = AC.currentTime + 0.09, total = 0;
+  var t = AC.currentTime + 0.08, total = 0;
   MELODY.forEach(function(n){ bell(NOTE_FREQ[n[0]], t + total, n[1]*BEAT, 0.13); total += n[1]*BEAT; });
-  BASS.forEach(function(n,i){ bassNote(NOTE_FREQ[n], t + i*4*BEAT, 4*BEAT); });
+  CHORDS.forEach(function(ch,i){
+    ch.forEach(function(note, j){ arpNote(NOTE_FREQ[note], t + (i*4 + j)*BEAT, BEAT); });
+  });
   if(voices.length > 900) voices = voices.slice(-300);
-  loopTimer = window.setTimeout(scheduleLoop, Math.max(400, (total - 0.12)*1000));
+  loopTimer = window.setTimeout(scheduleLoop, Math.max(300, (total - 0.10)*1000));
 }
 function setMusic(want){
   var btn = $("#musicBtn"), txt = $("#musicTxt");
@@ -3306,6 +3335,7 @@ function logoutMe(){
   closeModal();
   renderAll();
   toast("로그아웃 했어요 👋");
+  if(window.XmasInvite) window.XmasInvite.open();
 }
 function refreshMe(){
   var ava = $("#meAva"), nm = $("#meName");
