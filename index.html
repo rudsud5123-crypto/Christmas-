@@ -638,7 +638,6 @@ body.invite-open{overflow:hidden}
   position:relative;margin:14px auto 8px;padding:5px 5px 17px;
   background:#fff;border:2px solid var(--ink);border-radius:3px;
   box-shadow:0 4px 0 rgba(0,0,0,.14), 0 8px 18px rgba(0,0,0,.18);
-  transform:rotate(-2.2deg);
 }
 .ic-photo>img.pic{display:block;width:222px;height:auto;border:1px solid #E4D8C4;border-radius:1px}
 .ic-photo .ic-tape{
@@ -648,7 +647,7 @@ body.invite-open{overflow:hidden}
   border:1px solid rgba(27,27,27,.35);border-radius:2px;
   box-shadow:0 1px 2px rgba(0,0,0,.18);
 }
-.ic-santa{position:absolute;right:-27px;bottom:-16px;width:56px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.22))}
+.ic-santa{position:absolute;right:-16px;bottom:-18px;width:54px;z-index:6;filter:drop-shadow(0 2px 3px rgba(0,0,0,.22))}
 .ic-holly{position:absolute;left:-17px;top:-13px;width:34px;transform:rotate(-14deg)}
 /* 글자 */
 .ic-kicker{font-size:10.5px;font-weight:700;letter-spacing:.3em;color:var(--red);margin-top:2px}
@@ -672,11 +671,11 @@ body.invite-open{overflow:hidden}
 .ic-foot{font-size:11.5px;color:#8a8482;margin-top:7px;line-height:1.35}
 /* 카드 아래 빼꼼 캐릭터 */
 .ic-buddy{position:absolute;pointer-events:none;filter:drop-shadow(0 2px 2px rgba(0,0,0,.2));z-index:2}
-.ic-buddy.rud{left:-14px;bottom:-16px;width:52px;transform:rotate(-8deg)}
-.ic-buddy.snow{right:-12px;bottom:-18px;width:56px}
+.ic-buddy.rud{left:-14px;bottom:-16px;width:52px}
+.ic-snow{position:absolute;right:-14px;top:-14px;width:44px;z-index:6;filter:drop-shadow(0 2px 2px rgba(0,0,0,.2))}
 .ic-cane{position:absolute;pointer-events:none;width:30px;z-index:2;filter:drop-shadow(0 2px 2px rgba(0,0,0,.18))}
-.ic-cane.cl{left:2px;top:34px;transform:rotate(-12deg);opacity:.95}
-.ic-cane.cr{right:2px;top:34px;transform:rotate(12deg) scaleX(-1);opacity:.95}
+.ic-cane.cl{left:16px;top:42%;transform:rotate(-10deg);opacity:.95}
+.ic-cane.cr{right:16px;top:42%;transform:rotate(10deg) scaleX(-1);opacity:.95}
 .inviteLink{
   margin-left:auto;display:inline-flex;align-items:center;gap:3px;cursor:pointer;
   border:2px solid var(--ink);border-radius:999px;background:#fff;color:var(--ink);
@@ -724,7 +723,6 @@ body.invite-open{overflow:hidden}
         <span class="ic-tape" aria-hidden="true"></span>
         <img class="ic-holly" src="art/holly.png" alt="" aria-hidden="true">
         <img class="pic" src="party-photo.jpg" alt="지난 크리스마스 파티 사진">
-        <img class="ic-santa" src="art/santa.png" alt="" aria-hidden="true">
       </div>
       <div class="ic-kicker">MERRY CHRISTMAS</div>
       <div class="ic-lead">다섯 부부와 두 왕자의</div>
@@ -739,7 +737,8 @@ body.invite-open{overflow:hidden}
       <div class="ic-foot">12월 7일 (월) 19:00 시작 · 1박 2일</div>
     </div>
     <img class="ic-buddy rud" src="art/rudolph.png" alt="" aria-hidden="true">
-    <img class="ic-buddy snow" src="art/snowman.png" alt="" aria-hidden="true">
+    <img class="ic-santa" src="art/santa.png" alt="" aria-hidden="true">
+    <img class="ic-snow" src="art/snowman.png" alt="" aria-hidden="true">
     <img class="ic-cane cl" src="art/candy.png" alt="" aria-hidden="true">
     <img class="ic-cane cr" src="art/candy.png" alt="" aria-hidden="true">
   </div>
