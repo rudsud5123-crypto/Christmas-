@@ -2861,9 +2861,14 @@ function renderShop(){
   var list = $("#shopList");
   if(!list) return;
   var cat = S.toolsCustom.cat || "전체";
+  var CAT_ORDER = {"음식/장보기":0,"주류/음료":1,"게임/소품":2,"아기/기타":3};
   var items = Object.keys(S.shop).map(function(id){ var v = S.shop[id]||{}; return { id:id, name:v.name||"", cat:v.cat||"기타", qty:Number(v.qty)||1, unit:v.unit||"개", memo:v.memo||"", checked:!!v.checked, at:v.at||0 }; })
     .filter(function(x){ return cat === "전체" || x.cat === cat; })
-    .sort(function(a,b){ return (a.checked - b.checked) || (a.at - b.at); });
+    .sort(function(a,b){
+      var ca = CAT_ORDER[a.cat] !== undefined ? CAT_ORDER[a.cat] : 9;
+      var cb = CAT_ORDER[b.cat] !== undefined ? CAT_ORDER[b.cat] : 9;
+      return (a.checked - b.checked) || (ca - cb) || (a.at - b.at);
+    });
   var ae = document.activeElement;
   var typing = !!(shopEditId && ae && ae.closest && ae.closest(".shopitem.edit"));
   if(!typing){
